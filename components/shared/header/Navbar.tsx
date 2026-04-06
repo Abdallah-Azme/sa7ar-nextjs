@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -13,7 +13,6 @@ import {
 	CircleStarIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import Logo from "@/components/shared/Logo";
 import CartIcon from "@/components/icons/CartIcon";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -38,16 +37,8 @@ const navLinks = [
 
 /**
  * Navbar - Client Component
- * Full parity with React Navbar:
- * - Scroll-triggered sticky effect with fade-in animation
- * - Active link highlighting via usePathname
- * - AuthActionWrapper on cart button (blocks guests with toast)
- * - AccountDropdown for authenticated users
- * - LoginDropdown for unauthenticated users
- * - Mobile Sheet with auth dropdown inside
- * - ScrollToTop on route change
  */
-export default function Navbar() {
+export default function Navbar({ logo }: { logo?: ReactNode }) {
 	const [isSheetOpen, setIsSheetOpen] = useState(false);
 	const [isScrolled, setIsScrolled] = useState(false);
 	const [isTransitioning, setIsTransitioning] = useState(false);
@@ -118,7 +109,7 @@ export default function Navbar() {
 			>
 				<div className="w-full flex justify-between items-center container">
 					{/* Logo */}
-					<Logo />
+					{logo}
 
 					{/* Desktop nav links */}
 					<ul className="hidden lg:flex transition-all duration-1000 items-center gap-2 text-nowrap">

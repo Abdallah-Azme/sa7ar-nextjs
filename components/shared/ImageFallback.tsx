@@ -11,6 +11,7 @@ interface ImageFallbackProps {
 	className?: string;
 	fill?: boolean;
 	priority?: boolean;
+	sizes?: string;
 }
 
 const FALLBACK_SRC = "/images/logo.svg";
@@ -28,6 +29,7 @@ export default function ImageFallback({
 	className,
 	fill = false,
 	priority = false,
+	sizes,
 }: ImageFallbackProps) {
 	const [imgSrc, setImgSrc] = useState<string>(
 		src && src.trim() !== "" ? src : FALLBACK_SRC,
@@ -42,6 +44,7 @@ export default function ImageFallback({
 				src={imgSrc}
 				alt={alt}
 				fill
+				sizes={sizes || "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"}
 				className={className}
 				onError={handleError}
 				priority={priority}
@@ -56,6 +59,7 @@ export default function ImageFallback({
 			alt={alt}
 			width={width ?? 400}
 			height={height ?? 300}
+			sizes={sizes}
 			className={className}
 			onError={handleError}
 			priority={priority}

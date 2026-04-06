@@ -11,23 +11,24 @@ import FAQ from "@/features/home/components/FAQ";
 import BestSellingAccessories from "@/features/home/components/BestSellingAccessories";
 import type { Metadata } from "next";
 
+import { generateSeoMetadata } from "@/lib/seo";
+
 /**
  * Dynamic SEO metadata for Home Page
  */
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
+  const { lang } = await params;
   const setting = await getGlobalSettings();
   const title = setting?.meta_title || "Sohar Water | مياه صحار";
   const description = setting?.meta_description || "Premium natural water from Sohar, Oman.";
 
-  return {
+  return generateSeoMetadata({
     title,
     description,
-    openGraph: {
-      title,
-      description,
-      images: setting?.app_logo ? [setting.app_logo] : [],
-    },
-  };
+    lang,
+    path: "/",
+    image: setting?.app_logo,
+  });
 }
 
 /**

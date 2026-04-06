@@ -152,12 +152,14 @@ export default function Hero({
 					className="h-full max-h-179.25 flex-1 overflow-hidden rounded-4xl relative"
 				>
 					<CarouselContent className="h-full">
-						{sliders.map((slider) => (
+						{sliders.map((slider, index) => (
 							<CarouselItem key={slider.id}>
 								<Overlay>
 									<ImageFallback
 										src={slider.image}
 										alt={slider.title}
+										priority={index === 0}
+										sizes="(max-width: 768px) 100vw, 50vw"
 										className="h-full w-full object-cover"
 									/>
 								</Overlay>

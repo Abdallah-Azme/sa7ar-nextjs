@@ -31,8 +31,8 @@ export default async function AboutPage() {
   const features = data?.about_us_values_cards || [];
   
   // Handing nested vision/mission logic consistent with legacy CMS format
-  const vision = data?.our_vision?.[0]?.[0];
-  const mission = data?.our_sms?.[0]?.[0];
+  const vision = data?.our_vision;
+  const mission = data?.our_sms;
 
   const defaultIcons = [
     <BadgeCheck key="1" className="size-8 text-secondary" />,
@@ -67,8 +67,8 @@ export default async function AboutPage() {
             <AboutSection 
                 side="end"
                 label="رؤيتنا"
-                title={vision.title}
-                description={vision.description?.replace(/<[^>]*>/g, "")}
+                title={vision.title || ""}
+                description={vision.description?.replace(/<[^>]*>/g, "") || ""}
                 imageUrl={vision.icon || "/images/placeholder/our-story.webp"}
             />
         )}
@@ -78,8 +78,8 @@ export default async function AboutPage() {
             <AboutSection 
                 side="start"
                 label="مهمتنا"
-                title={mission.title}
-                description={mission.description?.replace(/<[^>]*>/g, "")}
+                title={mission.title || ""}
+                description={mission.description?.replace(/<[^>]*>/g, "") || ""}
                 imageUrl={mission.icon || "/images/placeholder/our-story.webp"}
             />
         )}

@@ -21,7 +21,7 @@ export async function getFaqData() {
 	try {
         // Calling /faq endpoint based on React's Faq.tsx fetcher
 		const res = await apiClient<{ id: number; question: string; answer: string; }[]>({
-			route: "/faq",
+			route: "/faqs",
 			next: { revalidate: 3600 }, 
 		});
 		return res.data;
