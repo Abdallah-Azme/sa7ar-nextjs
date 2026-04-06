@@ -11,7 +11,8 @@ interface SeoProps {
 }
 
 export function generateSeoMetadata({ title, description, lang, path = '', image, noIndex = false }: SeoProps): Metadata {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.soharwater.com';
+  let baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.soharwater.com';
+  if (!baseUrl.startsWith('http')) baseUrl = `https://${baseUrl}`;
   
   // Format the relative path
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;

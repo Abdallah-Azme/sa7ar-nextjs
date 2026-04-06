@@ -10,7 +10,8 @@ import {
 	PaginationPrevious,
 } from "@/components/ui/pagination";
 import { cn } from "@/lib/utils";
-import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { useRouter, usePathname } from "@/i18n/routing";
 import { useMemo } from "react";
 
 interface AppPaginationProps {

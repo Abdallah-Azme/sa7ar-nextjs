@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef, ReactNode } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname } from "@/i18n/routing";
 import {
 	MenuIcon,
 	ArchiveIcon,

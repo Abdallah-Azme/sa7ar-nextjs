@@ -10,7 +10,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import AuthDialog from "@/components/dialogs/AuthDialog";
 import { useState, useEffect } from "react";
-import { useSearchParams, usePathname, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "@/i18n/routing";
 
 /**
  * LoginDropdown - Client Component
