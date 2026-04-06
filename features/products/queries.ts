@@ -20,7 +20,8 @@ export async function getBestSellingProducts() {
 		});
 		return res.data;
 	} catch (error) {
-		console.error("Error fetching best selling products:", error);
+		const err = error as { message?: string; code?: number };
+		console.error("Error fetching best selling products:", err?.message ?? err?.code ?? error);
 		return [];
 	}
 }
