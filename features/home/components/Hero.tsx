@@ -171,6 +171,7 @@ export default function Hero({
 							<Button
 								disabled={currentSlide <= 0}
 								data-slot="btn prev"
+								aria-label="Previous slide"
 								onClick={() => api?.scrollPrev()}
 							>
 								<ChevronLeftIcon />
@@ -178,6 +179,7 @@ export default function Hero({
 							<Button
 								disabled={currentSlide >= slides}
 								data-slot="btn next"
+								aria-label="Next slide"
 								onClick={() => api?.scrollNext()}
 							>
 								<ChevronRightIcon />
@@ -203,7 +205,7 @@ export default function Hero({
 						className="rounded-full border bg-background-cu hover:bg-background-cu"
 						size={"icon-lg"}
 					>
-						<Link href={appleStoreLink ?? "#"}>
+						<Link href={appleStoreLink ?? "#"} aria-label="Apple Store">
 							<AppStore className="text-black" />
 						</Link>
 					</Button>
@@ -212,7 +214,7 @@ export default function Hero({
 						asChild
 						className="rounded-full border bg-background-cu hover:bg-background-cu"
 					>
-						<Link href={googlePlayLink ?? "#"}>
+						<Link href={googlePlayLink ?? "#"} aria-label="Google Play Store">
 							<GoogleStore />
 						</Link>
 					</Button>
@@ -223,6 +225,7 @@ export default function Hero({
 					>
 						<Link
 							href={whatsappNumber ? `https://wa.me/${whatsappNumber}` : "#"}
+							aria-label="WhatsApp"
 						>
 							<Whatsapp />
 						</Link>

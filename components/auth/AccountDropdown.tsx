@@ -63,6 +63,7 @@ export default function AccountDropdown({
 							size="icon-lg"
 							variant="link"
 							className="rounded-full flex place-content-center"
+							aria-label="User Account Menu"
 							asChild
 						>
 							<span>

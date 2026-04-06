@@ -9,7 +9,7 @@ import Link from "next/link";
 export default function ShowMore({ to }: { to?: string }) {
 	return (
 		<Button asChild className="bg-gray h-13 rounded-xl">
-			<Link href={to ?? "#"} className="flex items-center gap-3">
+			<Link href={to ?? "#"} className="flex items-center gap-3" aria-label="Show More Products">
 				<div className="bg-white text-gray rounded-lg p-2">
 					<Eye size={10} />
 				</div>

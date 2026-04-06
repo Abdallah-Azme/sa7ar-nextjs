@@ -24,7 +24,7 @@ export default function SectionLabel({
 				white && "bg-white",
 			)}
 		>
-			{Icon}
+			{Icon && <div aria-hidden="true">{Icon}</div>}
 			<span className="text-nowrap">{text}</span>
 		</div>
 	);

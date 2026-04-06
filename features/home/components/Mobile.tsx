@@ -43,7 +43,7 @@ export default function Mobile({
 						className="flex gap-2 w-40 sm:w-46 items-center h-14 rounded-[24px]"
 						asChild
 					>
-						<Link href={googlePlayLink ?? "#"}>
+						<Link href={googlePlayLink ?? "#"} aria-label="Download from Google Play">
 							<div className="text-start">
 								<p className="text-[8px]">حمّل من</p>
 								<b className="text-sm md:text-xs lg:text-sm">Google Play</b>
@@ -52,7 +52,7 @@ export default function Mobile({
 						</Link>
 					</Button>
 					<Button asChild className="flex w-40 sm:w-46 gap-2 bg-black hover:bg-black/90 items-center h-14 rounded-[24px]">
-						<Link href={appleStoreLink ?? "#"}>
+						<Link href={appleStoreLink ?? "#"} aria-label="Download from App Store">
 							<div className="text-start">
 								<p className="text-[8px]">حمّل من</p>
 								<b className="text-sm md:text-xs lg:text-sm">App Store</b>

@@ -7,11 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import ContactUsInput from "@/components/forms/ContactUsInput";
-import Header from "@/components/shared/header/Header";
 import Banner from "@/components/shared/Banner";
 import SectionLabel from "@/components/shared/SectionLabel";
 import HelpCard from "@/components/shared/cards/HelpCard";
-import Footer from "@/components/shared/footer/Footer";
 import apiClient from "@/lib/apiClient";
 import { toast } from "sonner";
 
@@ -73,7 +71,6 @@ export default function ContactPage() {
 
 	return (
 		<main className="flex flex-col min-h-screen">
-			<Header />
 
 			<Banner
 				title="تواصل معنا"
@@ -248,7 +245,6 @@ export default function ContactPage() {
 			</section>
 
 			<HelpCard />
-			<Footer />
 		</main>
 	);
 }

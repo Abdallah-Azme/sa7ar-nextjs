@@ -7,10 +7,8 @@ import { ShieldCheckIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useCart } from "@/contexts/CartContext";
-import Header from "@/components/shared/header/Header";
 import CartCard from "@/components/shared/cards/CartCard";
 import EmptyCard from "@/components/shared/EmptyCard";
-import CopyrightSection from "@/components/shared/CopyrightSection";
 import PriceIcon from "@/components/icons/PriceIcon";
 import DiscountIcon from "@/components/icons/DiscountIcon";
 import ShippingIcon from "@/components/icons/ShippingIcon";
@@ -58,8 +56,6 @@ export default function CartPage() {
 
 	return (
 		<main className="flex flex-col min-h-screen">
-			<Header />
-
 			<section className="container space-y-10 py-10 grow">
 				{/* Back Button / Title */}
 				<Button
@@ -187,8 +183,6 @@ export default function CartPage() {
 					)}
 				</div>
 			</section>
-
-			<CopyrightSection />
 
 			<Dialog
 				open={isApplyCouponDialogOpen}

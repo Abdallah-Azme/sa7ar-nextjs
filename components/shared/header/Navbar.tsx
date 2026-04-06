@@ -22,6 +22,7 @@ import AccountDropdown from "@/components/auth/AccountDropdown";
 import LoginDropdown from "@/components/auth/LoginDropdown";
 import AuthActionWrapper from "@/components/shared/AuthActionWrapper";
 import ScrollToTop from "@/components/shared/ScrollToTop";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 /**
  * Nav links — mirrors React's navLinks array exactly (same paths, same icons)
@@ -51,6 +52,7 @@ export default function Navbar({ logo }: { logo?: ReactNode }) {
 
 	// Active link helper — mirrors React NavLink's isActive logic
 	const isActive = (path: string) => {
+		if (!pathname) return false;
 		if (path === "/") return pathname === "/";
 		return pathname.startsWith(path);
 	};
@@ -133,6 +135,8 @@ export default function Navbar({ logo }: { logo?: ReactNode }) {
 
 					{/* Right-side actions */}
 					<div className="flex gap-3 items-center">
+						<LanguageSwitcher />
+
 						{/* Cart button — guarded by AuthActionWrapper for guests */}
 						<AuthActionWrapper>
 							<Button
@@ -140,7 +144,7 @@ export default function Navbar({ logo }: { logo?: ReactNode }) {
 								asChild
 								className="rounded-full relative size-12 flex place-content-center bg-accent hover:bg-accent/90 text-accent-foreground"
 							>
-								<Link href="/cart">
+								<Link href="/cart" aria-label="Cart">
 									{cartCount > 0 && (
 										<span
 											className="absolute size-5 border border-white top-0 -right-2 flex justify-center items-center bg-[#FF0084] text-[8px] text-white rounded-full"
@@ -169,6 +173,7 @@ export default function Navbar({ logo }: { logo?: ReactNode }) {
 										size={"icon-lg"}
 										variant="secondary"
 										className="rounded-full size-12 flex place-content-center"
+										aria-label="Open menu"
 									>
 										<MenuIcon />
 									</Button>

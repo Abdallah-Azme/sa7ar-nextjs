@@ -21,20 +21,22 @@ export function generateSeoMetadata({ title, description, lang, path = '', image
   const languages: Record<string, string> = {};
   
   routing.locales.forEach((locale) => {
-    // If root path is needed and locale is not default locale
     const prefix = locale === routing.defaultLocale ? '' : `/${locale}`;
-    languages[locale] = `${baseUrl}${prefix}${isRoot ? '' : normalizedPath}`;
+    languages[locale] = `${prefix}${isRoot ? '' : normalizedPath}`;
   });
 
+  // Add x-default
+  languages['x-default'] = `${isRoot ? '/' : normalizedPath}`;
+
   const currentPrefix = lang === routing.defaultLocale ? '' : `/${lang}`;
-  const currentUrl = `${baseUrl}${currentPrefix}${isRoot ? '' : normalizedPath}`;
+  const currentUrl = `${currentPrefix}${isRoot ? '' : normalizedPath}`;
 
   return {
     title,
     description,
     metadataBase: new URL(baseUrl),
     alternates: {
-      canonical: currentUrl,
+      canonical: currentUrl || '/',
       languages,
     },
     openGraph: {

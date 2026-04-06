@@ -9,12 +9,10 @@ import {
 	CardFooter,
 	CardHeader,
 } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
 import { useCart } from "@/contexts/CartContext";
 import { cn } from "@/lib/utils";
 import type { Product } from "@/types";
 import { MinusIcon, PlusIcon, ShoppingBasketIcon, StarIcon, Trash2 } from "lucide-react";
-import { useState } from "react";
 import Link from "next/link";
 import ImageFallback from "../ImageFallback";
 
@@ -26,7 +24,7 @@ const buttonClass =
  * Handles direct cart interaction and quantity management
  */
 export default function ProductCard({ item }: { item: Product }) {
-	const { cart, cartCount, isLoading } = useCart();
+	const { cart } = useCart();
     // Helper to format labels (e.g. "500ml")
     const formatSizeLabel = (size: string) => size; 
 
@@ -97,13 +95,16 @@ export default function ProductCard({ item }: { item: Product }) {
 			<CardFooter>
 				{cartItem ? (
 					<div className="flex justify-between w-full items-center gap-2 rounded-md border border-primary h-10 px-4 md:h-13 py-2">
-						<button className={buttonClass + " text-accent"}>
+						<button className={buttonClass + " text-accent"} aria-label="Increase quantity">
 							<PlusIcon size={14} />
 						</button>
 						<span className="text-xs font-medium">
 							{String(cartItem.quantity).padStart(2, "0")}
 						</span>
-						<button className={buttonClass + " text-gray"}>
+						<button 
+							className={buttonClass + " text-gray"} 
+							aria-label={cartItem.quantity === 1 ? "Remove from cart" : "Decrease quantity"}
+						>
 							{cartItem.quantity === 1 ? (
 								<Trash2 className="text-destructive stroke-1" size={14} />
 							) : (

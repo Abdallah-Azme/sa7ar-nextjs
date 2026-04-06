@@ -33,6 +33,7 @@ export default function AppPagination({ totalPages, className }: AppPaginationPr
 	}, [searchParams, totalPages]);
 
 	const createUrl = (page: number) => {
+		if (!pathname) return "";
 		const params = new URLSearchParams(searchParams.toString());
 		params.set("page", page.toString());
 		return `${pathname}?${params.toString()}`;

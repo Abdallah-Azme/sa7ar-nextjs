@@ -6,9 +6,7 @@ import { useRouter } from "next/navigation";
 import { CheckIcon, PlusIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
-import Header from "@/components/shared/header/Header";
 import CartCard from "@/components/shared/cards/CartCard";
-import CopyrightSection from "@/components/shared/CopyrightSection";
 import PriceIcon from "@/components/icons/PriceIcon";
 import ArrowIcon from "@/components/icons/ArrowIcon";
 import LocationPinIcon from "@/components/icons/LocationPinIcon";
@@ -115,8 +113,6 @@ export default function CheckoutPage() {
 
 	return (
 		<main className="flex flex-col min-h-screen">
-			<Header />
-
 			<section className="container space-y-10 py-10 grow">
 				{/* Back Button / Title */}
 				<Button
@@ -261,8 +257,6 @@ export default function CheckoutPage() {
 					</aside>
 				</div>
 			</section>
-
-			<CopyrightSection />
 
 			<Dialog open={isAddressDialogOpen} onOpenChange={setIsAddressDialogOpen}>
 				<DialogContent className="sm:max-w-xl" showCloseButton>
