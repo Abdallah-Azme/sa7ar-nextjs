@@ -1,9 +1,10 @@
-import { getBrandProducts, getBestSellingProducts } from "@/features/products/queries";
+import { getBrandProducts, getBestSellingProducts, getBestSellingAccessories } from "@/features/products/queries";
 import ProductCard from "@/components/shared/cards/ProductCard";
 import AppPagination from "@/components/shared/AppPagination";
 import EmptyCard from "@/components/shared/EmptyCard";
 import SectionLabel from "@/components/shared/SectionLabel";
 import HelpCard from "@/components/shared/cards/HelpCard";
+import SearchDialog from "@/components/shared/SearchDialog";
 import { ShoppingBagIcon, ShoppingBasketIcon } from "lucide-react";
 import type { Metadata } from "next";
 
@@ -13,16 +14,20 @@ interface Props {
 
 const sectionConfig: Record<string, { title: string; fetcher: (sizeIds?: number[]) => Promise<import("@/types").Product[]> }> = {
   "most-sold": {
-    title: "Most Sold Products",
+    title: "الأكثر مبيعاً",
     fetcher: getBestSellingProducts,
   },
   "rathath": {
-    title: "Rathath Products",
+    title: "منتجات رذاذ",
     fetcher: (sizeIds) => getBrandProducts("rathath", sizeIds),
   },
   "bard": {
-    title: "Bard Products",
+    title: "منتجات برد",
     fetcher: (sizeIds) => getBrandProducts("bard", sizeIds),
+  },
+  "accessories": {
+    title: "الإكسسوارات الأكثر مبيعاً",
+    fetcher: getBestSellingAccessories,
   },
 };
 
@@ -35,8 +40,8 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   const title = sectionConfig[section]?.title || "Products List";
 
   return {
-    title: `${title} | Sohar Water`,
-    description: `Browse all products in our ${title} collection. Pure and natural water for your daily life.`,
+    title: `${title} | مياه صحار`,
+    description: `تصفح جميع المنتجات في قسم ${title}. مياه نقية وطبيعية لحياتك اليومية.`,
   };
 }
 
@@ -65,7 +70,7 @@ export default async function ProductsListPage({ searchParams }: Props) {
         <div className="flex flex-wrap items-end justify-between gap-6 mb-16">
           <div className="space-y-4">
             <SectionLabel 
-              text="Our Products" 
+              text="منتجاتنا" 
               Icon={<ShoppingBagIcon size={15} />} 
             />
             <div className="flex items-center gap-2">
@@ -75,16 +80,19 @@ export default async function ProductsListPage({ searchParams }: Props) {
                 </h1>
             </div>
           </div>
+          <div className="w-full sm:w-80">
+            <SearchDialog />
+          </div>
         </div>
 
         {/* Product Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+        <div className="grid min-[460px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
           {products.length === 0 ? (
             <div className="col-span-full py-20">
                 <EmptyCard />
             </div>
           ) : (
-            products.map((product: any) => (
+            products.map((product: import("@/types").Product) => (
               <ProductCard key={product.id} item={product} />
             ))
           )}

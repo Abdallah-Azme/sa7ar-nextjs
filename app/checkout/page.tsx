@@ -1,33 +1,117 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { CheckIcon, PlusIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
 import Header from "@/components/shared/header/Header";
-import Navbar from "@/components/shared/header/Navbar";
 import CartCard from "@/components/shared/cards/CartCard";
 import CopyrightSection from "@/components/shared/CopyrightSection";
 import PriceIcon from "@/components/icons/PriceIcon";
 import ArrowIcon from "@/components/icons/ArrowIcon";
 import LocationPinIcon from "@/components/icons/LocationPinIcon";
+import apiClient from "@/lib/apiClient";
+import { toast } from "sonner";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Skeleton } from "@/components/ui/skeleton";
+
+type AddressItem = {
+	id: number;
+	location: string;
+	address_label: string | null;
+	address_details: string | null;
+	is_default: number;
+};
 
 /**
  * CheckoutPage - Client Component
  * Final stage of the ordering process including address selection and payment.
  */
 export default function CheckoutPage() {
-	const { cart, isLoading } = useCart();
+	const { cart, refreshCart } = useCart();
 	const router = useRouter();
     
-    // Mocking addresses for now until addresses feature is ported
-    const addresses = [
-        { id: 1, label: "Home", details: "Sohar, Al Hajrah St.", isDefault: true },
-        { id: 2, label: "Office", details: "Muscat, Al Khuwair", isDefault: false }
-    ];
-    const [selectedAddressId, setSelectedAddressId] = useState<number | null>(1);
+    const [addresses, setAddresses] = useState<AddressItem[]>([]);
+	const [isLoadingAddresses, setIsLoadingAddresses] = useState(true);
+    const [selectedAddressId, setSelectedAddressId] = useState<number | null>(null);
+	const [deliveryNotes, setDeliveryNotes] = useState("");
+	const [checkoutPending, setCheckoutPending] = useState(false);
+	const [isAddressDialogOpen, setIsAddressDialogOpen] = useState(false);
+
+	useEffect(() => {
+		const fetchAddresses = async () => {
+			try {
+				const res = await apiClient<AddressItem[]>({
+					route: "/addresses",
+					tokenRequire: true,
+				});
+				const data = res.data ?? [];
+				setAddresses(data);
+				if (data.length > 0) {
+					const toSelect = cart?.address_id 
+						? data.find(c => c.id === cart.address_id) 
+						: data.find(c => Number(c.is_default) === 1);
+					setSelectedAddressId(toSelect?.id ?? data[0].id);
+				}
+			} catch {
+				// Ignored
+			} finally {
+				setIsLoadingAddresses(false);
+			}
+		};
+		fetchAddresses();
+	}, [cart?.address_id]);
+
+	const selectedAddress = useMemo(
+		() => addresses.find((address) => address.id === selectedAddressId) ?? null,
+		[addresses, selectedAddressId],
+	);
+
+	const handleCheckout = async () => {
+		if (!selectedAddressId) {
+			toast.error("يرجى اختيار عنوان التوصيل أولاً");
+			return;
+		}
+
+		setCheckoutPending(true);
+		try {
+			await apiClient({
+				route: "/cart/set-address",
+				method: "POST",
+				body: JSON.stringify({ address_id: selectedAddressId }),
+				tokenRequire: true,
+			});
+
+			const res = await apiClient<{ payment_url?: string }>({
+				route: "/orders/checkout",
+				method: "POST",
+				body: JSON.stringify({
+					address_id: selectedAddressId,
+					payment_method: "online",
+					notes: deliveryNotes.trim() || undefined,
+				}),
+				tokenRequire: true,
+			});
+
+			toast.success(res.message);
+			await refreshCart();
+
+			const paymentUrl = res.data?.payment_url;
+			if (paymentUrl) {
+				const checkoutUrl = new URL(paymentUrl);
+				checkoutUrl.searchParams.set("lang", "ar");
+				window.location.assign(checkoutUrl.toString());
+				return;
+			}
+			router.push("/account/orders");
+		} catch {
+			toast.error("حدث خطأ ما");
+		} finally {
+			setCheckoutPending(false);
+		}
+	};
 
 	return (
 		<main className="flex flex-col min-h-screen">
@@ -40,8 +124,8 @@ export default function CheckoutPage() {
 					className="text-gray hover:no-underline p-0 flex items-center gap-2 group"
 					onClick={() => router.back()}
 				>
-					<ArrowIcon className="group-hover:-translate-x-1 transition-transform" />
-					<h1 className="text-xl font-extrabold text-primary">Checkout</h1>
+					<ArrowIcon className="rtl:rotate-180 group-hover:-translate-x-1 transition-transform" />
+					<h1 className="text-xl font-extrabold text-primary">إتمام الطلب</h1>
 				</Button>
 
 				<div className="grid lg:grid-cols-[1.3fr_0.7fr] gap-10 items-start">
@@ -51,48 +135,53 @@ export default function CheckoutPage() {
                         {/* 1. Delivery Address */}
 						<section className="bg-background-cu border border-black/5 rounded-4xl p-8 space-y-6">
 							<div className="flex items-center justify-between">
-								<h2 className="text-xl font-extrabold text-primary">Delivery Address</h2>
-								<Button variant="outline" className="rounded-full h-10">
-									Change
+								<h2 className="text-xl font-extrabold text-primary">عنوان التوصيل</h2>
+								<Button variant="outline" className="rounded-full h-10" onClick={() => setIsAddressDialogOpen(true)}>
+									تغيير
 								</Button>
 							</div>
 
-                            <div className="space-y-3">
-                                {addresses.map((address) => (
-                                    <div 
-                                        key={address.id}
-                                        onClick={() => setSelectedAddressId(address.id)}
-                                        className={cn(
-                                            "border rounded-2xl p-5 bg-white flex items-center justify-between gap-4 cursor-pointer transition-all",
-                                            selectedAddressId === address.id ? "border-accent ring-1 ring-accent" : "hover:border-gray/20"
-                                        )}
-                                    >
-                                        <div className="flex items-center gap-4">
-                                            <div className="size-10 bg-accent/10 rounded-full flex items-center justify-center text-accent">
-                                                <LocationPinIcon />
-                                            </div>
-                                            <div className="text-start">
-                                                <h3 className="font-bold text-primary">{address.label}</h3>
-                                                <p className="text-xs text-gray">{address.details}</p>
-                                            </div>
-                                        </div>
-                                        {selectedAddressId === address.id && (
-                                            <div className="size-6 bg-accent text-white rounded-full flex items-center justify-center">
-                                                <CheckIcon size={14} />
-                                            </div>
-                                        )}
-                                    </div>
-                                ))}
-                                <Button variant="link" className="text-accent p-0 h-auto font-bold flex items-center gap-2">
-                                    <PlusIcon size={16} />
-                                    Add New Address
-                                </Button>
-                            </div>
+                            {isLoadingAddresses ? (
+								<div className="border rounded-2xl p-4 space-y-3 bg-white">
+									<Skeleton className="h-4 w-40" />
+									<Skeleton className="h-3 w-60" />
+								</div>
+							) : selectedAddress ? (
+								<div className="border border-black/10 rounded-2xl p-4 bg-white flex items-center justify-between gap-3">
+									<div className="flex items-center gap-2.5 text-[#432DD7]">
+										<LocationPinIcon />
+										<div>
+											<h3 className="text-sm font-bold text-primary">
+												{selectedAddress.address_label || selectedAddress.location || "-"}
+											</h3>
+											<p className="text-gray text-xs font-light">
+												{selectedAddress.address_details || "-"}
+											</p>
+										</div>
+									</div>
+									<div className="size-5 shrink-0 text-white bg-accent flex items-center justify-center rounded-full">
+										<CheckIcon size={14} />
+									</div>
+								</div>
+							) : (
+								<p className="text-sm text-gray">
+									لا توجد عناوين توصيل محفوظة. يرجى إضافة عنوان.
+								</p>
+							)}
+
+							{/* Add New Address link — matches React */}
+							<Link
+								href="/account/addresses/new"
+								className="inline-flex items-center gap-2 text-accent font-bold text-sm hover:underline underline-offset-4"
+							>
+								<PlusIcon size={16} />
+								إضافة عنوان جديد
+							</Link>
 						</section>
 
                         {/* 2. Order Items */}
 						<section className="bg-background-cu border border-black/5 rounded-4xl p-8 space-y-6">
-							<h2 className="text-xl font-extrabold text-primary">Order Items</h2>
+							<h2 className="text-xl font-extrabold text-primary">عناصر الطلب</h2>
 							<div className="space-y-4">
 								{cart?.items?.map((item) => (
                                     <div key={item.id} className="opacity-80 grayscale-[0.5]">
@@ -104,11 +193,11 @@ export default function CheckoutPage() {
 
                         {/* 3. Payment Method */}
 						<section className="bg-background-cu border border-black/5 rounded-4xl p-8 space-y-6">
-							<h2 className="text-xl font-extrabold text-primary">Payment Method</h2>
+							<h2 className="text-xl font-extrabold text-primary">طريقة الدفع</h2>
 							<div className="border border-accent ring-1 ring-accent rounded-2xl p-5 bg-white flex items-center justify-between">
 								<div className="text-start">
-                                    <h3 className="font-bold text-primary">Online Payment</h3>
-                                    <p className="text-xs text-gray">VIsa, MasterCard, Benefit, Thawani</p>
+                                    <h3 className="font-bold text-primary">دفع إلكتروني</h3>
+                                    <p className="text-xs text-gray">فيزا، ماستركارد، بنفت، ثواني</p>
                                 </div>
                                 <div className="size-6 bg-accent text-white rounded-full flex items-center justify-center">
                                     <CheckIcon size={14} />
@@ -118,9 +207,11 @@ export default function CheckoutPage() {
 
                         {/* 4. Delivery Notes */}
 						<section className="bg-background-cu border border-black/5 rounded-4xl p-8 space-y-4">
-							<h2 className="text-xl font-extrabold text-primary">Delivery Notes</h2>
+							<h2 className="text-xl font-extrabold text-primary">ملاحظات التوصيل</h2>
 							<textarea
-								placeholder="E.g. Please leave at the door or ring the bell..."
+								value={deliveryNotes}
+								onChange={(e) => setDeliveryNotes(e.target.value)}
+								placeholder="مثل: يرجى ترك الطلب عند الباب أو رن الجرس..."
 								className="w-full min-h-32 rounded-2xl border bg-white px-5 py-4 text-sm outline-none focus:ring-2 focus:ring-secondary transition-all"
 							/>
 						</section>
@@ -129,20 +220,20 @@ export default function CheckoutPage() {
 					{/* Summary Sidebar */}
 					<aside className="bg-background-cu border border-black/5 rounded-4xl p-8 space-y-8 sticky top-24">
 						<div className="space-y-2 text-start">
-							<h2 className="text-xl font-extrabold text-primary">Summary</h2>
-							<p className="text-gray text-sm">Please review before confirming order.</p>
+							<h2 className="text-xl font-extrabold text-primary">ملخص الطلب</h2>
+							<p className="text-gray text-sm">يرجى مراجعة طلبك قبل التأكيد</p>
 						</div>
 
 						<div className="space-y-4 text-sm font-semibold text-gray">
 							<div className="flex items-center justify-between">
-								<span>Subtotal</span>
+								<span>المجموع الفرعي</span>
 								<span className="text-accent flex items-center gap-2">
 									{cart?.subtotal?.toFixed(3)}
 									<PriceIcon className="size-5" />
 								</span>
 							</div>
 							<div className="flex items-center justify-between">
-								<span>Shipping</span>
+								<span>التوصيل</span>
 								<span className="text-accent flex items-center gap-2">
 									{cart?.delivery_price?.toFixed(3)}
 									<PriceIcon className="size-5" />
@@ -151,7 +242,7 @@ export default function CheckoutPage() {
 						</div>
 
 						<div className="border-t pt-6 flex items-center justify-between text-lg font-extrabold text-secondary">
-							<span>Order Total</span>
+							<span>الإجمالي</span>
 							<span className="text-accent flex items-center gap-2">
 								{cart?.total?.toFixed(3)}
 								<PriceIcon className="size-6" />
@@ -161,8 +252,10 @@ export default function CheckoutPage() {
 						<Button
 							className="w-full h-14 rounded-full text-lg shadow-lg hover:shadow-xl transition-all"
 							variant="secondary"
+							disabled={checkoutPending || !selectedAddressId}
+							onClick={handleCheckout}
 						>
-							Place Order Now
+							{checkoutPending ? "جاري الإرسال..." : "أرسل الطلب الآن"}
 							<ArrowIcon className="rtl:rotate-180" />
 						</Button>
 					</aside>
@@ -170,11 +263,59 @@ export default function CheckoutPage() {
 			</section>
 
 			<CopyrightSection />
+
+			<Dialog open={isAddressDialogOpen} onOpenChange={setIsAddressDialogOpen}>
+				<DialogContent className="sm:max-w-xl" showCloseButton>
+					<DialogHeader>
+						<DialogTitle>تغيير عنوان التوصيل</DialogTitle>
+					</DialogHeader>
+					<div className="space-y-3 mt-4">
+						{isLoadingAddresses ? (
+							Array.from({ length: 3 }).map((_, idx) => (
+								<div key={idx} className="border border-black/10 rounded-xl p-3 bg-white space-y-2">
+									<Skeleton className="h-4 w-36" />
+									<Skeleton className="h-3 w-52" />
+								</div>
+							))
+						) : addresses.length > 0 ? (
+							addresses.map((address) => {
+								const isSelected = selectedAddressId === address.id;
+								return (
+									<button
+										key={address.id}
+										type="button"
+										onClick={() => {
+											setSelectedAddressId(address.id);
+											setIsAddressDialogOpen(false);
+										}}
+										className="w-full text-start border border-black/10 rounded-xl p-3 bg-white hover:bg-background-cu/80 transition-all"
+									>
+										<div className="flex items-center justify-between gap-2">
+											<div>
+												<h3 className="text-sm font-bold text-primary">
+													{address.address_label || address.location || "-"}
+												</h3>
+												<p className="text-gray text-xs font-light">
+													{address.address_details || "-"}
+												</p>
+											</div>
+											{isSelected ? (
+												<div className="size-5 shrink-0 text-white bg-accent flex items-center justify-center rounded-full">
+													<CheckIcon size={14} />
+												</div>
+											) : null}
+										</div>
+									</button>
+								);
+							})
+						) : (
+							<p className="text-sm text-gray">لا توجد عناوين توصيل</p>
+						)}
+					</div>
+				</DialogContent>
+			</Dialog>
 		</main>
 	);
 }
 
-// Helper utility for class merging
-function cn(...classes: string[]) {
-    return classes.filter(Boolean).join(" ");
-}
+

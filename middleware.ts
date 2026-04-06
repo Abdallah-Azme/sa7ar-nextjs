@@ -17,7 +17,7 @@ export function middleware(request: NextRequest) {
         // Redirect completely unauthenticated users away from protected areas
 		const url = request.nextUrl.clone();
 		url.pathname = "/";
-        // Optionally attach a query parameter ?redirected=true to trigger AuthDialog globally
+		url.searchParams.set("auth_required", "1");
 		return NextResponse.redirect(url);
 	}
 

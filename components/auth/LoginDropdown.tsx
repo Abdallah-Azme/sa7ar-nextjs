@@ -9,7 +9,8 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import AuthDialog from "@/components/dialogs/AuthDialog";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams, usePathname, useRouter } from "next/navigation";
 
 /**
  * LoginDropdown - Client Component
@@ -24,6 +25,20 @@ export default function LoginDropdown({
 }) {
 	const [authMode, setAuthMode] = useState<"login" | "signup">("login");
 	const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
+	const searchParams = useSearchParams();
+	const router = useRouter();
+	const pathname = usePathname();
+
+	useEffect(() => {
+		if (searchParams.get("auth_required") === "1") {
+			setTimeout(() => {
+				setAuthMode("login");
+				setIsAuthDialogOpen(true);
+				// Clean up URL to avoid re-triggering
+				router.replace(pathname, { scroll: false });
+			}, 0);
+		}
+	}, [searchParams, pathname, router]);
 
 	return (
 		<>

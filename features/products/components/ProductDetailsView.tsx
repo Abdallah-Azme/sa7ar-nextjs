@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { PlusIcon, MinusIcon, Trash2, ShoppingBagIcon, StarIcon, ShoppingBasketIcon } from "lucide-react";
+import { PlusIcon, MinusIcon, ShoppingBagIcon, ShoppingBasketIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
 	Carousel,
@@ -15,12 +15,29 @@ import WaterDrop from "@/components/icons/WaterDrop";
 import PriceIcon from "@/components/icons/PriceIcon";
 import CartIcon from "@/components/icons/CartIcon";
 import ArrowIcon from "@/components/icons/ArrowIcon";
+import Autoplay from "embla-carousel-autoplay";
+import SectionHeader from "@/components/shared/SectionHeader";
+import ProductCard from "@/components/shared/cards/ProductCard";
 import { useCart } from "@/contexts/CartContext";
 import { cn } from "@/lib/utils";
 import type { Product } from "@/types";
 
+export interface ProductSize {
+	id: number;
+	size: string;
+	price: number;
+	offer_price: number | null;
+}
+
+export interface ProductDetail extends Product {
+    sizes: ProductSize[];
+    description: string;
+    images: string[];
+    size_id: number;
+}
+
 interface ProductDetailsViewProps {
-	product: any;
+	product: ProductDetail;
 	relatedProducts: Product[];
 }
 
@@ -29,11 +46,11 @@ interface ProductDetailsViewProps {
  * Interactive view for a single product.
  */
 export default function ProductDetailsView({ product, relatedProducts }: ProductDetailsViewProps) {
-	const { cart, cartCount } = useCart();
+	const { addToCart, addToCartPending } = useCart();
 	const [quantity, setQuantity] = useState(1);
     const [selectedSizeId, setSelectedSizeId] = useState<number | null>(product?.size_id || null);
 
-    const activeSize = product?.sizes?.find((s: any) => s.id === selectedSizeId) || product;
+    const activeSize = product?.sizes?.find((s: ProductSize) => s.id === selectedSizeId) || product;
 	const unitPrice = activeSize?.offer_price || activeSize?.price || 0;
 	const totalPrice = unitPrice * quantity;
 
@@ -71,11 +88,11 @@ export default function ProductDetailsView({ product, relatedProducts }: Product
 								<WaterDrop size={16} className="stroke-2 text-accent" />
 								<span>{activeSize?.size}</span>
 							</div>
-                            {product?.is_most_sold && (
+                            {product?.is_most_sold ? (
                                 <span className="rounded-md bg-orange-500 px-2 py-1 text-[10px] font-bold text-white">
-                                    Most Sold
+                                    الأكثر مبيعاً
                                 </span>
-                            )}
+                            ) : null}
 						</div>
 						<div className="flex justify-between gap-2 items-center">
 							<h1 className="text-primary text-2xl lg:text-3xl font-bold">
@@ -93,7 +110,7 @@ export default function ProductDetailsView({ product, relatedProducts }: Product
 					<div className="space-y-4">
 						<label className="text-gray font-bold text-sm inline-block">
 							<CartIcon className="inline me-2" />
-							Description
+							الوصف
 						</label>
 						<p className="font-light text-gray text-sm leading-relaxed">
 							{product?.description}
@@ -103,16 +120,17 @@ export default function ProductDetailsView({ product, relatedProducts }: Product
 					{/* Size Selection */}
 					{product?.sizes?.length > 0 && (
                         <div className="space-y-4">
-                            <p className="text-sm font-bold text-gray">Choose Size</p>
+                            <p className="text-sm font-bold text-gray">اختر الحجم</p>
                             <div className="flex gap-3 w-full">
-                                {product.sizes.map((option: any) => (
+                                {product.sizes.map((option: ProductSize) => (
                                     <Button
                                         key={option.id}
                                         variant={option.id === selectedSizeId ? "default" : "outline"}
-                                        className="rounded-xl flex-1 h-12"
+                                        className={cn("rounded-xl flex-col gap-0 flex-1 font-extrabold h-12 px-6 border-none", option.id !== selectedSizeId && "text-gray")}
                                         onClick={() => setSelectedSizeId(option.id)}
                                     >
                                         {option.size}
+                                        <span className="font-light text-xs">كرتون</span>
                                     </Button>
                                 ))}
                             </div>
@@ -121,6 +139,10 @@ export default function ProductDetailsView({ product, relatedProducts }: Product
 
 					{/* Quantity Selector */}
 					<div className="space-y-4">
+						<label className="text-gray font-bold text-sm inline-block">
+							<CartIcon className="inline me-2" />
+							الكمية
+						</label>
 						<div className="flex items-center justify-between rounded-full py-2 px-5 bg-background-cu gap-3">
 							<Button
 								size="icon"
@@ -149,15 +171,17 @@ export default function ProductDetailsView({ product, relatedProducts }: Product
 							type="button"
 							variant="secondary"
 							className="rounded-full h-14 flex-1 text-lg gap-2"
+							disabled={addToCartPending}
+							onClick={() => addToCart({ product_id: product.id, quantity, size_id: activeSize?.id })}
 						>
-							Add To Cart
+							أضف للسلة
 							<ShoppingBagIcon size={20} />
 						</Button>
 						<Button
 							type="button"
 							className="rounded-full h-14 flex-1 text-lg gap-2 bg-black hover:bg-black/90"
 						>
-							Buy Now
+							اشتري الآن
 							<ArrowIcon className="rtl:rotate-180" />
 						</Button>
 					</div>
@@ -167,19 +191,27 @@ export default function ProductDetailsView({ product, relatedProducts }: Product
 			{/* Related Products */}
 			{relatedProducts.length > 0 && (
 				<section className="container space-y-6 pb-20">
-					<div className="flex items-center gap-2 mb-10">
-						<ShoppingBasketIcon size={30} className="text-accent" />
-						<h2 className="text-xl sm:text-2xl lg:text-3xl font-bold">Similar Products</h2>
-					</div>
-					<div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
-						{relatedProducts.map((p) => (
-                            <div key={p.id} className="scale-90">
-                                {/* Simplified logic, reuse ProductCard later */}
-                                <ImageFallback src={p.image} alt={p.name} className="h-40 object-contain mx-auto" />
-                                <p className="text-center font-bold mt-2">{p.name}</p>
-                            </div>
-						))}
-					</div>
+					<SectionHeader
+						label="منتجاتنا"
+						title="منتجات مشابهة"
+						labelIcon={<ShoppingBagIcon size={15} />}
+						titleIcon={<ShoppingBasketIcon size={30} />}
+					/>
+					<Carousel
+						plugins={[Autoplay({ delay: 2500 })]}
+						opts={{ align: "start", loop: true }}
+					>
+						<CarouselContent className="py-2">
+							{relatedProducts.map((related) => (
+								<CarouselItem
+									key={related.id}
+									className="basis-full min-[460px]:basis-1/2 sm:basis-1/3 lg:basis-1/4 xl:basis-1/6"
+								>
+									<ProductCard item={related} />
+								</CarouselItem>
+							))}
+						</CarouselContent>
+					</Carousel>
 				</section>
 			)}
 		</div>

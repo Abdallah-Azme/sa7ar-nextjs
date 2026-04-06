@@ -1,4 +1,5 @@
 import { getAboutPageData } from "@/features/about/queries";
+import { getGlobalSettings } from "@/features/settings/queries";
 import OurStory from "@/features/about/components/OurStory";
 import AboutSection from "@/features/about/components/AboutSection";
 import Header from "@/components/shared/header/Header";
@@ -6,6 +7,8 @@ import Banner from "@/components/shared/Banner";
 import AboutCard from "@/components/shared/cards/AboutCard";
 import HelpCard from "@/components/shared/cards/HelpCard";
 import Footer from "@/components/shared/footer/Footer";
+import Mobile from "@/features/home/components/Mobile";
+import ContactUsSection from "@/components/shared/ContactUsSection";
 import { BadgeCheck, Leaf, Truck } from "lucide-react";
 import type { Metadata } from "next";
 
@@ -19,7 +22,10 @@ export const metadata: Metadata = {
  * Dynamically fetches company info, vision and mission statements on the server.
  */
 export default async function AboutPage() {
-  const data = await getAboutPageData();
+  const [data, settings] = await Promise.all([
+    getAboutPageData(),
+    getGlobalSettings(),
+  ]);
 
   const aboutUs = data?.about_us;
   const features = data?.about_us_values_cards || [];
@@ -60,7 +66,7 @@ export default async function AboutPage() {
         {vision && (
             <AboutSection 
                 side="end"
-                label="Our Vision"
+                label="رؤيتنا"
                 title={vision.title}
                 description={vision.description?.replace(/<[^>]*>/g, "")}
                 imageUrl={vision.icon || "/images/placeholder/our-story.webp"}
@@ -71,7 +77,7 @@ export default async function AboutPage() {
         {mission && (
             <AboutSection 
                 side="start"
-                label="Our Mission"
+                label="مهمتنا"
                 title={mission.title}
                 description={mission.description?.replace(/<[^>]*>/g, "")}
                 imageUrl={mission.icon || "/images/placeholder/our-story.webp"}
@@ -91,6 +97,19 @@ export default async function AboutPage() {
             ))}
         </div>
 
+      </div>
+
+      {/* 5. Mobile App CTA — matches React About page */}
+      <div className="container py-10">
+        <Mobile
+          appleStoreLink={settings?.apple_store_link}
+          googlePlayLink={settings?.google_play_link}
+        />
+      </div>
+
+      {/* 6. Contact Us CTA — matches React About page */}
+      <div className="container py-10">
+        <ContactUsSection />
       </div>
 
       <HelpCard className="py-20 bg-gray-50/50" />

@@ -1,11 +1,12 @@
-import { getBestSellingProducts, getBrandProducts, getBrandSizes } from "@/features/products/queries";
+import { getBestSellingProducts, getBrandProducts, getBrandSizes, getBestSellingAccessories } from "@/features/products/queries";
 import ProductsCarouselSection, { ProductFilterOption } from "@/features/products/components/ProductsCarouselSection";
 import Banner from "@/components/shared/Banner";
+import BestSellingAccessories from "@/features/home/components/BestSellingAccessories";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Our Products | منتجاتنا",
-  description: "Browse the full collection of Sohar Water products, including Bard and Rathath brands.",
+  title: "المنتجات | منتجاتنا",
+  description: "تصفح التشكيلة الكاملة من مياه صحار، بما في ذلك العلامات التجارية برد ورذاذ.",
 };
 
 /**
@@ -14,17 +15,18 @@ export const metadata: Metadata = {
  */
 export default async function ProductsPage() {
   // 1. Parallel data fetching for all sections
-  const [bestSellers, bardSizes, rathathSizes, bardProducts, rathathProducts] = await Promise.all([
+  const [bestSellers, bardSizes, rathathSizes, bardProducts, rathathProducts, accessories] = await Promise.all([
     getBestSellingProducts(),
     getBrandSizes("bard"),
     getBrandSizes("rathath"),
     getBrandProducts("bard"),
     getBrandProducts("rathath"),
+    getBestSellingAccessories(),
   ]);
 
   // Helper to build filter options from sizes
   const buildFilters = (sizes: { size: string }[]): ProductFilterOption[] => {
-    const filters: ProductFilterOption[] = [{ value: "all", label: "All Sizes" }];
+    const filters: ProductFilterOption[] = [{ value: "all", label: "الكل" }];
     const seen = new Set();
     sizes.forEach(s => {
         if (!seen.has(s.size)) {
@@ -40,8 +42,8 @@ export default async function ProductsPage() {
       
       {/* 1. Header Banner */}
       <Banner 
-        title="Refresh Your Life" 
-        desc="Choose from our wide range of premium water products." 
+        title="منتجاتنا" 
+        desc="اختر من تشكيلتنا الواسعة من منتجات المياه الممتازة." 
         bannerUrl="/images/products-hero.webp"
       />
 
@@ -50,33 +52,36 @@ export default async function ProductsPage() {
         {/* 2. Best Sellers */}
         {bestSellers.length > 0 && (
             <ProductsCarouselSection
-                label="Best Sellers"
-                title="Our Most Popular"
+                label="منتجاتنا"
+                title="الأكثر مبيعاً"
                 filters={[]}
                 products={bestSellers}
-                showMoreTo="/products?section=most-sold"
+                showMoreTo="/products-list?section=most-sold"
             />
         )}
 
         {/* 3. Bard Brand Section */}
         <ProductsCarouselSection
-          label="Our Brands"
-          title="Bard Products"
+          label="منتجاتنا"
+          title="منتجات برد"
           filters={buildFilters(bardSizes)}
           products={bardProducts}
-          showMoreTo="/products?brand=bard"
+          showMoreTo="/products-list?section=bard"
         />
 
         {/* 4. Rathath Brand Section */}
         <ProductsCarouselSection
-          label="Our Brands"
-          title="Rathath Products"
+          label="منتجاتنا"
+          title="منتجات رذاذ"
           filters={buildFilters(rathathSizes)}
           products={rathathProducts}
-          showMoreTo="/products?brand=rathath"
+          showMoreTo="/products-list?section=rathath"
         />
 
       </div>
+
+      {/* 5. Best Selling Accessories */}
+      <BestSellingAccessories accessories={accessories} />
     </main>
   );
 }
