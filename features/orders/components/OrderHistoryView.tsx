@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "@/i18n/routing";
 import { OrderStatus, type Order } from "../types";
 import OrderCard from "./OrderCard";
 import EmptyCard from "@/components/shared/EmptyCard";
@@ -13,7 +14,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import apiClient from "@/lib/apiClient";
 import { useCart } from "@/contexts/CartContext";
 import { toast } from "sonner";
-import { useRouter as useNav } from "next/navigation";
+
 
 interface OrderHistoryViewProps {
 	orders: Order[];
@@ -37,7 +38,7 @@ const statusTabs = [
 export default function OrderHistoryView({ orders, totalPages = 1 }: OrderHistoryViewProps) {
 	const searchParams = useSearchParams();
 	const router = useRouter();
-	const nav = useNav();
+
 	const { cart, refreshCart } = useCart();
 
 	const [reorderDialogId, setReorderDialogId] = useState<number | null>(null);
@@ -108,7 +109,7 @@ export default function OrderHistoryView({ orders, totalPages = 1 }: OrderHistor
 			await refreshCart();
 			toast.success("تمت إعادة الطلب بنجاح");
 			setReorderDialogId(null);
-			nav.push("/checkout");
+			router.push("/checkout");
 		} catch (err: unknown) {
 			const error = err as { message?: string };
 			toast.error(error?.message || "حدث خطأ أثناء إعادة الطلب");

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/routing";
 import { SearchIcon, StarIcon, Loader2Icon, AlertTriangleIcon, UserRoundIcon } from "lucide-react";
 import { toast } from "sonner";
 import AppInput from "@/components/forms/AppInput";
