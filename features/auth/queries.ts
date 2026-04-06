@@ -12,7 +12,7 @@ export async function getServerAuth() {
 
 	if (!token) return null;
 
-	const API_BASE = process.env.VITE_API_URI || "https://saharapi.subcodeco.com/api";
+	const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "https://saharapi.subcodeco.com/api";
 
 	try {
         // We call the API directly from server side for best performance

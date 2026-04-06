@@ -15,9 +15,9 @@ export default async function apiClient<T = unknown>({
 	
 	// Server-side: Direct API call
     // Client-side: Proxy through /api/proxy to avoid CORS
-	const API_BASE = isServer 
-        ? (process.env.VITE_API_URI || "https://saharapi.subcodeco.com/api")
-        : "/api/proxy";
+	const API_BASE = isServer
+		? (process.env.NEXT_PUBLIC_API_URL ?? "https://saharapi.subcodeco.com/api")
+		: "/api/proxy";
         
 	const URI = isServer ? `${API_BASE}${route}` : `${API_BASE}?route=${encodeURIComponent(route)}`;
 

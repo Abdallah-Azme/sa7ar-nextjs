@@ -4,6 +4,8 @@ import { NextRequest, NextResponse } from "next/server";
  * Proxy API Route
  * Resolves CORS issues for client-side fetching by forwarding requests from server.
  */
+const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "https://saharapi.subcodeco.com/api";
+
 export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
   const route = searchParams.get("route");
@@ -12,7 +14,6 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ message: "Route parameter is missing" }, { status: 400 });
   }
 
-  const API_BASE = process.env.VITE_API_URI || "https://saharapi.subcodeco.com/api";
   const url = `${API_BASE}${route}`;
 
   try {
@@ -38,7 +39,6 @@ export async function POST(req: NextRequest) {
     const route = searchParams.get("route");
     if (!route) return NextResponse.json({ message: "Route missing" }, { status: 400 });
 
-    const API_BASE = process.env.VITE_API_URI || "https://saharapi.subcodeco.com/api";
     const body = await req.json();
 
     const res = await fetch(`${API_BASE}${route}`, {
