@@ -7,8 +7,8 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Business Partnerships | Sohar Water",
-  description: "Join the Sohar Water network. Register your organization for business partnerships and bulk delivery services.",
+  title: "الشراكات التجارية | سحر",
+  description: "انضم إلى شبكة سحر. سجّل مؤسستك للحصول على خدمات توصيل المياه بالجملة.",
 };
 
 /**
@@ -31,7 +31,7 @@ export default async function BusinessPartnershipsPage() {
             <nav className="flex items-center gap-3 text-sm font-bold text-white/70">
                 <Link href="/" className="hover:text-white transition-colors flex items-center gap-2">
                     <ArrowRightIcon className="rtl:rotate-180" size={16} />
-                    Back to Home
+                    العودة إلى الرئيسية
                 </Link>
             </nav>
 
@@ -40,10 +40,10 @@ export default async function BusinessPartnershipsPage() {
                     <BuildingIcon size={32} />
                 </div>
                 <h1 className="text-4xl md:text-6xl font-extrabold text-white leading-tight">
-                    Business Partnerships
+                    الشراكات التجارية
                 </h1>
                 <p className="text-lg text-white/80 font-medium">
-                    Partner with Sohar Water to secure pure, reliable, and consistent water delivery for your organization and employees.
+                    تشارك مع سحر لتأمين مياه نقية وموثوقة لموظفيك ومنظمتك.
                 </p>
             </div>
         </div>

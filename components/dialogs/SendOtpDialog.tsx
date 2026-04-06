@@ -2,6 +2,7 @@
 
 import { useForm } from "react-hook-form";
 import { XIcon } from "lucide-react";
+import { toast } from "sonner";
 import AppMobileInput from "@/components/forms/AppMobileInput";
 import { Button } from "@/components/ui/button";
 import {
@@ -36,20 +37,18 @@ export default function SendOtpDialog({
 	const onSubmit = async (data: { mobile: string }) => {
 		const mobile = data.mobile || "";
 		if (!mobile.trim()) {
-			alert("Phone number is required");
+			toast.error("يرجى إدخال رقم الهاتف");
 			return;
 		}
 
         try {
-            // Mocking API for Send OTP. To hook up to Server Action later.
-            console.log("Sending OTP to:", mobile);
-		    
-            // Simulate success
+            // OTP sending is handled by the auth flow upstream (VerifyOtpDialog)
             onOpenChange(false);
             onOtpSent?.({ otp: "0000", mobile });
             reset();
-        } catch (err) {
-            console.error("Failed to send OTP", err);
+        } catch (err: unknown) {
+            const error = err as { message?: string };
+            toast.error(error?.message || "حدث خطأ أثناء إرسال رمز OTP");
         }
 	};
 
@@ -62,7 +61,7 @@ export default function SendOtpDialog({
 				<DialogHeader className="mb-6">
 					<div className="flex items-center justify-between">
 						<DialogTitle className="text-start text-2xl font-bold text-primary">
-							Forgot Password?
+							نسيت كلمة المرور؟
 						</DialogTitle>
 						<DialogClose asChild>
 							<button className="transition-all duration-500 cursor-pointer hover:rotate-90 text-gray-400 hover:text-destructive">
@@ -71,7 +70,7 @@ export default function SendOtpDialog({
 						</DialogClose>
 					</div>
 					<DialogDescription className="text-sm text-gray-500 mt-2 text-start font-medium">
-						Enter your registered phone number, and we'll send you an OTP to reset your password.
+					أدخل رقم هاتفك المسجل لدينا، وسنرسل لك رمز لإعادة تعيين كلمة المرور.
 					</DialogDescription>
 				</DialogHeader>
 
@@ -95,7 +94,7 @@ export default function SendOtpDialog({
 						type="submit"
 						className="h-14 w-full rounded-full bg-primary text-white text-base font-bold hover:bg-accent hover:scale-[1.02] shadow-lg transition-all"
 					>
-						Send OTP
+					إرسال رمز OTP
 					</Button>
 				</form>
 			</DialogContent>

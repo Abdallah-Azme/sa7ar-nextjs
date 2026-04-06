@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+
 import {
 	Dialog,
 	DialogContent,
@@ -31,18 +33,19 @@ export default function OrderDetailsView({ order, mapSrc }: { order: OrderDetail
                 method: "POST",
                 tokenRequire: true,
             });
-            alert("Order cancelled successfully");
-            router.push("/account/orders?tab=cancelled");
+            toast.success("تم إلغاء الطلب بنجاح");
+            router.push("/account/orders");
             router.refresh();
-        } catch (err: any) {
-            alert(err.message || "Failed to cancel order");
+        } catch (err: unknown) {
+            const error = err as { message?: string };
+            toast.error(error?.message || "حدث خطأ أثناء إلغاء الطلب");
             setIsCancelling(false);
         }
 	};
 
 	return (
 		<div className="space-y-6 animate-in fade-in zoom-in duration-500">
-			<h2 className="text-gray-700 font-extrabold text-lg">Order Details</h2>
+			<h2 className="text-gray-700 font-extrabold text-lg">تفاصيل الطلب</h2>
 
 			<div className="relative space-y-10 group">
 				<iframe
@@ -86,12 +89,12 @@ export default function OrderDetailsView({ order, mapSrc }: { order: OrderDetail
 
 						<div className="flex flex-col gap-6 w-full">
 							<div>
-								<span className="font-bold text-xs text-gray-400 uppercase tracking-wider">Status</span>
-								<p className="font-extrabold text-sm text-secondary mt-1">{order.delivery_status || "In Progress"}</p>
+								<span className="font-bold text-xs text-gray-400 uppercase tracking-wider">حالة الطلب</span>
+								<p className="font-extrabold text-sm text-secondary mt-1">{order.delivery_status || "جارٍ التنفيذ"}</p>
 							</div>
 
 							<div>
-								<span className="font-bold text-xs text-gray-400 uppercase tracking-wider">Items in Order</span>
+								<span className="font-bold text-xs text-gray-400 uppercase tracking-wider">منتجات الطلب</span>
 								<p className="font-bold text-sm text-gray-800 mt-1 line-clamp-2 leading-relaxed">
                                     {productsNames}
                                 </p>
@@ -106,7 +109,7 @@ export default function OrderDetailsView({ order, mapSrc }: { order: OrderDetail
                                     variant="destructive"
                                     className="w-full mt-8 h-12 rounded-full bg-destructive/10 text-destructive hover:bg-destructive/20 font-bold transition-all"
                                 >
-                                    Cancel Order
+                                    إلغاء الطلب
                                     <AlertCircle className="size-5 ms-2" />
                                 </Button>
                             </DialogTrigger>
@@ -116,10 +119,10 @@ export default function OrderDetailsView({ order, mapSrc }: { order: OrderDetail
                                         <AlertCircle className="size-10" />
                                     </div>
                                     <DialogTitle className="text-2xl font-extrabold text-primary text-center">
-                                        Cancel <span className="text-destructive">Order</span>?
+                                        إلغاء <span className="text-destructive">الطلب</span>؟
                                     </DialogTitle>
                                     <DialogDescription className="text-sm font-medium text-gray-500 text-center mt-2 leading-relaxed">
-                                        Are you absolutely sure you want to cancel this order? This action is irreversible.
+                                        هل أنت متأكد تماماً من إلغاء هذا الطلب؟ هذا الإجراء لا يمكن التراجع عنه.
                                     </DialogDescription>
                                 </DialogHeader>
                                 <div className="flex flex-col gap-3 mt-6">
@@ -129,11 +132,11 @@ export default function OrderDetailsView({ order, mapSrc }: { order: OrderDetail
                                         disabled={isCancelling}
                                         onClick={handleCancel}
                                     >
-                                        {isCancelling ? "Cancelling..." : "Yes, Cancel Order"}
+                                        {isCancelling ? "جارٍ الإلغاء..." : "نعم، إلغاء الطلب"}
                                     </Button>
                                     <DialogClose asChild>
                                         <Button variant="ghost" className="h-12 rounded-full font-bold text-gray-500 bg-gray-50 hover:bg-gray-100">
-                                            Keep my order
+                                            الاحتفاظ بطلبي
                                         </Button>
                                     </DialogClose>
                                 </div>

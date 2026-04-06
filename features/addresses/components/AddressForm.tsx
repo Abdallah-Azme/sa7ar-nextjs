@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { SearchIcon, StarIcon, Loader2Icon, AlertTriangleIcon, MapPinIcon, UserRoundIcon } from "lucide-react";
+import { SearchIcon, StarIcon, Loader2Icon, AlertTriangleIcon, UserRoundIcon } from "lucide-react";
+import { toast } from "sonner";
 import AppInput from "@/components/forms/AppInput";
 import AppMobileInput from "@/components/forms/AppMobileInput";
 import { Button } from "@/components/ui/button";
@@ -19,7 +20,19 @@ import apiClient from "@/lib/apiClient";
 const DEFAULT_LAT = 23.5859;
 const DEFAULT_LON = 58.4059; // Muscat
 
-export default function AddressForm({ addressId, initialData }: { addressId?: string, initialData?: any }) {
+interface AddressInitialData {
+	lat?: string | number;
+	long?: string | number;
+	location?: string;
+	home_address?: string;
+	building_number?: string;
+	floor_number?: string;
+	description?: string;
+	contact_name?: string;
+	contact_mobile?: string;
+}
+
+export default function AddressForm({ addressId, initialData }: { addressId?: string; initialData?: AddressInitialData }) {
 	const router = useRouter();
 	const isEditMode = Boolean(addressId);
 	
@@ -64,7 +77,7 @@ export default function AddressForm({ addressId, initialData }: { addressId?: st
 			setSearchResults(results);
 			if (results.length === 1) applyLocation(results[0].lat, results[0].lon, results[0].display_name);
 		} catch {
-			alert("Failed to search location");
+			toast.error("تعذّر البحث عن الموقع");
 		}
 	};
 
@@ -76,7 +89,7 @@ export default function AddressForm({ addressId, initialData }: { addressId?: st
 
 	const handleGeoLocation = () => {
 		if (!navigator.geolocation) {
-			alert("Geolocation is not supported by your browser");
+			toast.error("المتصفح لا يدعم خاصية تحديد الموقع");
 			return;
 		}
 
@@ -95,7 +108,7 @@ export default function AddressForm({ addressId, initialData }: { addressId?: st
 				}
 			},
 			() => {
-				alert("Failed to fetch current location");
+				toast.error("تعذّر تحديد موقعك الحالي");
 				setIsLocating(false);
 			}
 		);
@@ -104,7 +117,7 @@ export default function AddressForm({ addressId, initialData }: { addressId?: st
 	const onSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		if (!formValues.home_address.trim()) {
-			alert("Home Address is required.");
+			toast.error("حقل العنوان مطلوب");
 			return;
 		}
 
@@ -128,12 +141,13 @@ export default function AddressForm({ addressId, initialData }: { addressId?: st
                 body: JSON.stringify(payload)
             });
 
-			alert("Address saved successfully");
+			toast.success("تم حفظ العنوان بنجاح");
 			setDialogOpen(false);
 			router.push("/account/addresses");
             router.refresh();
-		} catch (err: any) {
-			alert(err.message || "Failed to save address");
+		} catch (err: unknown) {
+			const error = err as { message?: string };
+			toast.error(error?.message || "حدث خطأ أثناء حفظ العنوان");
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -173,7 +187,7 @@ export default function AddressForm({ addressId, initialData }: { addressId?: st
 						disabled={isLocating}
 					>
 						{isLocating ? <Loader2Icon className="animate-spin size-5" /> : <StarIcon className="size-5" />}
-						Use Current Location
+						استخدام موقعي الحالي
 					</Button>
 				</div>
 
@@ -195,7 +209,7 @@ export default function AddressForm({ addressId, initialData }: { addressId?: st
 							<AlertTriangleIcon size={20} />
 						</div>
 						<p className="text-xs font-bold text-gray-700 leading-relaxed uppercase tracking-wide">
-							Please ensure the pin accurately points to your delivery location.
+							تأكد من دقة موقعك على الخريطة قبل تأكيد الموقع.
 						</p>
 					</div>
 
@@ -207,13 +221,13 @@ export default function AddressForm({ addressId, initialData }: { addressId?: st
                     }}>
 						<DialogTrigger asChild>
 							<Button className="h-14 rounded-full bg-white text-primary border-2 border-primary hover:bg-primary/5 font-extrabold shadow-lg shrink-0 px-8 w-full md:w-auto gap-3 text-sm transition-all duration-300">
-								Confirm Location
+								تأكيد الموقع
 							</Button>
 						</DialogTrigger>
 						<DialogContent className="sm:max-w-xl rounded-[40px] p-8 md:p-12 shadow-2xl bg-gray-50 border-none max-h-[90vh] overflow-y-auto">
                             <DialogHeader>
                                 <DialogTitle className="text-2xl font-extrabold text-primary">
-                                    {isEditMode ? "Update Delivery Address" : "Save Delivery Address"}
+                                    {isEditMode ? "تحديث عنوان التوصيل" : "حفظ عنوان التوصيل"}
                                 </DialogTitle>
                             </DialogHeader>
 
@@ -284,7 +298,7 @@ export default function AddressForm({ addressId, initialData }: { addressId?: st
 									disabled={isSubmitting}
 									className="h-14 w-full rounded-full bg-primary hover:bg-accent text-white font-bold shadow-lg transition-transform hover:scale-[1.02] mt-4"
 								>
-									{isSubmitting ? "Saving..." : isEditMode ? "Update Details" : "Save Details"}
+									{isSubmitting ? "جارٍ الحفظ..." : isEditMode ? "تحديث العنوان" : "حفظ العنوان"}
 								</Button>
 							</form>
 						</DialogContent>

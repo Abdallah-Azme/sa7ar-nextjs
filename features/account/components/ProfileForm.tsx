@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { UserRoundIcon, CloudDownloadIcon, MailIcon, Trash2Icon } from "lucide-react";
+import { toast } from "sonner";
 import AppInput from "@/components/forms/AppInput";
 import AppMobileInput from "@/components/forms/AppMobileInput";
 import VerifyOtpDialog from "@/components/dialogs/VerifyOtpDialog";
@@ -81,10 +82,11 @@ export default function ProfileForm() {
                 setMobileVerificationData({ oldMobile, newMobile });
                 setShowVerifyMobileDialog(true);
             } else {
-                alert("Profile updated successfully!");
+                toast.success("تم تحديث الملف الشخصي بنجاح");
             }
-        } catch (err: any) {
-            alert(err.message || "Failed to update profile");
+        } catch (err: unknown) {
+            const error = err as { message?: string };
+            toast.error(error?.message || "حدث خطأ أثناء تحديث الملف الشخصي");
         } finally {
             setIsSubmitting(false);
         }
@@ -95,8 +97,9 @@ export default function ProfileForm() {
         try {
             await apiClient({ route: "/delete-account", method: "POST" });
             await logout();
-        } catch (err: any) {
-            alert(err.message || "Failed to delete account");
+        } catch (err: unknown) {
+            const error = err as { message?: string };
+            toast.error(error?.message || "حدث خطأ أثناء حذف الحساب");
             setIsDeleting(false);
         }
 	};
@@ -160,7 +163,7 @@ export default function ProfileForm() {
 				<div className="bg-white p-8 sm:p-12 rounded-3xl border border-black/5 shadow-sm">
 					<form className="grid sm:grid-cols-2 xl:grid-cols-3 gap-8" onSubmit={handleSubmit(onSubmit)}>
 						<div className="space-y-3">
-							<label className="text-sm font-bold text-gray-700">Full Name</label>
+							<label className="text-sm font-bold text-gray-700">الاسم الكامل</label>
 							<AppInput
 								placeholder="e.g. Abdullah"
 								Icon={<UserRoundIcon className="text-gray-400 size-5" />}
@@ -169,7 +172,7 @@ export default function ProfileForm() {
 						</div>
 
 						<div className="space-y-3">
-							<label className="text-sm font-bold text-gray-700">Email Address</label>
+							<label className="text-sm font-bold text-gray-700">البريد الإلكتروني</label>
 							<AppInput
 								placeholder="e.g. email@domain.com"
 								Icon={<MailIcon className="text-gray-400 size-5" />}
@@ -185,7 +188,7 @@ export default function ProfileForm() {
 							disabled={isSubmitting}
 							className="col-span-full h-14 rounded-full mt-4 bg-primary hover:bg-accent text-white font-bold shadow-md transition-all sm:w-fit px-12"
 						>
-							{isSubmitting ? "Saving..." : "Save Changes"}
+							{isSubmitting ? "جارٍ الحفظ..." : "حفظ التغييرات"}
 						</Button>
 					</form>
 
@@ -194,20 +197,20 @@ export default function ProfileForm() {
 						<Dialog>
                             <DialogTrigger asChild>
                                 <Button type="button" variant="destructive" className="rounded-full font-bold px-8">
-                                    Delete Account
+                                    حذف الحساب
                                 </Button>
                             </DialogTrigger>
                             <DialogContent className="sm:max-w-md rounded-3xl p-8">
                                 <DialogHeader>
-                                    <DialogTitle className="text-start">Are you completely sure?</DialogTitle>
+                                    <DialogTitle className="text-start">هل أنت متأكد تماماً؟</DialogTitle>
                                     <DialogDescription className="text-start mt-2 leading-relaxed">
-                                        This action cannot be undone. This will permanently delete your account and remove your active subscriptions and order history from our servers.
+                                        هذا الإجراء لا يمكن التراجع عنه. سيتم حذف حسابك وجميع بياناتك بشكل دائم.
                                     </DialogDescription>
                                 </DialogHeader>
                                 <div className="grid grid-cols-2 gap-4 mt-6">
-                                    <Button variant="outline" className="h-12 rounded-full font-bold shadow-none">Cancel</Button>
+                                    <Button variant="outline" className="h-12 rounded-full font-bold shadow-none">إلغاء</Button>
                                     <Button variant="destructive" className="h-12 rounded-full font-bold shadow-none" onClick={onDeleteAccount} disabled={isDeleting}>
-                                        {isDeleting ? "Deleting..." : "Confirm Deletion"}
+                                        {isDeleting ? "جارٍ الحذف..." : "تأكيد الحذف"}
                                     </Button>
                                 </div>
                             </DialogContent>

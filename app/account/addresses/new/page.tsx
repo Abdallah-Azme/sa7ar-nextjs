@@ -9,9 +9,9 @@ export default function AddAddressPage() {
   return (
     <div className="space-y-6">
       <header className="flex flex-col gap-2 mb-8">
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-primary">Add New Address</h1>
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-primary">إضافة عنوان جديد</h1>
         <p className="text-gray-500 font-medium leading-relaxed">
-            Pinpoint your exact delivery location on the map to ensure seamless delivery of your orders.
+            حدد موقعك بدقة على الخريطة لضمان توصيل طلباتك بسلاسة.
         </p>
       </header>
 

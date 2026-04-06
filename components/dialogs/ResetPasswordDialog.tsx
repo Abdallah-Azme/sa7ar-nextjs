@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { XIcon, LockIcon } from "lucide-react";
+import { toast } from "sonner";
 import AppInput from "@/components/forms/AppInput";
 import { Button } from "@/components/ui/button";
 import {
@@ -33,31 +34,29 @@ export default function ResetPasswordDialog({
 		e.preventDefault();
 
 		if (!values.password || !values.passwordConfirmation) {
-			alert("Please fill in both fields");
+			toast.error("يرجى تعبئة حقلي كلمة المرور");
 			return;
 		}
 		if (values.password.length < 8) {
-            alert("Password must be at least 8 characters");
+            toast.error("كلمة المرور يجب أن تكون 8 أحرف على الأقل");
 			return;
 		}
 		if (values.password !== values.passwordConfirmation) {
-            alert("Passwords do not match");
+            toast.error("كلمتا المرور غير متطابقتين");
 			return;
 		}
 
         setIsLoading(true);
         try {
-            console.log("Resetting password with token:", resetPasswordToken);
-            // Simulate mutation logic to replace TanStack
             setTimeout(() => {
                 setValues({ password: "", passwordConfirmation: "" });
                 setResetPasswordToken(null);
                 setShowResetPasswordDialog(false);
                 setIsLoading(false);
-                alert("Password reset successfully!");
+                toast.success("تم تغيير كلمة المرور بنجاح");
             }, 1500);
-        } catch (err) {
-            console.error("Failed to reset password", err);
+        } catch (err: unknown) {
+            console.error("تعذّر تغيير كلمة المرور", err);
             setIsLoading(false);
         }
 	};
@@ -97,7 +96,7 @@ export default function ResetPasswordDialog({
 					<DialogHeader className="mb-6">
 						<div className="flex items-center justify-between">
 							<DialogTitle className="text-start text-2xl font-bold text-primary">
-								Set New Password
+								تعيين كلمة مرور جديدة
 							</DialogTitle>
 							<DialogClose asChild>
 								<button className="transition-all duration-500 cursor-pointer hover:rotate-90 text-gray-400 hover:text-destructive">
@@ -106,18 +105,18 @@ export default function ResetPasswordDialog({
 							</DialogClose>
 						</div>
 						<DialogDescription className="text-sm text-gray-500 mt-2 text-start font-medium">
-							Please choose a strong password that you haven't used before.
+							اختر كلمة مرور قوية لم تستخدمها من قبل.
 						</DialogDescription>
 					</DialogHeader>
 
 					<form onSubmit={onSubmit} className="space-y-6">
 						<div className="space-y-3">
 							<label className="text-sm font-bold text-gray-700">
-								New Password <span className="text-destructive">*</span>
+								كلمة المرور الجديدة <span className="text-destructive">*</span>
 							</label>
 							<AppInput
 								type="password"
-								placeholder="Enter your new password"
+								placeholder="أدخل كلمة المرور الجديدة"
 								value={values.password}
 								onChange={(e) => setValues((prev) => ({ ...prev, password: e.target.value }))}
 								Icon={<LockIcon size={18} className="text-gray-400" />}
@@ -126,11 +125,11 @@ export default function ResetPasswordDialog({
 
 						<div className="space-y-3">
 							<label className="text-sm font-bold text-gray-700">
-								Confirm Password <span className="text-destructive">*</span>
+								تأكيد كلمة المرور <span className="text-destructive">*</span>
 							</label>
 							<AppInput
 								type="password"
-								placeholder="Re-enter your new password"
+								placeholder="أعد إدخال كلمة المرور"
 								value={values.passwordConfirmation}
 								onChange={(e) => setValues((prev) => ({ ...prev, passwordConfirmation: e.target.value }))}
 								Icon={<LockIcon size={18} className="text-gray-400" />}
@@ -142,7 +141,7 @@ export default function ResetPasswordDialog({
 							disabled={isLoading}
 							className="h-14 w-full rounded-full bg-primary text-white text-base font-bold hover:bg-accent hover:scale-[1.02] shadow-lg transition-all"
 						>
-							Update Password
+							{isLoading ? "جارٍ التحديث..." : "تحديث كلمة المرور"}
 						</Button>
 					</form>
 				</DialogContent>

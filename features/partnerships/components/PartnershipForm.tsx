@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { UserRoundIcon, ChevronDownIcon, BoxIcon, WifiIcon } from "lucide-react";
 import AppInput from "@/components/forms/AppInput";
@@ -34,7 +35,7 @@ export default function PartnershipForm({ types }: { types: InstitutionType[] })
 
 	const onSubmit = async (values: PartnershipFormValues) => {
 		if (!mobile.trim() || !institutionTypeId) {
-			alert("Please fill in all required fields.");
+			toast.error("يرجى تعبئة جميع الحقول المطلوبة");
 			return;
 		}
 
@@ -52,12 +53,13 @@ export default function PartnershipForm({ types }: { types: InstitutionType[] })
                 })
             });
 
-            alert("Partnership request submitted successfully!");
+            toast.success("تم إرسال طلب الشراكة بنجاح. سنتواصل معك قريباً!");
             reset();
             setMobile("");
             setInstitutionTypeId("");
-        } catch (err: any) {
-            alert(err.message || "Failed to submit request.");
+        } catch (err: unknown) {
+            const error = err as { message?: string };
+            toast.error(error?.message || "حدث خطأ أثناء إرسال الطلب");
         } finally {
             setIsSubmitting(false);
         }
@@ -70,13 +72,13 @@ export default function PartnershipForm({ types }: { types: InstitutionType[] })
         >
             <div className="space-y-4">
                 <Label htmlFor="name" className="text-gray-700 font-bold">
-                    Full Name <span className="text-destructive">*</span>
+                    الاسم الكامل <span className="text-destructive">*</span>
                 </Label>
                 <AppInput
                     id="name"
-                    placeholder="Enter full name"
+                    placeholder="مثال: محمد عبدالله"
                     Icon={<UserRoundIcon className="text-secondary" size={18} />}
-                    {...register("name", { required: "Name is required" })}
+                    {...register("name", { required: "هذا الحقل مطلوب" })}
                 />
                 {errors.name && <p className="text-destructive text-xs font-bold ps-2">{errors.name.message}</p>}
             </div>
@@ -87,7 +89,7 @@ export default function PartnershipForm({ types }: { types: InstitutionType[] })
 
             <div className="space-y-4 pt-2">
                 <Label htmlFor="type" className="text-gray-700 font-bold">
-                    Organization Type <span className="text-destructive">*</span>
+                    نوع المؤسسة <span className="text-destructive">*</span>
                 </Label>
                 <Select
                     value={institutionTypeId}
@@ -99,7 +101,7 @@ export default function PartnershipForm({ types }: { types: InstitutionType[] })
                         <div className="flex items-center gap-3 w-full">
                             <BoxIcon className="text-primary" size={18} />
                             <span className="text-black/10">|</span>
-                            <SelectValue placeholder="Choose Organization Type" />
+                            <SelectValue placeholder="اختر نوع المؤسسة" />
                         </div>
                         <div className="bg-gray-200 size-8 sm:size-9 rounded-full flex justify-center items-center ms-auto shrink-0">
                             <ChevronDownIcon className="text-primary size-4" />
@@ -121,29 +123,29 @@ export default function PartnershipForm({ types }: { types: InstitutionType[] })
 
             <div className="space-y-4 pt-2">
                 <Label htmlFor="companyName" className="text-gray-700 font-bold">
-                    Company Name <span className="text-destructive">*</span>
+                    اسم الشركة <span className="text-destructive">*</span>
                 </Label>
                 <AppInput
                     id="companyName"
-                    placeholder="Enter company name"
+                    placeholder="مثال: شركة النجوم"
                     Icon={<WifiIcon className="text-primary" size={18} />}
-                    {...register("company_name", { required: "Company name is required" })}
+                    {...register("company_name", { required: "اسم الشركة مطلوب" })}
                 />
                 {errors.company_name && <p className="text-destructive text-xs font-bold ps-2">{errors.company_name.message}</p>}
             </div>
 
             <div className="space-y-4 pt-2">
                 <Label htmlFor="numberOfEmployees" className="text-gray-700 font-bold">
-                    Number of Employees <span className="text-destructive">*</span>
+                    عدد الموظفين <span className="text-destructive">*</span>
                 </Label>
                 <AppInput
                     id="numberOfEmployees"
                     type="number"
                     min={1}
-                    placeholder="e.g. 50"
+                    placeholder="مثال: 50"
                     {...register("number_of_employees", {
-                        required: "Required",
-                        pattern: { value: /^\d+$/, message: "Numbers only" },
+                        required: "هذا الحقل مطلوب",
+                        pattern: { value: /^\d+$/, message: "أرقام فقط" },
                     })}
                 />
                 {errors.number_of_employees && <p className="text-destructive text-xs font-bold ps-2">{errors.number_of_employees.message}</p>}
@@ -154,7 +156,7 @@ export default function PartnershipForm({ types }: { types: InstitutionType[] })
                 disabled={isSubmitting}
                 className="h-14 w-full rounded-full bg-primary text-white text-base font-bold hover:bg-accent hover:scale-[1.02] shadow-lg transition-all mt-8"
             >
-                {isSubmitting ? "Submitting..." : "Submit Request"}
+                {isSubmitting ? "جارٍ الإرسال..." : "إرسال الطلب"}
             </Button>
         </form>
 	);

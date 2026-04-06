@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { UserRound, XIcon, LockIcon, MailIcon, ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
 import ImageFallback from "@/components/shared/ImageFallback";
@@ -56,8 +57,9 @@ export default function AuthDialog({
                 await login(res.data.token, res.data.user);
                 onOpenChange(false);
             }
-        } catch (err: any) {
-            alert(err.message || "Failed to login");
+        } catch (err: unknown) {
+            const error = err as { message?: string };
+            toast.error(error?.message || "حدث خطأ أثناء تسجيل الدخول");
         } finally {
             setIsSubmitting(false);
         }
@@ -216,8 +218,9 @@ function SignupDialog({
             onOpenChange(false);
             setShowOtpDialog(true);
             reset();
-        } catch (err: any) {
-            alert(err.message || "Failed to register");
+        } catch (err: unknown) {
+            const error = err as { message?: string };
+            toast.error(error?.message || "حدث خطأ أثناء إنشاء الحساب");
         } finally {
             setIsSubmitting(false);
         }
