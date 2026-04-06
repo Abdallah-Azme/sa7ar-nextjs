@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# office / documents (don't commit these)
+*.docx
+*.doc
+*.xlsx
+*.xls
+*.pdf
