@@ -1,0 +1,232 @@
+"use client";
+
+import { cn } from "@/lib/utils";
+import type { HomeResponse } from "../types";
+import {
+	ArrowUpLeftIcon,
+	ChevronLeftIcon,
+	ChevronRightIcon,
+	CircleCheckBigIcon,
+	CircleDotIcon,
+	ShieldCheckIcon,
+	ShoppingBasketIcon,
+	TruckIcon,
+} from "lucide-react";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import AppStore from "@/components/icons/AppStore";
+import GoogleStore from "@/components/icons/GoogleStore";
+import WaterDrop from "@/components/icons/WaterDrop";
+import Whatsapp from "@/components/icons/Whatsapp";
+import ImageFallback from "@/components/shared/ImageFallback";
+import Overlay from "@/components/shared/Overlay";
+import { Button } from "@/components/ui/button";
+import {
+	Carousel,
+	CarouselContent,
+	CarouselItem,
+	type CarouselApi,
+} from "@/components/ui/carousel";
+
+export default function Hero({
+	sliders,
+    appleStoreLink,
+    googlePlayLink,
+    whatsappNumber,
+}: {
+	sliders?: HomeResponse["sliders"];
+    appleStoreLink?: string | null;
+    googlePlayLink?: string | null;
+    whatsappNumber?: string | null;
+}) {
+	const [api, setApi] = useState<CarouselApi>();
+	const [currentSlide, setCurrentSlide] = useState<number>(0);
+	const [slides, setSlides] = useState<number>(0);
+
+	const shoppingSteps = [
+		{
+			title: "توصيل سريع",
+			label: "مباشرة لباب بيتك",
+			Icon: TruckIcon,
+		},
+		{
+			title: "جودة مضمونة",
+			label: "مياه طبيعية 100%",
+			Icon: ShieldCheckIcon,
+		},
+		{
+			title: "الخيار الموثوق",
+			label: "جودة صحار الممتازة",
+			Icon: CircleCheckBigIcon,
+		},
+	];
+
+	useEffect(() => {
+		if (!api) return;
+
+		const onInit = () => {
+			setSlides(api.scrollSnapList().length - 1);
+			setCurrentSlide(api.selectedScrollSnap());
+		};
+
+		api.on("init", onInit);
+		api.on("reInit", onInit);
+		onInit();
+
+		api.on("select", () => {
+			setCurrentSlide(api.selectedScrollSnap());
+		});
+
+		return () => {
+			api.off("init", onInit);
+			api.off("reInit", onInit);
+		};
+	}, [api]);
+
+	if (!sliders || sliders.length === 0) return null;
+
+	return (
+		<section className="grid lg:grid-cols-2 gap-10 container">
+			{/* Label */}
+			<div className="space-y-10">
+				<div className="bg-accent/10 max-w-xs font-bold text-xs text-accent p-2.5 rounded-4xl flex gap-1 justify-between items-center">
+					<CircleDotIcon className="text-white fill-accent" />
+					<span className="text-nowrap">انتعاش نقي</span>
+					<WaterDrop className="text-accent" />
+				</div>
+
+				{/* Titles */}
+				<h1 className="text-xl sm:text-2xl lg:text-5xl font-medium">
+					خليك دايماً منتعش
+				</h1>
+				<h1 className="text-xl sm:text-2xl lg:text-5xl">
+					<span className="text-secondary font-extrabold">
+						مياه صحار
+					</span>{" "}
+					خيارك الأفضل
+				</h1>
+				{/* Desc */}
+				<p className="font-light text-black text-lg/10">
+					مياه طبيعية نقية المستخرجة من قلب صحار. صافية، نقية، ومنعشة لنمط حياتك الصحي.
+				</p>
+				{/* Actions */}
+				<Button
+					asChild
+					className="justify-between items-center w-full rounded-[24px]"
+				>
+					<Link href="/products">
+						<div className="flex items-center gap-2">
+							<ShoppingBasketIcon />
+							<span>تسوق المنتجات</span>
+						</div>
+						<ArrowUpLeftIcon className="ltr:rotate-90 rtl:rotate-0" />
+					</Link>
+				</Button>
+
+				{/* Shopping Steps */}
+				<div className="grid sm:grid-cols-3 divide-x gap-3">
+					{shoppingSteps.map((item, i) => (
+						<div
+							key={i}
+							className="flex items-center gap-2 max-sm:bg-gray/10 max-sm:p-3 max-sm:rounded-lg"
+						>
+							<div className="size-13 bg-secondary/10 rounded-full flex items-center justify-center">
+								<item.Icon size={24} />
+							</div>
+
+							<div className="flex flex-col justify-between gap-2">
+								<span className="font-bold text-sm">{item.title}</span>
+								<span className="text-gray font-light text-xs">
+									{item.label}
+								</span>
+							</div>
+						</div>
+					))}
+				</div>
+			</div>
+
+			{/* Carousel */}
+			<div className="flex flex-col sm:flex-row gap-2">
+				<Carousel
+					setApi={setApi}
+					className="h-full max-h-179.25 flex-1 overflow-hidden rounded-4xl relative"
+				>
+					<CarouselContent className="h-full">
+						{sliders.map((slider) => (
+							<CarouselItem key={slider.id}>
+								<Overlay>
+									<ImageFallback
+										src={slider.image}
+										alt={slider.title}
+										className="h-full w-full object-cover"
+									/>
+								</Overlay>
+							</CarouselItem>
+						))}
+					</CarouselContent>
+					<div className="absolute inset-x-10 items-center flex justify-between bottom-5">
+						<div className="*:size-10 sm:*:size-13 *:rtl:rotate-180 *:rounded-full flex items-center gap-3 *:text-white *:static *:bg-white/35 *:hover:bg-white/30">
+							<Button
+								disabled={currentSlide <= 0}
+								data-slot="btn prev"
+								onClick={() => api?.scrollPrev()}
+							>
+								<ChevronLeftIcon />
+							</Button>
+							<Button
+								disabled={currentSlide >= slides}
+								data-slot="btn next"
+								onClick={() => api?.scrollNext()}
+							>
+								<ChevronRightIcon />
+							</Button>
+						</div>
+						<div className="flex items-center gap-2 sm:gap-4">
+							{api?.scrollSnapList().map((_, i) => (
+								<div
+									key={i}
+									onClick={() => api?.scrollTo(i)}
+									className={cn(
+										"rounded w-8 sm:w-13 h-2 cursor-pointer transition-colors",
+										i === currentSlide ? "bg-white" : "bg-gray/50",
+									)}
+								/>
+							))}
+						</div>
+					</div>
+				</Carousel>
+				<div className="self-start *:size-12 transition-transform *:hover:scale-110 flex sm:flex-col gap-3">
+					<Button
+						asChild
+						className="rounded-full border bg-background-cu hover:bg-background-cu"
+						size={"icon-lg"}
+					>
+						<Link href={appleStoreLink ?? "#"}>
+							<AppStore className="text-black" />
+						</Link>
+					</Button>
+					<Button
+						size={"icon-lg"}
+						asChild
+						className="rounded-full border bg-background-cu hover:bg-background-cu"
+					>
+						<Link href={googlePlayLink ?? "#"}>
+							<GoogleStore />
+						</Link>
+					</Button>
+					<Button
+						size={"icon-lg"}
+						asChild
+						className="rounded-full border text-green-500 border-green-500 bg-green-100 hover:bg-green-100"
+					>
+						<Link
+							href={whatsappNumber ? `https://wa.me/${whatsappNumber}` : "#"}
+						>
+							<Whatsapp />
+						</Link>
+					</Button>
+				</div>
+			</div>
+		</section>
+	);
+}
