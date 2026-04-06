@@ -2,8 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { useRouter, usePathname } from "@/i18n/routing";
+import { useRouter } from "@/i18n/routing";
 import { CheckIcon, PlusIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";

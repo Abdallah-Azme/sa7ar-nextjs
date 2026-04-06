@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense, useMemo } from "react";
 import {
 	Pagination,
 	PaginationContent,
@@ -12,18 +13,14 @@ import {
 import { cn } from "@/lib/utils";
 import { useSearchParams } from "next/navigation";
 import { useRouter, usePathname } from "@/i18n/routing";
-import { useMemo } from "react";
 
 interface AppPaginationProps {
 	totalPages: number;
 	className?: string;
 }
 
-/**
- * AppPagination - Client Component
- * Optimized for Next.js App Router navigation.
- */
-export default function AppPagination({ totalPages, className }: AppPaginationProps) {
+/** Inner component using useSearchParams — must live inside <Suspense> */
+function PaginationInner({ totalPages, className }: AppPaginationProps) {
 	const searchParams = useSearchParams();
 	const router = useRouter();
 	const pathname = usePathname();
@@ -100,3 +97,17 @@ export default function AppPagination({ totalPages, className }: AppPaginationPr
 		</Pagination>
 	);
 }
+
+/**
+ * AppPagination - Client Component
+ * Wraps inner pagination in Suspense (required for useSearchParams in App Router).
+ */
+export default function AppPagination({ totalPages, className }: AppPaginationProps) {
+	if (totalPages <= 1) return null;
+	return (
+		<Suspense fallback={null}>
+			<PaginationInner totalPages={totalPages} className={className} />
+		</Suspense>
+	);
+}
+

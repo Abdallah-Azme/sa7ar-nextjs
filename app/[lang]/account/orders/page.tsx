@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { getOrderHistory } from "@/features/orders/queries";
 import OrderHistoryView from "@/features/orders/components/OrderHistoryView";
 import type { Metadata } from "next";
@@ -17,8 +18,12 @@ export default async function OrdersPage() {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50/30">
       <section className="container py-12 grow">
-        <OrderHistoryView orders={orders || []} />
+        {/* Suspense required: OrderHistoryView uses useSearchParams */}
+        <Suspense fallback={null}>
+          <OrderHistoryView orders={orders || []} />
+        </Suspense>
       </section>
     </div>
   );
 }
+
