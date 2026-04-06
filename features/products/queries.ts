@@ -1,5 +1,11 @@
 import apiClient from "@/lib/apiClient";
 import type { Product } from "@/types";
+import type { ProductDetail } from "@/features/products/components/ProductDetailsView";
+
+export interface ProductDetailsResponse {
+	product: ProductDetail;
+	related_products: Product[];
+}
 
 export interface BrandSize {
 	id: number;
@@ -63,9 +69,9 @@ export async function getBrandProducts(brand: "bard" | "rathath", sizeIds?: numb
 	}
 }
 
-export async function getProductDetails(id: string) {
+export async function getProductDetails(id: string): Promise<ProductDetailsResponse | null> {
 	try {
-		const res = await apiClient<Product>({
+		const res = await apiClient<ProductDetailsResponse>({
 			route: `/products/${id}`,
 			next: { revalidate: 3600 },
 		});

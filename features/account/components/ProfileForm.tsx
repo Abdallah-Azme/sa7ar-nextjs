@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { UserRoundIcon, CloudDownloadIcon, MailIcon, Trash2Icon } from "lucide-react";
 import { toast } from "sonner";
+import ImageFallback from "@/components/shared/ImageFallback";
 import AppInput from "@/components/forms/AppInput";
 import AppMobileInput from "@/components/forms/AppMobileInput";
 import VerifyOtpDialog from "@/components/dialogs/VerifyOtpDialog";
@@ -114,13 +115,12 @@ export default function ProfileForm() {
 				<div className="flex flex-col sm:flex-row gap-6 items-center justify-between bg-white rounded-3xl p-8 border border-black/5 shadow-sm">
 					<div className="flex items-center gap-6">
 						{displayImage ? (
-							<img
+							<ImageFallback
 								src={displayImage}
-								alt="Avatar"
+								alt="صورة الملف الشخصي"
 								width={96}
 								height={96}
 								className={avatarClass}
-                                onError={(e) => { e.currentTarget.src = "/images/logo.svg"; }}
 							/>
 						) : (
 							<label htmlFor="avatar-upload" className={cn(avatarClass, "bg-gray-50 flex items-center justify-center text-accent cursor-pointer hover:bg-gray-100 transition-colors")}>
@@ -129,12 +129,12 @@ export default function ProfileForm() {
 						)}
 						<div className="space-y-2">
 							<h3 className="font-extrabold text-sm text-primary">
-								<label htmlFor="avatar-upload" className="text-accent cursor-pointer hover:underline cursor-pointer">
-									Click to upload
+								<label htmlFor="avatar-upload" className="text-accent cursor-pointer hover:underline">
+									اضغط للرفع
 								</label>{" "}
-								your new avatar
+								صورتك الجديدة
 							</h3>
-							<p className="text-gray-500 text-xs font-medium">SVG, PNG, JPG or GIF (max. 800x400px)</p>
+							<p className="text-gray-500 text-xs font-medium">يدعم SVG وPNG وJPG وGIF (بحد أقصى 800x400 بكسل)</p>
 						</div>
 						<input
 							type="file"

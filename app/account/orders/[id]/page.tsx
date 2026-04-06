@@ -25,8 +25,11 @@ export default async function OrderDetailsPage({ params }: { params: Promise<{ i
 		order.address?.city,
 	].filter(Boolean).join(", ");
     
-    // NOTE: In production, substitute API_KEY with a valid Google Maps Embed API key via process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY
-    const mapSrc = `https://www.google.com/maps/embed/v1/place?key=REPLACE_WITH_YOUR_API_KEY&q=${encodeURIComponent(orderMapQuery)}&zoom=11`;
+    // Use Google Maps Embed if API key is configured, otherwise fall back to free OpenStreetMap embed
+    const googleKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY;
+    const mapSrc = googleKey
+        ? `https://www.google.com/maps/embed/v1/place?key=${googleKey}&q=${encodeURIComponent(orderMapQuery)}&zoom=11`
+        : `https://maps.google.com/maps?q=${encodeURIComponent(orderMapQuery)}&z=11&output=embed`;
 
     return (
         <OrderDetailsView order={order} mapSrc={mapSrc} />

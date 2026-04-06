@@ -19,7 +19,7 @@ export default async function Logo() {
 				src={setting.app_logo}
 				width={120}
 				height={100}
-				alt="Sohar Water Logo" // TODO: Use dynamic translation
+				alt="شعار سحر"
 				className="max-w-30 shrink-0 max-h-25"
 			/>
 		</Link>

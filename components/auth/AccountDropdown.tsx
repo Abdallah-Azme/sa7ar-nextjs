@@ -18,6 +18,7 @@ import {
 import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
 import { useState } from "react";
+import ImageFallback from "@/components/shared/ImageFallback";
 
 /**
  * Account links matching React's `accountLinks` from data/index.ts
@@ -66,9 +67,11 @@ export default function AccountDropdown({
 						>
 							<span>
 								{user?.image ? (
-									<img
+									<ImageFallback
 										src={user.image}
-										alt={user?.name}
+										alt={user?.name || "صورة المستخدم"}
+										width={40}
+										height={40}
 										className="rounded-full"
 									/>
 								) : (

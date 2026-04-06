@@ -13,16 +13,15 @@ interface Props {
  */
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
-  const data: any = await getProductDetails(id);
-  const product = data?.product;
+  const data = await getProductDetails(id);
 
-  if (!product) return { title: "Product Not Found" };
+  if (!data?.product) return { title: "المنتج غير موجود | سحر" };
 
   return {
-    title: `${product.name} | Sohar Water`,
-    description: product.description,
+    title: `${data.product.name} | سحر`,
+    description: data.product.description,
     openGraph: {
-      images: [product.image || product.images?.[0]],
+      images: [data.product.image || data.product.images?.[0]],
     },
   };
 }
@@ -33,7 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  */
 export default async function ProductPage({ params }: Props) {
   const { id } = await params;
-  const data: any = await getProductDetails(id);
+  const data = await getProductDetails(id);
 
   if (!data?.product) {
     notFound();
@@ -41,11 +40,11 @@ export default async function ProductPage({ params }: Props) {
 
   return (
     <main className="flex flex-col min-h-screen">
-      
+
       {/* Interactive Single Product View */}
-      <ProductDetailsView 
-        product={data.product} 
-        relatedProducts={data.related_products || []} 
+      <ProductDetailsView
+        product={data.product}
+        relatedProducts={data.related_products || []}
       />
 
       {/* Support Call to Action */}

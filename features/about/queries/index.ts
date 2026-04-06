@@ -15,8 +15,16 @@ export interface AboutPageData {
 		title: string;
 		description: string;
 	}>;
-	our_vision: any;
-	our_sms: any;
+	our_vision: {
+		title?: string;
+		description?: string;
+		icon?: string | null;
+	} | null;
+	our_sms: {
+		title?: string;
+		description?: string;
+		icon?: string | null;
+	} | null;
 }
 
 /**

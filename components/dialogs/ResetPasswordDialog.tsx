@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { XIcon, LockIcon } from "lucide-react";
 import { toast } from "sonner";
+import apiClient from "@/lib/apiClient";
 import AppInput from "@/components/forms/AppInput";
 import { Button } from "@/components/ui/button";
 import {
@@ -38,25 +39,38 @@ export default function ResetPasswordDialog({
 			return;
 		}
 		if (values.password.length < 8) {
-            toast.error("كلمة المرور يجب أن تكون 8 أحرف على الأقل");
+			toast.error("كلمة المرور يجب أن تكون 8 أحرف على الأقل");
 			return;
 		}
 		if (values.password !== values.passwordConfirmation) {
-            toast.error("كلمتا المرور غير متطابقتين");
+			toast.error("كلمتا المرور غير متطابقتين");
+			return;
+		}
+
+		if (!resetPasswordToken) {
+			toast.error("رمز إعادة التعيين غير صالح. يرجى إعادة المحاولة");
 			return;
 		}
 
         setIsLoading(true);
         try {
-            setTimeout(() => {
-                setValues({ password: "", passwordConfirmation: "" });
-                setResetPasswordToken(null);
-                setShowResetPasswordDialog(false);
-                setIsLoading(false);
-                toast.success("تم تغيير كلمة المرور بنجاح");
-            }, 1500);
+            const res = await apiClient({
+                route: "/reset-password",
+                method: "POST",
+                body: JSON.stringify({
+                    temp_token: resetPasswordToken,
+                    password: values.password,
+                    password_confirmation: values.passwordConfirmation,
+                }),
+            });
+            toast.success(res.message || "تم تغيير كلمة المرور بنجاح");
+            setValues({ password: "", passwordConfirmation: "" });
+            setResetPasswordToken(null);
+            setShowResetPasswordDialog(false);
         } catch (err: unknown) {
-            console.error("تعذّر تغيير كلمة المرور", err);
+            const error = err as { message?: string };
+            toast.error(error?.message || "حدث خطأ أثناء إعادة تعيين كلمة المرور");
+        } finally {
             setIsLoading(false);
         }
 	};

@@ -3,7 +3,7 @@ import Header from "@/components/shared/header/Header";
 import Footer from "@/components/shared/footer/Footer";
 import ImageFallback from "@/components/shared/ImageFallback";
 import Link from "next/link";
-import { SparklesIcon, CalendarIcon, Share2Icon } from "lucide-react";
+import { CalendarIcon, Share2Icon } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: BlogDetailsProps): Promise<Me
   if (!blog) return { title: "Article Not Found" };
 
   return {
-    title: `${blog.title} | Sohar Water Blog`,
+    title: `${blog.title} | سحر`,
     description: blog.subtitle || blog.description.substring(0, 160).replace(/<[^>]*>/g, ""),
   };
 }
@@ -37,7 +37,7 @@ export default async function BlogDetailsPage({ params }: BlogDetailsProps) {
     notFound();
   }
 
-  const formattedDate = new Date(blog.created_at).toLocaleDateString("en-US", {
+  const formattedDate = new Date(blog.created_at).toLocaleDateString("ar-SA", {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -50,9 +50,9 @@ export default async function BlogDetailsPage({ params }: BlogDetailsProps) {
       {/* 1. Breadcrumbs */}
       <nav className="container pt-10 pb-6">
         <div className="flex items-center gap-3 text-xs font-bold uppercase tracking-widest text-gray-400">
-          <Link href="/" className="hover:text-accent transition-colors">Home</Link>
+          <Link href="/" className="hover:text-accent transition-colors">الرئيسية</Link>
           <span className="size-1 bg-gray-300 rounded-full" />
-          <Link href="/blogs" className="hover:text-accent transition-colors">Health Blog</Link>
+          <Link href="/blogs" className="hover:text-accent transition-colors">المدونة الصحية</Link>
           <span className="size-1 bg-gray-300 rounded-full" />
           <span className="text-primary truncate max-w-[200px] sm:max-w-none">{blog.title}</span>
         </div>
@@ -70,7 +70,7 @@ export default async function BlogDetailsPage({ params }: BlogDetailsProps) {
                 {blog.title}
             </h1>
             <p className="text-xl text-gray-500 font-medium max-w-2xl mx-auto italic">
-                "{blog.subtitle}"
+                &ldquo;{blog.subtitle}&rdquo;
             </p>
         </header>
 
@@ -90,7 +90,7 @@ export default async function BlogDetailsPage({ params }: BlogDetailsProps) {
             {/* Aesthetic Side Decoration */}
             <div className="hidden lg:block absolute -left-24 top-0 space-y-6 sticky top-32">
                 <div className="flex flex-col gap-4">
-                    <p className="text-[10px] font-bold text-gray-400 uppercase vertical-text transform -rotate-180 mb-4 whitespace-nowrap">Share Story</p>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase vertical-text transform -rotate-180 mb-4 whitespace-nowrap">شارك المقال</p>
                     <button className="size-10 rounded-full bg-primary text-white flex items-center justify-center hover:bg-accent transition-colors shadow-sm font-bold">F</button>
                     <button className="size-10 rounded-full bg-primary text-white flex items-center justify-center hover:bg-accent transition-colors shadow-sm font-bold">X</button>
                     <button className="size-10 rounded-full bg-primary text-white flex items-center justify-center hover:bg-accent transition-colors shadow-sm font-bold">I</button>
@@ -113,14 +113,14 @@ export default async function BlogDetailsPage({ params }: BlogDetailsProps) {
         <footer className="pt-16 border-t border-gray/5 text-center flex flex-col items-center gap-6">
             <div className="flex items-center gap-3 text-sm font-extrabold text-secondary uppercase tracking-widest">
                 <Share2Icon size={18} className="text-accent" />
-                Spread the Wealth of Health
+                أوسع محتوى الصحة
             </div>
             <div className="flex gap-4">
                 <button className="px-8 h-12 bg-primary text-white rounded-full flex items-center gap-3 font-bold hover:bg-accent transition-all shadow-md">
-                    Share
+                    مشاركة
                 </button>
                 <button className="px-8 h-12 bg-primary text-white rounded-full flex items-center gap-3 font-bold hover:bg-accent transition-all shadow-md">
-                    Tweet
+                    تغريد
                 </button>
             </div>
         </footer>

@@ -60,9 +60,9 @@ export default async function apiClient<T = unknown>({
 	});
 
 	if (!res.ok) {
-        let errorData: any;
+        let errorData: { message?: string; code?: number; errors?: Record<string, string[]> };
         try {
-            errorData = await res.json();
+            errorData = await res.json() as { message?: string; code?: number; errors?: Record<string, string[]> };
         } catch {
             errorData = { message: "Internal Server Error" };
         }

@@ -40,11 +40,11 @@ export default function AuthDialog({
 	const { login, isLoading: isAuthLoading } = useAuth();
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-	const { register, handleSubmit, formState: { errors }, reset } = useForm({
+	const { register, handleSubmit, formState: { errors }, reset } = useForm<{ mobile: string; password: string }>({
 		defaultValues: { mobile: "", password: "" },
 	});
 
-	const onSubmit = async (data: any) => {
+	const onSubmit = async (data: { mobile: string; password: string }) => {
         setIsSubmitting(true);
         try {
             const res = await apiClient<{ token: string; user: Profile }>({
@@ -154,12 +154,12 @@ export default function AuthDialog({
 					</form>
 
 					<div className="text-center text-sm font-medium text-gray-500 mt-6 pb-2">
-						Don't have an account?
+						ليس لديك حساب؟;
 						<button
 							className="text-accent ms-2 font-extrabold hover:underline"
 							onClick={() => setActiveDialogOverride("signup")}
 						>
-							Create New
+							إنشاء حساب جديد
 						</button>
 					</div>
 				</DialogContent>
@@ -200,7 +200,7 @@ function SignupDialog({
 	});
     const password = watch("password");
 
-	const onSubmit = async (data: any) => {
+	const onSubmit = async (data: { name: string; email: string; mobile: string; password: string; confirmPassword: string; consent: boolean }) => {
         setIsSubmitting(true);
         try {
             const payload = {
@@ -309,10 +309,10 @@ function SignupDialog({
 									{...register("consent", { required: "You must accept our terms" })}
 								/>
 								<p className="text-gray-500 font-medium leading-relaxed">
-									By clicking "Submit", I acknowledge that I have read and agree to the 
-                                    <Link href="/terms" className="font-extrabold text-primary hover:underline mx-1">Terms & Conditions</Link> 
-                                    and 
-                                    <Link href="/privacy" className="font-extrabold text-primary hover:underline ms-1">Privacy Policy</Link>.
+									بالضغط على &quot;إرسال&quot;، أقرّ بأنني قرأتووافقت على
+                                    <Link href="/terms" className="font-extrabold text-primary hover:underline mx-1">شروط الاستخدام</Link>
+                                    و
+                                    <Link href="/privacy" className="font-extrabold text-primary hover:underline ms-1">سياسة الخصوصية</Link>.
 								</p>
 							</div>
 							{errors.consent && <p className="text-destructive text-xs font-bold ps-2 mt-1">{String(errors.consent.message)}</p>}
