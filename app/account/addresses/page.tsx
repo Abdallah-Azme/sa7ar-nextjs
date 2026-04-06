@@ -16,7 +16,7 @@ export default async function AddressesPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50/20">
-      <section className="container py-12 flex-grow">
+      <section className="container py-12 grow">
         <AddressListView addresses={addresses || []} />
       </section>
     </div>

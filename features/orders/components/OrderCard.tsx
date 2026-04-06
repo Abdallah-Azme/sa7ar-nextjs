@@ -66,13 +66,13 @@ export default function OrderCard({
                                 disabled={isReordering}
                                 onClick={() => onReorder?.(order.id)}
                             >
-                                {isReordering ? "Processing..." : "Reorder"}
+                            {isReordering ? "جارٍ المعالجة..." : "إعادة الطلب"}
                             </Button>
                         ) : (
                             <Button size="sm" variant="outline" className="rounded-full px-6" asChild>
                                 <Link href={`/account/orders/${order.id}`}>
                                     <TargetIcon size={14} className="me-2" />
-                                    Track Order
+                                    تتبع الطلب
                                 </Link>
                             </Button>
                         )}

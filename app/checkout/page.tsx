@@ -117,7 +117,7 @@ export default function CheckoutPage() {
 		<main className="flex flex-col min-h-screen">
 			<Header />
 
-			<section className="container space-y-10 py-10 flex-grow">
+			<section className="container space-y-10 py-10 grow">
 				{/* Back Button / Title */}
 				<Button
 					variant="link"

@@ -95,7 +95,7 @@ export default function BlogsView({ blogs, totalPages }: BlogsViewProps) {
 							className="mt-4 flex max-w-95 items-center overflow-hidden rounded-xs bg-white py-1 pe-1"
 						>
 							<div className="relative flex-1">
-								<MailIcon className="absolute start-3 top-1/2 size-4 -translate-y-1/2 text-primary/80" />
+								<MailIcon className="absolute inset-s-3 top-1/2 size-4 -translate-y-1/2 text-primary/80" />
 								<input
 									type="email"
 									value={newsletterEmail}

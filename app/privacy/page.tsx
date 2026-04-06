@@ -20,7 +20,7 @@ export default async function PrivacyPage() {
     <main className="flex flex-col min-h-screen bg-white">
       <Header />
 
-      <section className="container py-16 space-y-12 flex-grow">
+      <section className="container py-16 space-y-12 grow">
         <header className="flex flex-col items-center gap-6 text-center max-w-2xl mx-auto">
             <div className="size-16 rounded-3xl bg-accent/10 text-accent flex items-center justify-center shadow-sm">
                 <ShieldCheckIcon size={32} />

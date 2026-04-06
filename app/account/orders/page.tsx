@@ -16,7 +16,7 @@ export default async function OrdersPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50/30">
-      <section className="container py-12 flex-grow">
+      <section className="container py-12 grow">
         <OrderHistoryView orders={orders || []} />
       </section>
     </div>

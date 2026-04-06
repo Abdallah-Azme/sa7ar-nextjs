@@ -1,15 +1,21 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect } from "react";
-import type { CartItem, ResponseResult } from "@/types";
+import type { CartItem } from "@/types";
 import apiClient from "@/lib/apiClient";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 
+interface AppliedCoupon {
+	code: string;
+	discount_type?: string;
+	discount_value?: number;
+}
+
 interface CartResponse {
 	address_id: number | null;
 	items: CartItem[];
-	applied_coupon: any | null;
+	applied_coupon: AppliedCoupon | null;
 	subtotal: number;
 	tax: number;
 	coupon_discount: number;
@@ -101,7 +107,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 			});
 			toast.success(res.message);
 			await refreshCart();
-		} catch (error: any) {
+		} catch (err: unknown) {
+			const error = err as { message?: string };
 			toast.error(error?.message || "حدث خطأ ما");
 		} finally {
 			setAddToCartPending(false);
@@ -145,7 +152,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 			});
 			toast.success(res.message);
 			await refreshCart();
-		} catch (error: any) {
+		} catch (err: unknown) {
+			const error = err as { message?: string };
 			toast.error(error?.message || "حدث خطأ ما");
 		} finally {
 			setUpdateCartPending(false);
@@ -169,7 +177,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 			toast.success(data.message);
 			await refreshCart();
 			return true;
-		} catch (error: any) {
+		} catch (err: unknown) {
+			const error = err as { message?: string };
 			toast.error(error?.message || "حدث خطأ ما");
 			return false;
 		} finally {
