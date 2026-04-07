@@ -13,7 +13,7 @@ import { useCart } from "@/contexts/CartContext";
 import { cn } from "@/lib/utils";
 import type { Product } from "@/types";
 import { MinusIcon, PlusIcon, ShoppingBasketIcon, StarIcon, Trash2 } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import ImageFallback from "../ImageFallback";
 
 const buttonClass =

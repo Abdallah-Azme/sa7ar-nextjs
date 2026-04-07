@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Eye } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 
 /**
  * ShowMore - RSC (Server Component)

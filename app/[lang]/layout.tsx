@@ -4,13 +4,14 @@ import "./globals.css";
 import { getServerAuth } from "@/features/auth/queries";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CartProvider } from "@/contexts/CartContext";
+import { routing } from "@/i18n/config";
 import Header from "@/components/shared/header/Header";
 import Navbar from "@/components/shared/header/Navbar";
 import Footer from "@/components/shared/footer/Footer";
 
 // next-intl
 import { NextIntlClientProvider } from "next-intl";
-import { getMessages } from "next-intl/server";
+import { getMessages, setRequestLocale } from "next-intl/server";
 
 const inter = Inter({
   subsets: ["latin", "latin-ext"],
@@ -35,7 +36,10 @@ export default async function RootLayout({
   const initialUser = await getServerAuth();
 
   // 2. Extract locale and messages
-  const { lang } = await params;
+  const paramsResolved = await params;
+  const lang = paramsResolved?.lang ?? routing.defaultLocale;
+  
+  setRequestLocale(lang);
   const messages = await getMessages();
 
   return (
@@ -45,7 +49,11 @@ export default async function RootLayout({
       className={`${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans">
-        <NextIntlClientProvider messages={messages} locale={lang}>
+        <NextIntlClientProvider 
+          messages={messages} 
+          locale={lang}
+          timeZone="Asia/Muscat"
+        >
           {/* State Providers */}
           <AuthProvider initialUser={initialUser}>
             <CartProvider>

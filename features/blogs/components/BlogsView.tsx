@@ -6,7 +6,6 @@ import ImageFallback from "@/components/shared/ImageFallback";
 import WaterDrop from "@/components/icons/WaterDrop";
 import AppPagination from "@/components/shared/AppPagination";
 import HelpCard from "@/components/shared/cards/HelpCard";
-import Footer from "@/components/shared/footer/Footer";
 import { SparklesIcon, MailIcon, Loader2, ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
 import apiClient from "@/lib/apiClient";
@@ -205,7 +204,6 @@ export default function BlogsView({ blogs, totalPages }: BlogsViewProps) {
 			</section>
 
 			<HelpCard />
-			<Footer />
 		</div>
 	);
 }

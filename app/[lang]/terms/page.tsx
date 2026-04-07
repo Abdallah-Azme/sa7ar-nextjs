@@ -1,6 +1,4 @@
 import { getCmsPage } from "@/features/about/queries/cms";
-import Header from "@/components/shared/header/Header";
-import CopyrightSection from "@/components/shared/CopyrightSection";
 import { FileTextIcon } from "lucide-react";
 import type { Metadata } from "next";
 
@@ -18,8 +16,7 @@ export default async function TermsPage() {
 
   return (
     <main className="flex flex-col min-h-screen bg-white">
-      <Header />
-
+      
       <section className="container py-16 space-y-12 grow">
         <header className="flex flex-col items-center gap-6 text-center max-w-2xl mx-auto">
             <div className="size-16 rounded-3xl bg-secondary/10 text-secondary flex items-center justify-center shadow-sm">
@@ -48,8 +45,6 @@ export default async function TermsPage() {
             )}
         </article>
       </section>
-
-      <CopyrightSection />
     </main>
   );
 }

@@ -3,6 +3,7 @@ import ProductsCarouselSection, { ProductFilterOption } from "@/features/product
 import Banner from "@/components/shared/Banner";
 import BestSellingAccessories from "@/features/home/components/BestSellingAccessories";
 import type { Metadata } from "next";
+import { setRequestLocale } from "next-intl/server";
 
 export const metadata: Metadata = {
   title: "المنتجات | منتجاتنا",
@@ -13,7 +14,10 @@ export const metadata: Metadata = {
  * Products Page - RSC (Server Component)
  * Secondary most visited page showing brand-specific collections with size filtering.
  */
-export default async function ProductsPage() {
+export default async function ProductsPage({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang } = await params;
+  setRequestLocale(lang);
+
   // 1. Parallel data fetching for all sections
   const [bestSellers, bardSizes, rathathSizes, bardProducts, rathathProducts, accessories] = await Promise.all([
     getBestSellingProducts(),

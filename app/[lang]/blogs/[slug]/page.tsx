@@ -1,23 +1,24 @@
 import { getBlogBySlug } from "@/features/blogs/queries";
-import Header from "@/components/shared/header/Header";
-import Footer from "@/components/shared/footer/Footer";
 import ImageFallback from "@/components/shared/ImageFallback";
 import Link from "next/link";
 import { CalendarIcon, Share2Icon } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { setRequestLocale } from "next-intl/server";
 
 interface BlogDetailsProps {
-  params: {
+  params: Promise<{
+    lang: string;
     slug: string;
-  };
+  }>;
 }
 
 /**
  * Generate Dynamic SEO Metadata for individual blog posts.
  */
 export async function generateMetadata({ params }: BlogDetailsProps): Promise<Metadata> {
-  const blog = await getBlogBySlug(params.slug);
+  const { slug } = await params;
+  const blog = await getBlogBySlug(slug);
   if (!blog) return { title: "Article Not Found" };
 
   return {
@@ -31,7 +32,9 @@ export async function generateMetadata({ params }: BlogDetailsProps): Promise<Me
  * Dynamically fetches and renders a single health/education article with full SEO support.
  */
 export default async function BlogDetailsPage({ params }: BlogDetailsProps) {
-  const blog = await getBlogBySlug(params.slug);
+  const { lang, slug } = await params;
+  setRequestLocale(lang);
+  const blog = await getBlogBySlug(slug);
 
   if (!blog) {
     notFound();
@@ -44,9 +47,7 @@ export default async function BlogDetailsPage({ params }: BlogDetailsProps) {
   });
 
   return (
-    <main className="flex flex-col min-h-screen bg-white">
-      <Header />
-
+    <article className="flex flex-col min-h-screen bg-white">
       {/* 1. Breadcrumbs */}
       <nav className="container pt-10 pb-6">
         <div className="flex items-center gap-3 text-xs font-bold uppercase tracking-widest text-gray-400">
@@ -58,8 +59,7 @@ export default async function BlogDetailsPage({ params }: BlogDetailsProps) {
         </div>
       </nav>
 
-      <article className="container max-w-4xl pb-24 space-y-12">
-        
+      <div className="container max-w-4xl pb-24 space-y-12">
         {/* 2. Header Info */}
         <header className="text-center space-y-6">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-secondary/5 text-secondary rounded-full text-xs font-bold uppercase tracking-wider">
@@ -124,9 +124,7 @@ export default async function BlogDetailsPage({ params }: BlogDetailsProps) {
                 </button>
             </div>
         </footer>
-      </article>
-
-      <Footer />
-    </main>
+      </div>
+    </article>
   );
 }

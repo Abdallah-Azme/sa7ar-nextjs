@@ -3,7 +3,7 @@ import AppStore from "@/components/icons/AppStore";
 import GoogleStore from "@/components/icons/GoogleStore";
 import { Button } from "@/components/ui/button";
 import Logo from "../Logo";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 
 /**
  * Footer - RSC (Server Component)
@@ -123,7 +123,7 @@ export default async function Footer() {
 							className="flex gap-2 w-full items-center rounded-[24px]"
 							asChild
 						>
-							<Link href={setting.google_play_link ?? "#"}>
+							<a href={setting.google_play_link ?? "#"}>
 								<div>
 									<p className="text-[8px]">تحميل من</p> {/* common.downloadOn */}
 									<b className="text-sm md:text-xs lg:text-sm">
@@ -131,13 +131,13 @@ export default async function Footer() {
 									</b>
 								</div>
 								<GoogleStore />
-							</Link>
+							</a>
 						</Button>
 						<Button
 							asChild
 							className="flex w-full lg:w-46 gap-2 bg-black hover:bg-black/90 items-center rounded-[24px]"
 						>
-							<Link href={setting.apple_store_link ?? "#"}>
+							<a href={setting.apple_store_link ?? "#"}>
 								<div>
 									<p className="text-[8px]">تحميل من</p>
 									<b className="text-sm md:text-xs lg:text-sm">
@@ -145,7 +145,7 @@ export default async function Footer() {
 									</b>
 								</div>
 								<AppStore className="text-white" />
-							</Link>
+							</a>
 						</Button>
 					</div>
 				</div>

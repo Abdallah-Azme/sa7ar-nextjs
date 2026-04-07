@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import ImageFallback from "./ImageFallback";
 import { getGlobalSettings } from "@/features/settings/queries";
 import { Skeleton } from "@/components/ui/skeleton";

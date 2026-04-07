@@ -5,7 +5,7 @@ const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
 const nextConfig: NextConfig = {
   experimental: {
-    mcpServer: true,
+    // mcpServer: true,
   },
 
   images: {

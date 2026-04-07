@@ -1,11 +1,10 @@
-import Header from "@/components/shared/header/Header";
 import Banner from "@/components/shared/Banner";
 import FAQ from "@/features/home/components/FAQ";
 import HelpCard from "@/components/shared/cards/HelpCard";
-import Footer from "@/components/shared/footer/Footer";
 import ContactUsSection from "@/components/shared/ContactUsSection";
 import { getFaqData } from "@/features/home/queries";
 import type { Metadata } from "next";
+import { setRequestLocale } from "next-intl/server";
 
 export const metadata: Metadata = {
   title: "الأسئلة الشائعة | مياه صحار",
@@ -18,15 +17,16 @@ export const metadata: Metadata = {
  *   - Arabic banner title and description
  *   - Correct hero image
  *   - ContactUsSection after FAQ (matches React)
- *   - HelpCard + Footer
+ *   - HelpCard
  */
-export default async function FaqPage() {
+export default async function FaqPage({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang } = await params;
+  setRequestLocale(lang);
   const faqs = await getFaqData();
 
   return (
     <main className="flex flex-col min-h-screen relative overflow-hidden">
-      <Header />
-
+      
       {/* Visual background lights — matches React's .light absolute divs */}
       <div className="absolute top-1/4 -z-1 start-20 size-72 bg-accent/5 rounded-full blur-[100px]" />
       <div className="absolute top-[40%] -z-1 end-20 size-72 bg-secondary/5 rounded-full blur-[100px]" />
@@ -47,7 +47,6 @@ export default async function FaqPage() {
       </div>
 
       <HelpCard />
-      <Footer />
     </main>
   );
 }

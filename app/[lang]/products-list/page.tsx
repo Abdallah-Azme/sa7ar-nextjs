@@ -7,8 +7,10 @@ import HelpCard from "@/components/shared/cards/HelpCard";
 import SearchDialog from "@/components/shared/SearchDialog";
 import { ShoppingBagIcon, ShoppingBasketIcon } from "lucide-react";
 import type { Metadata } from "next";
+import { setRequestLocale } from "next-intl/server";
 
 interface Props {
+  params: Promise<{ lang: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
@@ -49,10 +51,12 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
  * Products List Page - RSC (Server Component)
  * Handles paginated and filtered product lists for different categories.
  */
-export default async function ProductsListPage({ searchParams }: Props) {
-  const params = await searchParams;
-  const section = (params.section as string) || "most-sold";
-  const sizeId = params.size_id as string;
+export default async function ProductsListPage({ params, searchParams }: Props) {
+  const { lang } = await params;
+  setRequestLocale(lang);
+  const searchValues = await searchParams;
+  const section = (searchValues.section as string) || "most-sold";
+  const sizeId = searchValues.size_id as string;
 
   const sizeIds = sizeId ? sizeId.split(",").map(Number) : [];
   const resolvedSection = sectionConfig[section] || sectionConfig["most-sold"];

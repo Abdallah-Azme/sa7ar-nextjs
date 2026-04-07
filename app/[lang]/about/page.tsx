@@ -2,15 +2,14 @@ import { getAboutPageData } from "@/features/about/queries";
 import { getGlobalSettings } from "@/features/settings/queries";
 import OurStory from "@/features/about/components/OurStory";
 import AboutSection from "@/features/about/components/AboutSection";
-import Header from "@/components/shared/header/Header";
 import Banner from "@/components/shared/Banner";
 import AboutCard from "@/components/shared/cards/AboutCard";
 import HelpCard from "@/components/shared/cards/HelpCard";
-import Footer from "@/components/shared/footer/Footer";
 import Mobile from "@/features/home/components/Mobile";
 import ContactUsSection from "@/components/shared/ContactUsSection";
 import { BadgeCheck, Leaf, Truck } from "lucide-react";
 import type { Metadata } from "next";
+import { setRequestLocale } from "next-intl/server";
 
 export const metadata: Metadata = {
   title: "About Us | Sohar Water",
@@ -21,7 +20,10 @@ export const metadata: Metadata = {
  * About Us Page - RSC (Server Component)
  * Dynamically fetches company info, vision and mission statements on the server.
  */
-export default async function AboutPage() {
+export default async function AboutPage({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang } = await params;
+  setRequestLocale(lang);
+
   const [data, settings] = await Promise.all([
     getAboutPageData(),
     getGlobalSettings(),
@@ -42,8 +44,7 @@ export default async function AboutPage() {
   ];
 
   return (
-    <main className="flex flex-col min-h-screen">
-      <Header />
+    <>
       
       <Banner 
         title={aboutUs?.title || "Crafting Pure Refreshment"} 
@@ -113,7 +114,6 @@ export default async function AboutPage() {
       </div>
 
       <HelpCard className="py-20 bg-gray-50/50" />
-      <Footer />
-    </main>
+    </>
   );
 }

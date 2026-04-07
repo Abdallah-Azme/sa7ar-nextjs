@@ -13,7 +13,7 @@ import {
 	TruckIcon,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import AppStore from "@/components/icons/AppStore";
 import GoogleStore from "@/components/icons/GoogleStore";
 import WaterDrop from "@/components/icons/WaterDrop";
@@ -205,30 +205,30 @@ export default function Hero({
 						className="rounded-full border bg-background-cu hover:bg-background-cu"
 						size={"icon-lg"}
 					>
-						<Link href={appleStoreLink ?? "#"} aria-label="Apple Store">
+						<a href={appleStoreLink ?? "#"} aria-label="Apple Store">
 							<AppStore className="text-black" />
-						</Link>
+						</a>
 					</Button>
 					<Button
 						size={"icon-lg"}
 						asChild
 						className="rounded-full border bg-background-cu hover:bg-background-cu"
 					>
-						<Link href={googlePlayLink ?? "#"} aria-label="Google Play Store">
+						<a href={googlePlayLink ?? "#"} aria-label="Google Play Store">
 							<GoogleStore />
-						</Link>
+						</a>
 					</Button>
 					<Button
 						size={"icon-lg"}
 						asChild
 						className="rounded-full border text-green-500 border-green-500 bg-green-100 hover:bg-green-100"
 					>
-						<Link
+						<a
 							href={whatsappNumber ? `https://wa.me/${whatsappNumber}` : "#"}
 							aria-label="WhatsApp"
 						>
 							<Whatsapp />
-						</Link>
+						</a>
 					</Button>
 				</div>
 			</div>

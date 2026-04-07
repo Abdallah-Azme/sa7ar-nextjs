@@ -1,5 +1,3 @@
-import Header from "@/components/shared/header/Header";
-import CopyrightSection from "@/components/shared/CopyrightSection";
 import PartnershipForm from "@/features/partnerships/components/PartnershipForm";
 import { getInstitutionTypes } from "@/features/partnerships/queries";
 import { ArrowRightIcon, BuildingIcon } from "lucide-react";
@@ -20,7 +18,7 @@ export default async function BusinessPartnershipsPage() {
 
   return (
     <main className="flex flex-col min-h-screen bg-gray-50">
-      <Header />
+      
 
       {/* 1. Header & Breadcrumbs */}
       <section className="bg-primary pt-12 pb-32 rounded-b-[60px] md:rounded-b-[100px] shadow-lg relative overflow-hidden">
@@ -55,8 +53,6 @@ export default async function BusinessPartnershipsPage() {
             <PartnershipForm types={institutionTypes} />
           </div>
       </section>
-
-      <CopyrightSection className="mt-auto" />
     </main>
   );
 }

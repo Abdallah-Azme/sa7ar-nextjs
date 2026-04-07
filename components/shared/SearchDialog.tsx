@@ -1,7 +1,7 @@
 "use client";
 
 import { useDeferredValue, useState, type KeyboardEvent } from "react";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import AppInput from "@/components/forms/AppInput";
 import ImageFallback from "@/components/shared/ImageFallback";
 import PriceIcon from "@/components/icons/PriceIcon";

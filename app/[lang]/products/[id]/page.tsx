@@ -3,9 +3,10 @@ import ProductDetailsView from "@/features/products/components/ProductDetailsVie
 import HelpCard from "@/components/shared/cards/HelpCard";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { setRequestLocale } from "next-intl/server";
 
 interface Props {
-  params: Promise<{ id: string }>;
+  params: Promise<{ lang: string; id: string }>;
 }
 
 /**
@@ -31,7 +32,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  * Dynamically fetches product data on the server for best SEO and LCP.
  */
 export default async function ProductPage({ params }: Props) {
-  const { id } = await params;
+  const { lang, id } = await params;
+  setRequestLocale(lang);
   const data = await getProductDetails(id);
 
   if (!data?.product) {

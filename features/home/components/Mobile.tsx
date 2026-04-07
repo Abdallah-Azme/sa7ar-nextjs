@@ -4,7 +4,6 @@ import GoogleStore from "@/components/icons/GoogleStore";
 import ImageFallback from "@/components/shared/ImageFallback";
 import SectionLabel from "@/components/shared/SectionLabel";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 
 /**
  * Mobile - RSC (Server Component)
@@ -43,22 +42,22 @@ export default function Mobile({
 						className="flex gap-2 w-40 sm:w-46 items-center h-14 rounded-[24px]"
 						asChild
 					>
-						<Link href={googlePlayLink ?? "#"} aria-label="Download from Google Play">
+						<a href={googlePlayLink ?? "#"} aria-label="Download from Google Play">
 							<div className="text-start">
 								<p className="text-[8px]">حمّل من</p>
 								<b className="text-sm md:text-xs lg:text-sm">Google Play</b>
 							</div>
 							<GoogleStore className="size-6" />
-						</Link>
+						</a>
 					</Button>
 					<Button asChild className="flex w-40 sm:w-46 gap-2 bg-black hover:bg-black/90 items-center h-14 rounded-[24px]">
-						<Link href={appleStoreLink ?? "#"} aria-label="Download from App Store">
+						<a href={appleStoreLink ?? "#"} aria-label="Download from App Store">
 							<div className="text-start">
 								<p className="text-[8px]">حمّل من</p>
 								<b className="text-sm md:text-xs lg:text-sm">App Store</b>
 							</div>
 							<AppStore className="text-white size-6" />
-						</Link>
+						</a>
 					</Button>
 				</div>
 			</div>

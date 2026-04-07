@@ -1,6 +1,6 @@
 import { ArrowUpLeft, Building2Icon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 
 /**
  * RequestPartnership - RSC (Server Component)

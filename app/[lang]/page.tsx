@@ -12,31 +12,44 @@ import BestSellingAccessories from "@/features/home/components/BestSellingAccess
 import type { Metadata } from "next";
 
 import { generateSeoMetadata } from "@/lib/seo";
+import { setRequestLocale } from "next-intl/server";
 
 /**
  * Dynamic SEO metadata for Home Page
  */
-export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
-  const { lang } = await params;
-  const setting = await getGlobalSettings();
-  const title = setting?.meta_title || "Sohar Water | مياه صحار";
-  const description = setting?.meta_description || "Premium natural water from Sohar, Oman.";
+// export async function generateMetadata({
+//   params,
+// }: {
+//   params: Promise<{ lang: string }>;
+// }): Promise<Metadata> {
+//   const { lang } = await params;
+//   const setting = await getGlobalSettings();
+//   const title = setting?.meta_title || "Sohar Water | مياه صحار";
+//   const description =
+//     setting?.meta_description || "Premium natural water from Sohar, Oman.";
 
-  return generateSeoMetadata({
-    title,
-    description,
-    lang,
-    path: "/",
-    image: setting?.app_logo,
-  });
-}
+//   return generateSeoMetadata({
+//     title,
+//     description,
+//     lang,
+//     path: "/",
+//     image: setting?.app_logo,
+//   });
+// }
 
 /**
  * Home Page - RSC (Server Component)
  * The main landing entry point of sa7ar-next.
  * Implements full Server-First architecture with pre-fetched data.
  */
-export default async function HomePage() {
+export default async function HomePage({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}) {
+  const { lang } = await params;
+  setRequestLocale(lang);
+
   // 1. Parallel data fetching for best performance
   const [homeData, settings, faqs, accessories] = await Promise.all([
     getHomeData(),
@@ -47,10 +60,9 @@ export default async function HomePage() {
 
   return (
     <div className="flex flex-col gap-20 pb-20">
-      
       {/* 1. Hero Section */}
-      <Hero 
-        sliders={homeData?.sliders} 
+      <Hero
+        sliders={homeData?.sliders}
         appleStoreLink={settings?.apple_store_link}
         googlePlayLink={settings?.google_play_link}
         whatsappNumber={settings?.whatsapp}
@@ -60,9 +72,9 @@ export default async function HomePage() {
       <About />
 
       {/* 3. Products Section (Most Sold) */}
-      <Products 
-        title="الأكثر مبيعاً" 
-        mostSold={homeData?.most_sold_products} 
+      <Products
+        title="الأكثر مبيعاً"
+        mostSold={homeData?.most_sold_products}
         queryKey="most-sold"
       />
 
@@ -73,7 +85,7 @@ export default async function HomePage() {
       <Partners />
 
       {/* 6. Mobile App CTA */}
-      <Mobile 
+      <Mobile
         appleStoreLink={settings?.apple_store_link}
         googlePlayLink={settings?.google_play_link}
       />
@@ -83,7 +95,6 @@ export default async function HomePage() {
 
       {/* 8. FAQ Section */}
       <FAQ faqs={faqs} isSection={true} />
-
     </div>
   );
 }
