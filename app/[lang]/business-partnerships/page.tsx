@@ -1,28 +1,30 @@
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { makeQueryClient } from "@/lib/queryClient";
+import { fetchInstitutionTypes, partnershipKeys } from "@/features/partnerships/services/partnershipService";
 import PartnershipForm from "@/features/partnerships/components/PartnershipForm";
-import { getInstitutionTypes } from "@/features/partnerships/queries";
 import { ArrowRightIcon, BuildingIcon } from "lucide-react";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { setRequestLocale } from "next-intl/server";
 
 export const metadata: Metadata = {
   title: "الشراكات التجارية | سحر",
   description: "انضم إلى شبكة سحر. سجّل مؤسستك للحصول على خدمات توصيل المياه بالجملة.",
 };
 
-/**
- * Business Partnerships Page - RSC (Server Component)
- * Dynamically fetches institution types from the server and injects them into the interactive client form.
- */
-export default async function BusinessPartnershipsPage() {
-  const institutionTypes = await getInstitutionTypes();
+export default async function BusinessPartnershipsPage({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang } = await params;
+  setRequestLocale(lang);
+
+  const queryClient = makeQueryClient();
+  const types = await queryClient.fetchQuery({
+    queryKey: partnershipKeys.types(),
+    queryFn: fetchInstitutionTypes,
+  });
 
   return (
     <main className="flex flex-col min-h-screen bg-gray-50">
-      
-
-      {/* 1. Header & Breadcrumbs */}
       <section className="bg-primary pt-12 pb-32 rounded-b-[60px] md:rounded-b-[100px] shadow-lg relative overflow-hidden">
-        {/* Decorative Grid Pattern */}
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] bg-size-[24px_24px]"></div>
         
         <div className="container relative z-10 space-y-12">
@@ -47,10 +49,11 @@ export default async function BusinessPartnershipsPage() {
         </div>
       </section>
 
-      {/* 2. Interactive Form Section */}
       <section className="container relative z-20 -mt-20 pb-24">
           <div className="max-w-3xl mx-auto">
-            <PartnershipForm types={institutionTypes} />
+            <HydrationBoundary state={dehydrate(queryClient)}>
+              <PartnershipForm types={types} />
+            </HydrationBoundary>
           </div>
       </section>
     </main>

@@ -1,54 +1,12 @@
-import apiClient from "@/lib/apiClient";
-
-export interface BlogItem {
-	id: number;
-	title: string;
-	subtitle: string;
-	slug: string;
-	image: string;
-	description: string;
-	is_active: boolean;
-	viewers_count: number;
-	created_at: string;
-}
-
-export interface BlogsResponse {
-	blogs: BlogItem[];
-	pagination: {
-		current_page: number;
-		per_page: number;
-		total: number;
-		total_pages: number;
-	};
-}
+export * from "../services/blogService";
+import { fetchBlogs, fetchBlogBySlug } from "../services/blogService";
 
 /**
- * Fetch Blogs List
- * Server-side cached query for the list of health and education articles.
+ * Deprecated: Use fetchBlogs or the useBlogs hook instead.
  */
-export async function getBlogs(page: string | number = 1) {
-	try {
-        const res = await apiClient<BlogsResponse>({
-            route: `/blogs?page=${page}`,
-        });
-        return res.data;
-    } catch (error) {
-        console.error("Error fetching blogs:", error);
-        return null;
-    }
-}
+export const getBlogs = fetchBlogs;
 
 /**
- * Fetch Single Blog Post by Slug
+ * Deprecated: Use fetchBlogBySlug or the useBlogs hook instead.
  */
-export async function getBlogBySlug(slug: string) {
-    try {
-        const res = await apiClient<BlogItem>({
-            route: `/blogs/${slug}`,
-        });
-        return res.data;
-    } catch (error) {
-        console.error(`Error fetching blog ${slug}:`, error);
-        return null;
-    }
-}
+export const getBlogBySlug = fetchBlogBySlug;

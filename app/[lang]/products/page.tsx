@@ -1,7 +1,13 @@
-import { getBestSellingProducts, getBrandProducts, getBrandSizes, getBestSellingAccessories } from "@/features/products/queries";
-import ProductsCarouselSection, { ProductFilterOption } from "@/features/products/components/ProductsCarouselSection";
-import Banner from "@/components/shared/Banner";
-import BestSellingAccessories from "@/features/home/components/BestSellingAccessories";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { makeQueryClient } from "@/lib/queryClient";
+import { 
+    fetchBestSellingProducts, 
+    fetchBrandSizes, 
+    fetchBrandProducts, 
+    fetchBestSellingAccessories, 
+    productKeys 
+} from "@/features/products/services/productService";
+import ProductsPageContent from "@/features/products/components/ProductsPageContent";
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 
@@ -18,74 +24,21 @@ export default async function ProductsPage({ params }: { params: Promise<{ lang:
   const { lang } = await params;
   setRequestLocale(lang);
 
-  // 1. Parallel data fetching for all sections
-  const [bestSellers, bardSizes, rathathSizes, bardProducts, rathathProducts, accessories] = await Promise.all([
-    getBestSellingProducts(),
-    getBrandSizes("bard"),
-    getBrandSizes("rathath"),
-    getBrandProducts("bard"),
-    getBrandProducts("rathath"),
-    getBestSellingAccessories(),
+  const queryClient = makeQueryClient();
+
+  // 1. Parallel data prefetching for all sections
+  await Promise.all([
+    queryClient.prefetchQuery({ queryKey: productKeys.bestSelling(),         queryFn: fetchBestSellingProducts }),
+    queryClient.prefetchQuery({ queryKey: productKeys.brandSizes("bard"),    queryFn: () => fetchBrandSizes("bard") }),
+    queryClient.prefetchQuery({ queryKey: productKeys.brandSizes("rathath"), queryFn: () => fetchBrandSizes("rathath") }),
+    queryClient.prefetchQuery({ queryKey: productKeys.brand("bard"),         queryFn: () => fetchBrandProducts("bard") }),
+    queryClient.prefetchQuery({ queryKey: productKeys.brand("rathath"),      queryFn: () => fetchBrandProducts("rathath") }),
+    queryClient.prefetchQuery({ queryKey: productKeys.accessories(),         queryFn: fetchBestSellingAccessories }),
   ]);
 
-  // Helper to build filter options from sizes
-  const buildFilters = (sizes: { size: string }[]): ProductFilterOption[] => {
-    const filters: ProductFilterOption[] = [{ value: "all", label: "الكل" }];
-    const seen = new Set();
-    sizes.forEach(s => {
-        if (!seen.has(s.size)) {
-            seen.add(s.size);
-            filters.push({ value: s.size, label: s.size });
-        }
-    });
-    return filters;
-  };
-
   return (
-    <main className="space-y-16 pb-20">
-      
-      {/* 1. Header Banner */}
-      <Banner 
-        title="منتجاتنا" 
-        desc="اختر من تشكيلتنا الواسعة من منتجات المياه الممتازة." 
-        bannerUrl="/images/products-hero.webp"
-      />
-
-      <div className="container space-y-20">
-        
-        {/* 2. Best Sellers */}
-        {bestSellers.length > 0 && (
-            <ProductsCarouselSection
-                label="منتجاتنا"
-                title="الأكثر مبيعاً"
-                filters={[]}
-                products={bestSellers}
-                showMoreTo="/products-list?section=most-sold"
-            />
-        )}
-
-        {/* 3. Bard Brand Section */}
-        <ProductsCarouselSection
-          label="منتجاتنا"
-          title="منتجات برد"
-          filters={buildFilters(bardSizes)}
-          products={bardProducts}
-          showMoreTo="/products-list?section=bard"
-        />
-
-        {/* 4. Rathath Brand Section */}
-        <ProductsCarouselSection
-          label="منتجاتنا"
-          title="منتجات رذاذ"
-          filters={buildFilters(rathathSizes)}
-          products={rathathProducts}
-          showMoreTo="/products-list?section=rathath"
-        />
-
-      </div>
-
-      {/* 5. Best Selling Accessories */}
-      <BestSellingAccessories accessories={accessories} />
-    </main>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <ProductsPageContent />
+    </HydrationBoundary>
   );
 }

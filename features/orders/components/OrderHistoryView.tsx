@@ -75,7 +75,7 @@ export default function OrderHistoryView({ orders, totalPages = 1 }: OrderHistor
 				items: { product_id: number; quantity: number }[];
 				address: { id: number } | null;
 			};
-			const orderRes = await apiClient<OrderDetailsResponse>({
+			const orderRes = await apiClient<{ data: OrderDetailsResponse }>({
 				route: `/orders/${orderId}`,
 				tokenRequire: true,
 			});

@@ -1,5 +1,7 @@
-import { getBlogs } from "@/features/blogs/queries";
-import BlogsView from "@/features/blogs/components/BlogsView";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { makeQueryClient } from "@/lib/queryClient";
+import { fetchBlogs, blogKeys } from "@/features/blogs/services/blogService";
+import BlogsPageContent from "@/features/blogs/components/BlogsPageContent";
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 
@@ -19,11 +21,17 @@ export default async function BlogsPage({
   setRequestLocale(lang);
   
   const { page: pageStr } = await searchParams;
-  const page = pageStr || "1";
-  const data = await getBlogs(page);
+  const page = parseInt(pageStr || "1", 10);
 
-  const blogs = data?.blogs || [];
-  const totalPages = data?.pagination?.total_pages || 1;
+  const queryClient = makeQueryClient();
+  await queryClient.prefetchQuery({
+    queryKey: blogKeys.list(page),
+    queryFn: () => fetchBlogs(page),
+  });
 
-  return <BlogsView blogs={blogs} totalPages={totalPages} />;
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <BlogsPageContent initialPage={page} />
+    </HydrationBoundary>
+  );
 }

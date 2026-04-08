@@ -10,7 +10,7 @@ export interface CmsPage {
  */
 export async function getCmsPage(id: string | number) {
 	try {
-        const res = await apiClient<CmsPage>({
+        const res = await apiClient<{ data: CmsPage }>({
             route: `/pages?page_id=${id}`,
         });
         return res.data;

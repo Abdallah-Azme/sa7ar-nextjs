@@ -1,23 +1,31 @@
-import { getAddresses } from "@/features/addresses/queries";
-import AddressListView from "@/features/addresses/components/AddressListView";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { makeQueryClient } from "@/lib/queryClient";
+import { fetchAddresses, addressKeys } from "@/features/addresses/services/addressService";
+import AddressesPageContent from "@/features/addresses/components/AddressesPageContent";
 import type { Metadata } from "next";
+import { setRequestLocale } from "next-intl/server";
 
 export const metadata: Metadata = {
   title: "Delivery Addresses | Sohar Water",
   description: "Manage your saved delivery locations for faster checkout experience.",
 };
 
-/**
- * Addresses Page - RSC (Server Component)
- * Dynamically fetches authenticated user addresses for secure display.
- */
-export default async function AddressesPage() {
-  const addresses = await getAddresses();
+export default async function AddressesPage({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang } = await params;
+  setRequestLocale(lang);
+
+  const queryClient = makeQueryClient();
+  await queryClient.prefetchQuery({
+    queryKey: addressKeys.list(),
+    queryFn: fetchAddresses,
+  });
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50/20">
       <section className="container py-12 grow">
-        <AddressListView addresses={addresses || []} />
+        <HydrationBoundary state={dehydrate(queryClient)}>
+          <AddressesPageContent />
+        </HydrationBoundary>
       </section>
     </div>
   );

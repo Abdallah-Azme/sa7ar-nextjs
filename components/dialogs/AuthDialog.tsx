@@ -53,8 +53,8 @@ export default function AuthDialog({
                 body: JSON.stringify(data),
             });
             
-            if (res.data?.token) {
-                await login(res.data.token, res.data.user);
+            if (res?.token) {
+                await login(res.token, res.user);
                 onOpenChange(false);
             }
         } catch (err: unknown) {

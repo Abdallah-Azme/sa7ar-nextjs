@@ -25,6 +25,8 @@ export const metadata: Metadata = {
 
 import Logo from "@/components/shared/Logo";
 
+import { QueryProvider } from "@/providers/QueryProvider";
+
 export default async function RootLayout({
   children,
   params,
@@ -54,22 +56,24 @@ export default async function RootLayout({
           locale={lang}
           timeZone="Asia/Muscat"
         >
-          {/* State Providers */}
-          <AuthProvider initialUser={initialUser}>
-            <CartProvider>
-              
-              {/* Global UI Structure */}
-              <Header />
-              <Navbar logo={<Logo />} />
+          <QueryProvider>
+            {/* State Providers */}
+            <AuthProvider initialUser={initialUser}>
+              <CartProvider>
+                
+                {/* Global UI Structure */}
+                <Header />
+                <Navbar logo={<Logo />} />
 
-              <main className="flex-1">
-                {children}
-              </main>
+                <main className="flex-1">
+                  {children}
+                </main>
 
-              <Footer />
-              
-            </CartProvider>
-          </AuthProvider>
+                <Footer />
+                
+              </CartProvider>
+            </AuthProvider>
+          </QueryProvider>
         </NextIntlClientProvider>
       </body>
     </html>

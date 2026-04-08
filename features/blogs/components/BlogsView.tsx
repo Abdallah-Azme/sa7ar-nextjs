@@ -51,7 +51,7 @@ export default function BlogsView({ blogs, totalPages }: BlogsViewProps) {
 
 		setIsSubscribing(true);
 		try {
-			const res = await apiClient({
+			const res = await apiClient<{ message?: string }>({
 				route: "/health-education/subscribe",
 				method: "POST",
 				body: JSON.stringify({ email }),

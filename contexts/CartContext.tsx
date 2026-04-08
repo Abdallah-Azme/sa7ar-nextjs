@@ -1,10 +1,14 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useMemo } from "react";
 import type { CartItem } from "@/types";
-import apiClient from "@/lib/apiClient";
 import { useAuth } from "@/contexts/AuthContext";
-import { toast } from "sonner";
+import { 
+    useCartQuery, 
+    useAddToCartMutation, 
+    useUpdateCartMutation, 
+    useApplyCouponMutation 
+} from "@/features/cart/hooks/useCart";
 
 interface AppliedCoupon {
 	code: string;
@@ -48,71 +52,24 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | null>(null);
 
-/**
- * CartProvider - Client Component
- * Managed client-side cart data
- */
 export function CartProvider({ children }: { children: React.ReactNode }) {
-	const [cart, setCart] = useState<CartResponse | null>(null);
-	const [isLoading, setIsLoading] = useState(false);
-	const [addToCartPending, setAddToCartPending] = useState(false);
-	const [updateCartPending, setUpdateCartPending] = useState(false);
-	const [applyCouponPending, setApplyCouponPending] = useState(false);
 	const { isAuthenticated } = useAuth();
+    
+    // React Query Hooks
+    const { data: cartData, isLoading, refetch } = useCartQuery(isAuthenticated);
+    const addToCartMutation = useAddToCartMutation();
+    const updateCartMutation = useUpdateCartMutation();
+    const applyCouponMutation = useApplyCouponMutation();
 
-	const cartCount = cart?.items.reduce((acc, item) => acc + item.quantity, 0) ?? 0;
+    const cart = (cartData as unknown as { data: CartResponse })?.data ?? null;
+	const cartCount = useMemo(() => cart?.items.reduce((acc, item) => acc + item.quantity, 0) ?? 0, [cart]);
 
 	const refreshCart = async () => {
-		if (!isAuthenticated) {
-			setCart(null);
-			return;
-		}
-
-		setIsLoading(true);
-		try {
-			const res = await apiClient<CartResponse>({
-				route: "/cart",
-				tokenRequire: true,
-			});
-			setCart(res.data ?? null);
-		} catch (error) {
-			console.error("Cart Fetch Error:", error);
-		} finally {
-			setIsLoading(false);
-		}
+		await refetch();
 	};
 
-	useEffect(() => {
-		if (isAuthenticated) {
-			refreshCart();
-		} else {
-			setCart(null);
-		}
-        // eslint-disable-next-line
-	}, [isAuthenticated]);
-
 	const addToCart = async ({ quantity = 1, ...item }: DataSent) => {
-		if (!isAuthenticated) {
-			toast.error("يرجى تسجيل الدخول أولاً");
-			return;
-		}
-
-		setAddToCartPending(true);
-		try {
-			const res = await apiClient({
-				route: "/cart/add",
-				method: "POST",
-				body: JSON.stringify({ ...item, quantity }),
-				tokenRequire: true,
-			});
-			toast.success(res.message);
-			await refreshCart();
-		} catch (err: unknown) {
-			const error = err as { message?: string };
-			toast.error(error?.message || "حدث خطأ ما");
-		} finally {
-			setAddToCartPending(false);
-		}
+		addToCartMutation.mutate({ ...item, quantity });
 	};
 
 	const updateCart = async ({
@@ -142,48 +99,19 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 			}
 		}
 
-		setUpdateCartPending(true);
-		try {
-			const res = await apiClient({
-				route: "/cart/update",
-				method: "POST",
-				body: JSON.stringify({ cart_item_id: cartItem.id, quantity: Math.max(0, resolvedQuantity), _method: "PUT" }),
-				tokenRequire: true,
-			});
-			toast.success(res.message);
-			await refreshCart();
-		} catch (err: unknown) {
-			const error = err as { message?: string };
-			toast.error(error?.message || "حدث خطأ ما");
-		} finally {
-			setUpdateCartPending(false);
-		}
+		updateCartMutation.mutate({ 
+            cart_item_id: cartItem.id, 
+            quantity: Math.max(0, resolvedQuantity) 
+        });
 	};
 
 	const applyCoupon = async (code: string) => {
-		if (!isAuthenticated) {
-			toast.error("يرجى تسجيل الدخول أولاً");
-			return false;
-		}
-
-		setApplyCouponPending(true);
 		try {
-			const data = await apiClient({
-				route: "/cart/apply-coupon",
-				method: "POST",
-				body: JSON.stringify({ code }),
-				tokenRequire: true,
-			});
-			toast.success(data.message);
-			await refreshCart();
-			return true;
-		} catch (err: unknown) {
-			const error = err as { message?: string };
-			toast.error(error?.message || "حدث خطأ ما");
-			return false;
-		} finally {
-			setApplyCouponPending(false);
-		}
+            await applyCouponMutation.mutateAsync(code);
+            return true;
+        } catch {
+            return false;
+        }
 	};
 
 	return (
@@ -196,9 +124,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 				addToCart,
 				updateCart,
 				applyCoupon,
-				addToCartPending,
-				updateCartPending,
-				applyCouponPending,
+				addToCartPending: addToCartMutation.isPending,
+				updateCartPending: updateCartMutation.isPending,
+				applyCouponPending: applyCouponMutation.isPending,
 			}}
 		>
 			{children}

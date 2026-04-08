@@ -1,4 +1,3 @@
-import apiClient from "@/lib/apiClient";
 import type { Product } from "@/types";
 import type { ProductDetail } from "@/features/products/components/ProductDetailsView";
 
@@ -12,73 +11,43 @@ export interface BrandSize {
 	size: string;
 }
 
-export async function getBestSellingProducts() {
-	try {
-		const res = await apiClient<Product[]>({
-			route: "/products/best-selling",
-			next: { revalidate: 3600 },
-		});
-		return res.data;
-	} catch (error) {
-		const err = error as { message?: string; code?: number };
-		console.error("Error fetching best selling products:", err?.message ?? err?.code ?? error);
-		return [];
-	}
-}
+export * from "./services/productService";
+import { 
+    fetchBestSellingProducts, 
+    fetchBestSellingAccessories, 
+    fetchBrandSizes, 
+    fetchBrandProducts, 
+    fetchProductDetail 
+} from "./services/productService";
 
-export async function getBestSellingAccessories() {
-	try {
-		const res = await apiClient<Product[]>({
-			route: "/products-accessories",
-			next: { revalidate: 3600 },
-		});
-		return res.data;
-	} catch (error) {
-		console.error("Error fetching accessories:", error);
-		return [];
-	}
-}
+/**
+ * Deprecated: Use fetchBestSellingProducts or the useProducts hook instead.
+ */
+export const getBestSellingProducts = fetchBestSellingProducts;
 
+/**
+ * Deprecated: Use fetchBestSellingAccessories or the useProducts hook instead.
+ */
+export const getBestSellingAccessories = fetchBestSellingAccessories;
 
-export async function getBrandSizes(brand: "bard" | "rathath") {
-	try {
-		const res = await apiClient<{ sizes: BrandSize[] }>({
-			route: `/brands/${brand}/sizes`,
-			next: { revalidate: 3600 },
-		});
-		return res.data?.sizes ?? [];
-	} catch (error) {
-		console.error(`Error fetching ${brand} sizes:`, error);
-		return [];
-	}
-}
+/**
+ * Deprecated: Use fetchBrandSizes or the useProducts hook instead.
+ */
+export const getBrandSizes = fetchBrandSizes;
 
-export async function getBrandProducts(brand: "bard" | "rathath", sizeIds?: number[]) {
-	try {
-        let route = `/brands/${brand}/products`;
-        if (sizeIds && sizeIds.length > 0) {
-            route += `?size_id=${sizeIds.join(",")}`;
-        }
-		const res = await apiClient<Product[]>({
-			route,
-			next: { revalidate: 3600 },
-		});
-		return res.data ?? [];
-	} catch (error) {
-		console.error(`Error fetching ${brand} products:`, error);
-		return [];
-	}
-}
+/**
+ * Deprecated: Use fetchBrandProducts or the useProducts hook instead.
+ */
+export const getBrandProducts = fetchBrandProducts;
 
+/**
+ * Deprecated: Use fetchProductDetail or the useProducts hook instead.
+ */
 export async function getProductDetails(id: string): Promise<ProductDetailsResponse | null> {
-	try {
-		const res = await apiClient<ProductDetailsResponse>({
-			route: `/products/${id}`,
-			next: { revalidate: 3600 },
-		});
-		return res.data;
-	} catch (error) {
-		console.error(`Error fetching product ${id} details:`, error);
-		return null;
-	}
+    try {
+        const res = await fetchProductDetail(id);
+        return (res as unknown as ProductDetailsResponse) ?? null;
+    } catch {
+        return null;
+    }
 }

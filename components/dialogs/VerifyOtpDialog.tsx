@@ -71,7 +71,7 @@ export default function VerifyOtpDialog({
 
 		setIsLoading(true);
 		try {
-			const res = await apiClient<DataSent>({
+			const res = await apiClient<{ message?: string; data: DataSent }>({
 				route: verifyRoute,
 				method: "POST",
 				body: JSON.stringify({ mobile, code: values.code }),
@@ -94,7 +94,7 @@ export default function VerifyOtpDialog({
 
 		setIsResending(true);
 		try {
-			const res = await apiClient({
+			const res = await apiClient<{ message: string }>({
 				route: "/resend-otp",
 				method: "POST",
 				body: JSON.stringify({ mobile }),

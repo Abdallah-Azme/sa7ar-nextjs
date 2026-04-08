@@ -17,6 +17,8 @@ import {
 } from "@/components/ui/accordion";
 import ShowMore from "@/components/shared/buttons/ShowMore";
 
+import { useFaqsQuery } from "../hooks/useHome";
+
 type ApiFaqItem = {
 	id: number;
 	question: string;
@@ -28,12 +30,14 @@ type ApiFaqItem = {
  * Handles the interactive accordion for support questions
  */
 export default function FAQ({ 
-    faqs = [], 
+    faqs: initialFaqs, 
     isSection = true 
 }: { 
     faqs?: ApiFaqItem[]; 
     isSection?: boolean 
 }) {
+    const { data: queryFaqs } = useFaqsQuery();
+    const faqs = initialFaqs || queryFaqs || [];
 	const [itemSelected, setItemSelected] = useState<string>("");
     const visibleFaqs = isSection ? faqs.slice(0, 5) : faqs;
 

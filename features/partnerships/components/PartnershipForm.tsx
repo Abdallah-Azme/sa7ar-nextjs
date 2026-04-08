@@ -16,6 +16,8 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import apiClient from "@/lib/apiClient";
+import { useMutation } from "@tanstack/react-query";
+import { useInstitutionTypesQuery } from "../hooks/usePartnerships";
 import type { InstitutionType } from "../queries";
 
 interface PartnershipFormValues {
@@ -24,45 +26,46 @@ interface PartnershipFormValues {
 	number_of_employees: string;
 }
 
-export default function PartnershipForm({ types }: { types: InstitutionType[] }) {
+export default function PartnershipForm({ types: initialTypes }: { types?: InstitutionType[] }) {
 	const [mobile, setMobile] = useState("");
 	const [institutionTypeId, setInstitutionTypeId] = useState<string>("");
-	const [isSubmitting, setIsSubmitting] = useState(false);
+    
+    const { data: queryTypes } = useInstitutionTypesQuery();
+    const types = initialTypes || queryTypes || [];
 
 	const { register, handleSubmit, formState: { errors }, reset } = useForm<PartnershipFormValues>({
 		defaultValues: { name: "", company_name: "", number_of_employees: "" },
 	});
 
-	const onSubmit = async (values: PartnershipFormValues) => {
-		if (!mobile.trim() || !institutionTypeId) {
-			toast.error("يرجى تعبئة جميع الحقول المطلوبة");
-			return;
-		}
-
-        setIsSubmitting(true);
-        try {
-            await apiClient({
+    const { mutate: submitForm, isPending } = useMutation({
+        mutationFn: async (values: PartnershipFormValues) => {
+            return apiClient({
                 route: "/business-partnerships",
                 method: "POST",
                 body: JSON.stringify({
-                    name: values.name,
+                    ...values,
                     mobile: mobile.trim(),
                     institution_type_id: institutionTypeId,
-                    company_name: values.company_name,
-                    number_of_employees: values.number_of_employees,
                 })
             });
-
+        },
+        onSuccess: () => {
             toast.success("تم إرسال طلب الشراكة بنجاح. سنتواصل معك قريباً!");
             reset();
             setMobile("");
             setInstitutionTypeId("");
-        } catch (err: unknown) {
-            const error = err as { message?: string };
-            toast.error(error?.message || "حدث خطأ أثناء إرسال الطلب");
-        } finally {
-            setIsSubmitting(false);
+        },
+        onError: (err: { message?: string }) => {
+            toast.error(err?.message || "حدث خطأ أثناء إرسال الطلب");
         }
+    });
+
+	const onSubmit = (values: PartnershipFormValues) => {
+		if (!mobile.trim() || !institutionTypeId) {
+			toast.error("يرجى تعبئة جميع الحقول المطلوبة");
+			return;
+		}
+        submitForm(values);
 	};
 
 	return (
@@ -153,10 +156,10 @@ export default function PartnershipForm({ types }: { types: InstitutionType[] })
 
             <Button
                 type="submit"
-                disabled={isSubmitting}
+                disabled={isPending}
                 className="h-14 w-full rounded-full bg-primary text-white text-base font-bold hover:bg-accent hover:scale-[1.02] shadow-lg transition-all mt-8"
             >
-                {isSubmitting ? "جارٍ الإرسال..." : "إرسال الطلب"}
+                {isPending ? "جارٍ الإرسال..." : "إرسال الطلب"}
             </Button>
         </form>
 	);

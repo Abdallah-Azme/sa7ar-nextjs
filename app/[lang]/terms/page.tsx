@@ -1,50 +1,43 @@
-import { getCmsPage } from "@/features/about/queries/cms";
-import { FileTextIcon } from "lucide-react";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { makeQueryClient } from "@/lib/queryClient";
+import { fetchCmsPage, cmsKeys } from "@/features/about/services/cmsService";
+import CmsPageContent from "@/features/about/components/CmsPageContent";
+import HelpCard from "@/components/shared/cards/HelpCard";
 import type { Metadata } from "next";
+import { setRequestLocale } from "next-intl/server";
+
+const TERMS_PAGE_ID = 2;
 
 export const metadata: Metadata = {
   title: "Terms & Conditions | Sohar Water",
   description: "Review our service terms, conditions, and usage guidelines at Sohar Water.",
 };
 
-/**
- * Terms & Conditions Page - RSC (Server Component)
- * Dynamically fetches the terms agreement from the CMS.
- */
-export default async function TermsPage() {
-  const data = await getCmsPage(2); // CMS Page ID for Terms
+export default async function TermsPage({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang } = await params;
+  setRequestLocale(lang);
+
+  const queryClient = makeQueryClient();
+  await queryClient.prefetchQuery({
+    queryKey: cmsKeys.detail(TERMS_PAGE_ID),
+    queryFn: () => fetchCmsPage(TERMS_PAGE_ID),
+  });
 
   return (
-    <main className="flex flex-col min-h-screen bg-white">
-      
-      <section className="container py-16 space-y-12 grow">
-        <header className="flex flex-col items-center gap-6 text-center max-w-2xl mx-auto">
-            <div className="size-16 rounded-3xl bg-secondary/10 text-secondary flex items-center justify-center shadow-sm">
-                <FileTextIcon size={32} />
-            </div>
-            <div className="space-y-3">
-                <h1 className="text-4xl sm:text-5xl font-extrabold text-primary">Terms & Conditions</h1>
-                <p className="text-gray-500 font-medium italic">
-                    By using our services, you agree to the guidelines listed below.
-                </p>
-            </div>
-        </header>
+    <main className="flex flex-col min-h-screen relative overflow-hidden bg-white/50">
+      <div className="absolute top-1/2 inset-s-0 -z-1 size-[600px] bg-accent/5 rounded-full blur-[120px] -translate-x-1/2 -translate-y-1/2" />
+      <div className="absolute top-0 inset-e-0 -z-1 size-[500px] bg-secondary/5 rounded-full blur-[100px] translate-x-1/3 -translate-y-1/4" />
 
-        <article className="max-w-4xl mx-auto rounded-[40px] bg-background-cu border border-black/5 p-8 sm:p-14 shadow-xl">
-            {data?.description ? (
-                <div 
-                    className="prose prose-lg prose-primary max-w-none text-start
-                    prose-headings:text-primary prose-headings:font-extrabold
-                    prose-p:text-gray-700 prose-p:leading-relaxed prose-p:text-lg
-                    prose-strong:text-secondary
-                    [&_ul]:list-disc [&_ul]:ps-6 [&_ol]:list-decimal [&_ol]:ps-6"
-                    dangerouslySetInnerHTML={{ __html: data.description }} 
-                />
-            ) : (
-                <p className="text-center text-gray-400 italic py-10">Terms content is being updated...</p>
-            )}
-        </article>
-      </section>
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <CmsPageContent 
+          id={TERMS_PAGE_ID} 
+          title="Terms & Conditions" 
+          subtitle="By using our services, you agree to the guidelines listed below."
+          iconType="terms"
+        />
+      </HydrationBoundary>
+
+      <HelpCard className="py-20 bg-background-cu/30" />
     </main>
   );
 }

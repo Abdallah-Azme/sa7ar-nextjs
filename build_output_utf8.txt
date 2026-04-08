@@ -1,0 +1,42 @@
+﻿
+> sa7ar-next@0.1.0 build
+> next build
+
+Γû▓ Next.js 16.2.2 (Turbopack)
+- Environments: .env
+
+  Creating an optimized production build ...
+Γ£ô Compiled successfully in 9.9s
+  Running TypeScript ...
+node.exe : Failed to type check.
+At C:\Program Files\nodejs\npm.ps1:29 
+char:3
++   & $NODE_EXE $NPM_CLI_JS $args
++   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpeci 
+   fied: (Failed to type check.:Strin  
+  g) [], RemoteException
+    + FullyQualifiedErrorId : NativeCo 
+   mmandError
+ 
+
+./components/dialogs/AuthDialog.tsx:56:
+21
+Type error: Property 'data' does not 
+exist on type '{ token: string; user: 
+Profile; }'.
+
+  [90m54 |[0m             });
+  [90m55 |[0m             
+[31m[1m>[0m [90m56 |[0m           
+  [36mif[0m (res.data?.token) {
+  [90m   |[0m                     
+[31m[1m^[0m
+  [90m57 |[0m                 
+[36mawait[0m login(res.data.token, 
+res.data.user);
+  [90m58 |[0m                 
+onOpenChange([36mfalse[0m);
+  [90m59 |[0m             }
+Next.js build worker exited with code: 
+1 and signal: null

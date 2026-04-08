@@ -54,7 +54,7 @@ export default function ResetPasswordDialog({
 
         setIsLoading(true);
         try {
-            const res = await apiClient({
+            const res = await apiClient<{ message: string }>({
                 route: "/reset-password",
                 method: "POST",
                 body: JSON.stringify({

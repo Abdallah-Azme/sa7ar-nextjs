@@ -1,76 +1,69 @@
-import type { RequestAppInit, ResponseResult } from "@/types";
+import { ofetch, type FetchOptions } from "ofetch";
 
 /**
- * Isomorphic Fetch Wrapper for Next.js
- * Solves CORS by ensuring client-side requests go through a Next.js API Route (Proxy)
- * and server-side requests call the API directly.
+ * Isomorphic ofetch client for sa7ar-next.
+ * - Server-side  → calls the API directly (no CORS issue)
+ * - Client-side  → routes through /api/proxy (avoids CORS)
  */
-export default async function apiClient<T = unknown>({
-	route,
-	isFormData = false,
-	tokenRequire = false,
-	...props
-}: RequestAppInit): Promise<ResponseResult<T>> {
-	const isServer = typeof window === "undefined";
-	
-	// Server-side: Direct API call
-    // Client-side: Proxy through /api/proxy to avoid CORS
-	const API_BASE = isServer
-		? (process.env.NEXT_PUBLIC_API_URL ?? "https://saharapi.subcodeco.com/api")
-		: "/api/proxy";
-        
-	const URI = isServer ? `${API_BASE}${route}` : `${API_BASE}?route=${encodeURIComponent(route)}`;
 
-	const headersInit: HeadersInit = {
-		"Accept-Language": "ar",
-	};
+type AppRequestOptions = FetchOptions & {
+  route: string;
+  tokenRequire?: boolean;
+  isFormData?: boolean;
+  next?: {
+    revalidate?: number | false;
+    tags?: string[];
+  };
+};
 
-	if (!isFormData) {
-		headersInit["Accept"] = "application/json";
-		headersInit["Content-Type"] = "application/json";
-	}
+export async function apiClient<T = unknown>(
+  { route, tokenRequire = false, isFormData = false, ...opts }: AppRequestOptions
+): Promise<T> {
+  const isServer = typeof window === "undefined";
 
-	if (tokenRequire) {
-		let token: string | null = null;
+  const baseURL = isServer
+    ? (process.env.NEXT_PUBLIC_API_URL ?? "https://saharapi.subcodeco.com/api")
+    : "/api/proxy";
 
-		if (isServer) {
-            try {
-                const { cookies } = await import("next/headers");
-                const cookieStore = await cookies();
-                token = cookieStore.get("token")?.value || null;
-            } catch (e) {
-                console.warn("apiClient: Failed to access cookies on server", e);
-            }
-		} else {
-			token = localStorage.getItem("token");
-		}
+  const url = isServer
+    ? `${baseURL}${route}`
+    : `${baseURL}?route=${encodeURIComponent(route)}`;
 
-		if (token) {
-			headersInit["Authorization"] = `Bearer ${token}`;
-		}
-	}
+  // Build headers
+  const headers: Record<string, string> = {
+    "Accept-Language": "ar",
+  };
 
-	const res = await fetch(URI, {
-		headers: {
-			...headersInit,
-			...props.headers,
-		},
-		next: { revalidate: 3600 }, 
-		...props,
-	});
+  if (!isFormData) {
+    headers["Accept"] = "application/json";
+    headers["Content-Type"] = "application/json";
+  }
 
-	if (!res.ok) {
-        let errorData: { message?: string; code?: number; errors?: Record<string, string[]> };
-        try {
-            errorData = await res.json() as { message?: string; code?: number; errors?: Record<string, string[]> };
-        } catch {
-            errorData = { message: "Internal Server Error" };
-        }
-		errorData.code = res.status;
-		throw errorData;
-	}
+  if (tokenRequire) {
+    let token: string | null = null;
 
-	const data: ResponseResult<T> = await res.json();
-	data.code = res.status;
-	return data;
+    if (isServer) {
+      try {
+        const { cookies } = await import("next/headers");
+        const store = await cookies();
+        token = store.get("token")?.value ?? null;
+      } catch {
+        // Non-fatal: SSG context may have no cookie store
+      }
+    } else {
+      token = localStorage.getItem("token");
+    }
+
+    if (token) headers["Authorization"] = `Bearer ${token}`;
+  }
+
+  // ofetch merges headers cleanly and handles JSON by default
+  // and throws on non-2xx responses
+  return ofetch<T>(url, {
+    headers,
+    retry: 2,                   // Auto-retry transient failures
+    ...opts,
+  } as any);
 }
+
+export default apiClient;

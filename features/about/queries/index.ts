@@ -33,7 +33,7 @@ export interface AboutPageData {
  */
 export async function getAboutPageData() {
 	try {
-		const res = await apiClient<AboutPageData>({
+		const res = await apiClient<{ data: AboutPageData }>({
 			route: "/about-us",
 		});
 		return res.data;

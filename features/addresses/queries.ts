@@ -7,7 +7,7 @@ import type { Address } from "./types";
  */
 export async function getAddresses() {
 	try {
-		const res = await apiClient<Address[]>({
+		const res = await apiClient<{ data: Address[] }>({
 			route: "/addresses",
 			tokenRequire: true,
 		});
@@ -23,7 +23,7 @@ export async function getAddresses() {
  */
 export async function getAddressDetails(id: string) {
 	try {
-		const res = await apiClient<Address>({
+		const res = await apiClient<{ data: Address }>({
 			route: `/addresses/${id}`,
 			tokenRequire: true,
 		});

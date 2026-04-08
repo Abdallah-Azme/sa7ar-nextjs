@@ -7,7 +7,7 @@ import type { Order, OrderDetails } from "./types";
  */
 export async function getOrderHistory() {
 	try {
-		const res = await apiClient<Order[]>({
+		const res = await apiClient<{ data: Order[] }>({
 			route: "/orders",
 			tokenRequire: true,
 		});
@@ -23,7 +23,7 @@ export async function getOrderHistory() {
  */
 export async function getOrderDetails(id: string) {
 	try {
-		const res = await apiClient<OrderDetails>({
+		const res = await apiClient<{ data: OrderDetails }>({
 			route: `/orders/${id}`,
 			tokenRequire: true,
 		});

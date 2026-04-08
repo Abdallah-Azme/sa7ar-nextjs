@@ -1,4 +1,6 @@
-import { getProductDetails } from "@/features/products/queries";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { makeQueryClient } from "@/lib/queryClient";
+import { productKeys, fetchProductDetail } from "@/features/products/services/productService";
 import ProductDetailsView from "@/features/products/components/ProductDetailsView";
 import HelpCard from "@/components/shared/cards/HelpCard";
 import { notFound } from "next/navigation";
@@ -14,7 +16,7 @@ interface Props {
  */
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
-  const data = await getProductDetails(id);
+  const data = await fetchProductDetail(id);
 
   if (!data?.product) return { title: "المنتج غير موجود | سحر" };
 
@@ -29,12 +31,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 /**
  * Product Details Page - RSC (Server Component)
- * Dynamically fetches product data on the server for best SEO and LCP.
  */
 export default async function ProductPage({ params }: Props) {
   const { lang, id } = await params;
   setRequestLocale(lang);
-  const data = await getProductDetails(id);
+
+  const queryClient = makeQueryClient();
+  const data = await queryClient.fetchQuery({
+    queryKey: productKeys.detail(id),
+    queryFn: () => fetchProductDetail(id),
+  });
 
   if (!data?.product) {
     notFound();
@@ -42,16 +48,14 @@ export default async function ProductPage({ params }: Props) {
 
   return (
     <main className="flex flex-col min-h-screen">
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <ProductDetailsView
+          product={data.product}
+          relatedProducts={data.related_products || []}
+        />
+      </HydrationBoundary>
 
-      {/* Interactive Single Product View */}
-      <ProductDetailsView
-        product={data.product}
-        relatedProducts={data.related_products || []}
-      />
-
-      {/* Support Call to Action */}
       <HelpCard className="border-t border-gray/5" />
-
     </main>
   );
 }

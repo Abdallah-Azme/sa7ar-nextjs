@@ -1,50 +1,43 @@
-import { getCmsPage } from "@/features/about/queries/cms";
-import { ShieldCheckIcon } from "lucide-react";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { makeQueryClient } from "@/lib/queryClient";
+import { fetchCmsPage, cmsKeys } from "@/features/about/services/cmsService";
+import CmsPageContent from "@/features/about/components/CmsPageContent";
+import HelpCard from "@/components/shared/cards/HelpCard";
 import type { Metadata } from "next";
+import { setRequestLocale } from "next-intl/server";
+
+const PRIVACY_PAGE_ID = 3;
 
 export const metadata: Metadata = {
   title: "Privacy Policy | Sohar Water",
   description: "Learn how we handle your personal data and protect your privacy at Sohar Water.",
 };
 
-/**
- * Privacy Policy Page - RSC (Server Component)
- * Dynamically fetches the privacy policy from the CMS.
- */
-export default async function PrivacyPage() {
-  const data = await getCmsPage(3); // CMS Page ID for Privacy
+export default async function PrivacyPage({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang } = await params;
+  setRequestLocale(lang);
+
+  const queryClient = makeQueryClient();
+  await queryClient.prefetchQuery({
+    queryKey: cmsKeys.detail(PRIVACY_PAGE_ID),
+    queryFn: () => fetchCmsPage(PRIVACY_PAGE_ID),
+  });
 
   return (
-    <main className="flex flex-col min-h-screen bg-white">
-      
-      <section className="container py-16 space-y-12 grow">
-        <header className="flex flex-col items-center gap-6 text-center max-w-2xl mx-auto">
-            <div className="size-16 rounded-3xl bg-accent/10 text-accent flex items-center justify-center shadow-sm">
-                <ShieldCheckIcon size={32} />
-            </div>
-            <div className="space-y-3">
-                <h1 className="text-4xl sm:text-5xl font-extrabold text-primary">Privacy Policy</h1>
-                <p className="text-gray-500 font-medium italic">
-                    Your trust is our priority. This document outlines our standards for data protection.
-                </p>
-            </div>
-        </header>
+    <main className="flex flex-col min-h-screen relative overflow-hidden bg-white/50">
+      <div className="absolute top-1/2 inset-s-0 -z-1 size-[600px] bg-accent/5 rounded-full blur-[120px] -translate-x-1/2 -translate-y-1/2" />
+      <div className="absolute top-0 inset-e-0 -z-1 size-[500px] bg-secondary/5 rounded-full blur-[100px] translate-x-1/3 -translate-y-1/4" />
 
-        <article className="max-w-4xl mx-auto rounded-[40px] bg-background-cu border border-black/5 p-8 sm:p-14 shadow-xl">
-            {data?.description ? (
-                <div 
-                    className="prose prose-lg prose-primary max-w-none text-start
-                    prose-headings:text-primary prose-headings:font-extrabold
-                    prose-p:text-gray-700 prose-p:leading-relaxed prose-p:text-lg
-                    prose-strong:text-secondary
-                    [&_ul]:list-disc [&_ul]:ps-6 [&_ol]:list-decimal [&_ol]:ps-6"
-                    dangerouslySetInnerHTML={{ __html: data.description }} 
-                />
-            ) : (
-                <p className="text-center text-gray-400 italic py-10">Policy content is being updated...</p>
-            )}
-        </article>
-      </section>
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <CmsPageContent 
+          id={PRIVACY_PAGE_ID} 
+          title="Privacy Policy" 
+          subtitle="Your trust is our priority. This document outlines our standards for data protection."
+          iconType="privacy"
+        />
+      </HydrationBoundary>
+
+      <HelpCard className="py-20 bg-background-cu/30" />
     </main>
   );
 }

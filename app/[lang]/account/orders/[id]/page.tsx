@@ -1,7 +1,10 @@
 import { notFound, redirect } from "next/navigation";
-import { getOrderDetails } from "@/features/orders/queries";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { makeQueryClient } from "@/lib/queryClient";
+import { fetchOrderDetail, orderKeys } from "@/features/orders/services/orderService";
 import OrderDetailsView from "@/features/orders/components/OrderDetailsView";
 import type { Metadata } from "next";
+import { setRequestLocale } from "next-intl/server";
 
 export const metadata: Metadata = {
   title: "Order Details | Sohar Water",
@@ -11,11 +14,20 @@ export const metadata: Metadata = {
  * Account Tracking Page - RSC (Server Component)
  * Dynamically fetches order detail and tracking history
  */
-export default async function OrderDetailsPage({ params }: { params: Promise<{ id: string }> }) {
-    const { id } = await params;
+export default async function OrderDetailsPage({ params }: { params: Promise<{ lang: string; id: string }> }) {
+    const { lang, id } = await params;
+    setRequestLocale(lang);
+
     if (!id) return redirect("/account/orders");
 
-    const order = await getOrderDetails(id);
+    const queryClient = makeQueryClient();
+    
+    // We use fetchQuery here so we can check for 404/Null before rendering
+    const order = await queryClient.fetchQuery({
+        queryKey: orderKeys.detail(id),
+        queryFn: () => fetchOrderDetail(id),
+    });
+
     if (!order) return notFound();
 
     // Replicate buildGoogleMapEmbedUrl logic inline
@@ -32,6 +44,8 @@ export default async function OrderDetailsPage({ params }: { params: Promise<{ i
         : `https://maps.google.com/maps?q=${encodeURIComponent(orderMapQuery)}&z=11&output=embed`;
 
     return (
-        <OrderDetailsView order={order} mapSrc={mapSrc} />
+        <HydrationBoundary state={dehydrate(queryClient)}>
+            <OrderDetailsView order={order} mapSrc={mapSrc} />
+        </HydrationBoundary>
     );
 }

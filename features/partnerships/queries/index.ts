@@ -13,10 +13,10 @@ export interface InstitutionType {
  */
 export async function getInstitutionTypes() {
 	try {
-        const res = await apiClient<InstitutionType[]>({
+        const res = await apiClient<{ data: InstitutionType[] }>({
             route: "/institution-types",
         });
-        return res.data;
+        return res.data ?? [];
     } catch (error) {
         console.error("Error fetching institution types:", error);
         return [];

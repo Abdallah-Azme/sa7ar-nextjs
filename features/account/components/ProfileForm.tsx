@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { UserRoundIcon, CloudDownloadIcon, MailIcon, Trash2Icon } from "lucide-react";
-import { toast } from "sonner";
 import ImageFallback from "@/components/shared/ImageFallback";
 import AppInput from "@/components/forms/AppInput";
 import AppMobileInput from "@/components/forms/AppMobileInput";
@@ -17,8 +16,8 @@ import {
 	DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { useAuth } from "@/contexts/AuthContext";
-import apiClient from "@/lib/apiClient";
+import { useProfile, useUpdateProfileMutation, useDeleteAccountMutation } from "@/features/auth/hooks/useAuth";
+import type { Profile } from "@/types";
 import { cn } from "@/lib/utils";
 
 interface ProfileInputs {
@@ -28,13 +27,16 @@ interface ProfileInputs {
 }
 
 export default function ProfileForm() {
-	const { user, setUser, logout } = useAuth();
+    const { data: userRaw } = useProfile();
+    const user = userRaw as Profile | undefined;
+
 	const [imageFile, setImageFile] = useState<File | null>(null);
-	const [isSubmitting, setIsSubmitting] = useState(false);
-	const [isDeleting, setIsDeleting] = useState(false);
 	
 	const [showVerifyMobileDialog, setShowVerifyMobileDialog] = useState(false);
 	const [mobileVerificationData, setMobileVerificationData] = useState<{ oldMobile: string; newMobile: string } | null>(null);
+
+    const updateProfile = useUpdateProfileMutation();
+    const deleteAccount = useDeleteAccountMutation();
 
 	const { register, handleSubmit, reset } = useForm<ProfileInputs>({
 		defaultValues: {
@@ -45,11 +47,13 @@ export default function ProfileForm() {
 	});
 
 	useEffect(() => {
-		reset({
-			name: user?.name || "",
-			email: user?.email || "",
-			mobile: user?.mobile || "",
-		});
+		if (user) {
+            reset({
+                name: user.name || "",
+                email: user.email || "",
+                mobile: user.mobile || "",
+            });
+        }
 	}, [reset, user]);
 
 	const imagePreview = useMemo(() => {
@@ -58,51 +62,29 @@ export default function ProfileForm() {
 	}, [imageFile]);
 
 	const onSubmit = async (data: ProfileInputs) => {
-        setIsSubmitting(true);
+        const formData = new FormData();
+        formData.append("name", data.name);
+        formData.append("email", data.email);
+        formData.append("mobile", data.mobile.trim());
+        if (imageFile) formData.append("image", imageFile);
+
         try {
-            const formData = new FormData();
-            formData.append("name", data.name);
-            formData.append("email", data.email);
-            formData.append("mobile", data.mobile.trim());
-            if (imageFile) formData.append("image", imageFile);
-
-            const res = await apiClient<{ old_mobile: string; new_mobile: string }>({
-                route: "/edit-profile",
-                method: "POST",
-                body: formData,
-            });
-
-            if (user) {
-                setUser({ ...user, name: data.name, email: data.email, mobile: data.mobile.trim() });
-            }
-
+            const res = await updateProfile.mutateAsync(formData);
+            
             const oldMobile = res.data?.old_mobile;
             const newMobile = res.data?.new_mobile;
 
             if (newMobile && oldMobile && newMobile !== oldMobile) {
                 setMobileVerificationData({ oldMobile, newMobile });
                 setShowVerifyMobileDialog(true);
-            } else {
-                toast.success("تم تحديث الملف الشخصي بنجاح");
             }
-        } catch (err: unknown) {
-            const error = err as { message?: string };
-            toast.error(error?.message || "حدث خطأ أثناء تحديث الملف الشخصي");
-        } finally {
-            setIsSubmitting(false);
+        } catch {
+            // Error handled by hook
         }
 	};
 
 	const onDeleteAccount = async () => {
-        setIsDeleting(true);
-        try {
-            await apiClient({ route: "/delete-account", method: "POST" });
-            await logout();
-        } catch (err: unknown) {
-            const error = err as { message?: string };
-            toast.error(error?.message || "حدث خطأ أثناء حذف الحساب");
-            setIsDeleting(false);
-        }
+        deleteAccount.mutate();
 	};
 
 	const displayImage = imagePreview || user?.image || "";
@@ -185,10 +167,10 @@ export default function ProfileForm() {
 						</div>
 
 						<Button
-							disabled={isSubmitting}
+							disabled={updateProfile.isPending}
 							className="col-span-full h-14 rounded-full mt-4 bg-primary hover:bg-accent text-white font-bold shadow-md transition-all sm:w-fit px-12"
 						>
-							{isSubmitting ? "جارٍ الحفظ..." : "حفظ التغييرات"}
+							{updateProfile.isPending ? "جارٍ الحفظ..." : "حفظ التغييرات"}
 						</Button>
 					</form>
 
@@ -209,8 +191,8 @@ export default function ProfileForm() {
                                 </DialogHeader>
                                 <div className="grid grid-cols-2 gap-4 mt-6">
                                     <Button variant="outline" className="h-12 rounded-full font-bold shadow-none">إلغاء</Button>
-                                    <Button variant="destructive" className="h-12 rounded-full font-bold shadow-none" onClick={onDeleteAccount} disabled={isDeleting}>
-                                        {isDeleting ? "جارٍ الحذف..." : "تأكيد الحذف"}
+                                    <Button variant="destructive" className="h-12 rounded-full font-bold shadow-none" onClick={onDeleteAccount} disabled={deleteAccount.isPending}>
+                                        {deleteAccount.isPending ? "جارٍ الحذف..." : "تأكيد الحذف"}
                                     </Button>
                                 </div>
                             </DialogContent>
