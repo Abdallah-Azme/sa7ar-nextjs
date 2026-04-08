@@ -6,10 +6,21 @@ import AboutPageContent from "@/features/about/components/AboutPageContent";
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "About Us | Sohar Water",
-  description: "Learn about our journey, vision, and mission to deliver pure refreshment to every home in Oman.",
-};
+import { getTranslations } from "next-intl/server";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}): Promise<Metadata> {
+  const { lang } = await params;
+  const t = await getTranslations({ locale: lang, namespace: "seo.about" });
+
+  return {
+    title: t("title"),
+    description: t("description"),
+  };
+}
 
 export default async function AboutPage({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;

@@ -11,10 +11,21 @@ import ProductsPageContent from "@/features/products/components/ProductsPageCont
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "المنتجات | منتجاتنا",
-  description: "تصفح التشكيلة الكاملة من مياه صحار، بما في ذلك العلامات التجارية برد ورذاذ.",
-};
+import { getTranslations } from "next-intl/server";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}): Promise<Metadata> {
+  const { lang } = await params;
+  const t = await getTranslations({ locale: lang, namespace: "seo.products" });
+
+  return {
+    title: t("title"),
+    description: t("description"),
+  };
+}
 
 /**
  * Products Page - RSC (Server Component)

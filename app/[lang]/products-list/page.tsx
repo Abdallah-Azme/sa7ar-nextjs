@@ -15,25 +15,41 @@ interface Props {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-const titles: Record<string, string> = {
-  "most-sold": "الأكثر مبيعاً",
-  "rathath": "منتجات رذاذ",
-  "bard": "منتجات برد",
-  "accessories": "الإكسسوارات الأكثر مبيعاً",
-};
+import { getTranslations } from "next-intl/server";
 
 /**
  * Dynamic Metadata for Products List
  */
-export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
-  const params = await searchParams;
-  const section = (params.section as string) || "most-sold";
-  const title = titles[section] || "Products List";
+export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
+  const { lang } = await params;
+  const tSeo = await getTranslations({ locale: lang, namespace: "seo.products" });
+  const tProducts = await getTranslations({ locale: lang, namespace: "products" });
+  const sParams = await searchParams;
+  const section = (sParams.section as string) || "most-sold";
+  
+  try {
+    let titleSegment = "";
+    if (section === "most-sold") {
+      titleSegment = tProducts("mostSold");
+    } else if (section === "rathath") {
+      titleSegment = tProducts("sections.rathath");
+    } else if (section === "bard") {
+      titleSegment = tProducts("sections.bard");
+    } else {
+      titleSegment = tSeo("title").split("|")[0].trim();
+    }
 
-  return {
-    title: `${title} | مياه صحار`,
-    description: `تصفح جميع المنتجات في قسم ${title}. مياه نقية وطبيعية لحياتك اليومية.`,
-  };
+    return {
+      title: `${titleSegment} | ${tSeo("title").split("|")[1]?.trim() || "Sohar"}`,
+      description: tSeo("description"),
+    };
+  } catch (error) {
+    console.error("Error in products-list metadata:", error);
+    return {
+      title: tSeo("title"),
+      description: tSeo("description"),
+    };
+  }
 }
 
 /**

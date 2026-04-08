@@ -37,12 +37,15 @@ function formatSizeLabel(size: string): string {
 	return size.replace(/-/g, " ");
 }
 
+import { useTranslations } from "next-intl";
+
 /**
  * SearchDialog - Client Component
  * Mirrors React's SearchDialog: trigger input + dialog with live search results.
  * Uses the /search?keyword=... API endpoint.
  */
 export default function SearchDialog() {
+    const t = useTranslations("common");
 	const [open, setOpen] = useState(false);
 	const [keyword, setKeyword] = useState("");
 	const [products, setProducts] = useState<SearchProduct[]>([]);
@@ -99,7 +102,7 @@ export default function SearchDialog() {
 					<AppInput
 						bgWhite
 						readOnly
-						placeholder="ابحث عن منتج..."
+						placeholder={t("searchPlaceholder")}
 						Icon={<SearchIcon />}
 					/>
 				</div>
@@ -124,12 +127,12 @@ export default function SearchDialog() {
 			>
 				<DialogContent className="sm:max-w-lg p-6 rounded-3xl">
 					<DialogHeader>
-						<DialogTitle>البحث عن منتج</DialogTitle>
+						<DialogTitle>{t("searchTitle")}</DialogTitle>
 					</DialogHeader>
 					<div className="space-y-4">
 						<AppInput
 							autoFocus
-							placeholder="ابحث عن منتج..."
+							placeholder={t("searchPlaceholder")}
 							value={keyword}
 							onValueChange={handleSearch}
 							Icon={<SearchIcon />}
@@ -138,18 +141,18 @@ export default function SearchDialog() {
 						<div className="max-h-95 overflow-y-auto pe-1">
 							{keyword.trim().length === 0 ? (
 								<p className="py-4 text-center text-xs text-gray">
-									ابدأ الكتابة للبحث عن منتج
+									{t("startTyping")}
 								</p>
 							) : showLoading ? (
-								<p className="py-4 text-center text-xs text-gray">جارٍ البحث...</p>
+								<p className="py-4 text-center text-xs text-gray">{t("searching")}</p>
 							) : products.length === 0 ? (
 								<p className="py-4 text-center text-xs text-gray">
-									لا توجد نتائج مطابقة
+									{t("noResults")}
 								</p>
 							) : (
 								<div className="space-y-2">
 									<p className="px-1 text-xs font-bold text-primary">
-										نتائج البحث
+										{t("searchResults")}
 									</p>
 									{products.map((product) => (
 										<Link

@@ -877,6 +877,18 @@
 		"error": {
 			"title": "Error | Sohar",
 			"description": "An unexpected error occurred while loading this page."
+		},
+		"checkout": {
+			"title": "Checkout | Sohar Water",
+			"description": "Enter your delivery details and complete your order securely and quickly."
+		},
+		"cart": {
+			"title": "Shopping Cart | Sohar Water",
+			"description": "Review your items and apply discount coupons before completing your order."
+		},
+		"partnership": {
+			"title": "Business Partnerships | Sohar Water",
+			"description": "Partner with Sohar to secure pure and reliable water for your employees and organization."
 		}
 	}
 }

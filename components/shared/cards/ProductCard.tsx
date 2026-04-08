@@ -19,11 +19,15 @@ import ImageFallback from "../ImageFallback";
 const buttonClass =
 	"inline-flex cursor-pointer items-center justify-center bg-background-cu hover:bg-background-cu/80 p-0 shrink-0 size-8 rounded-full";
 
+import { useTranslations } from "next-intl";
+
 /**
  * ProductCard - Client Component
  * Handles direct cart interaction and quantity management
  */
 export default function ProductCard({ item }: { item: Product }) {
+    const tActions = useTranslations("actions");
+    const tProducts = useTranslations("products");
 	const { cart } = useCart();
     // Helper to format labels (e.g. "500ml")
     const formatSizeLabel = (size: string) => size; 
@@ -48,7 +52,7 @@ export default function ProductCard({ item }: { item: Product }) {
 						)}
 						{isMostSold && (
 							<span className="rounded-md bg-orange-500 px-2 py-1 text-[10px] font-bold leading-none text-white">
-								Most Sold
+								{tProducts("mostSold")}
 							</span>
 						)}
 					</div>
@@ -95,7 +99,7 @@ export default function ProductCard({ item }: { item: Product }) {
 			<CardFooter>
 				{cartItem ? (
 					<div className="flex justify-between w-full items-center gap-2 rounded-md border border-primary h-10 px-4 md:h-13 py-2">
-						<button className={buttonClass + " text-accent"} aria-label="Increase quantity">
+						<button className={buttonClass + " text-accent"} aria-label={tActions("increase")}>
 							<PlusIcon size={14} />
 						</button>
 						<span className="text-xs font-medium">
@@ -103,7 +107,7 @@ export default function ProductCard({ item }: { item: Product }) {
 						</span>
 						<button 
 							className={buttonClass + " text-gray"} 
-							aria-label={cartItem.quantity === 1 ? "Remove from cart" : "Decrease quantity"}
+							aria-label={cartItem.quantity === 1 ? tActions("remove") : tActions("decrease")}
 						>
 							{cartItem.quantity === 1 ? (
 								<Trash2 className="text-destructive stroke-1" size={14} />
@@ -114,7 +118,7 @@ export default function ProductCard({ item }: { item: Product }) {
 					</div>
 				) : (
 					<Button className="w-full">
-						<span>Add to Cart</span>
+						<span>{tActions("addToCart")}</span>
 						<ShoppingBasketIcon size={10} />
 					</Button>
 				)}

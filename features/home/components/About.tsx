@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import { BadgeCheck, BookTextIcon, Leaf, Truck } from "lucide-react";
 import AboutCard from "@/components/shared/cards/AboutCard";
 import SectionLabel from "@/components/shared/SectionLabel";
@@ -10,30 +13,31 @@ type AboutValuesCard = {
 };
 
 /**
- * About - RSC (Server Component)
- * Home page "About Us" section. 
- * Data is passed in from parent to keep it purely RSC.
+ * About Component
+ * Home page "About Us" section.
  */
 export default function About({ 
     aboutValuesCards 
 }: { 
     aboutValuesCards?: AboutValuesCard[] 
 }) {
+	const t = useTranslations("about");
+
 	const fallbackFeatures = [
 		{
 			icon: <BadgeCheck className="h-6 w-6 text-primary" />,
-			title: "شهادة الجودة",
-			description: "معتمدة وموثقة حسب المعايير العمانية.",
+			title: t("features.accreditation.title"),
+			description: t("features.accreditation.description"),
 		},
 		{
 			icon: <Truck className="h-6 w-6 text-primary" />,
-			title: "راحة العملاء",
-			description: "نوصلها لباب بيتك بكل عناية.",
+			title: t("features.comfort.title"),
+			description: t("features.comfort.description"),
 		},
 		{
 			icon: <Leaf className="h-6 w-6 text-primary" />,
-			title: "الاستدامة",
-			description: "ممارسات صديقة للبيئة لعمان أكثر خضرة.",
+			title: t("features.sustainability.title"),
+			description: t("features.sustainability.description"),
 		},
 	];
 
@@ -57,7 +61,7 @@ export default function About({
 					featureIcons[index % featureIcons.length]
 				),
 				title: item.title,
-				description: item.description, // HTML stripping can be done in queries helper if needed
+				description: item.description,
 			}))
 		: fallbackFeatures;
 
@@ -65,19 +69,19 @@ export default function About({
 		<section className="container grid lg:grid-cols-3 gap-10">
 			<div className="gap-6 flex flex-col">
 				<SectionLabel
-					text="من نحن"
+					text={t("label")}
 					Icon={<BookTextIcon size={15} />}
 				/>
 
 				<h2 className="text-xl sm:text-2xl lg:text-5xl font-medium">
-					أكثر من مجرد مياه
+					{t("title.line1")}
 					<b className="text-secondary block mt-3 font-extrabold">
-						جودة وتفاني
+						{t("title.emphasis")}
 					</b>
 				</h2>
 
 				<p className="text-black font-light text-base/10 text-justify">
-					مياه صحار ليست مجرد علامة تجارية؛ بل هي التزام بتوفير العنصر الأساسي للحياة في أنقى صورة. بدأت رحلتنا برؤية تقديم مياه نقية وعالية الجودة.
+					{t("description")}
 				</p>
 			</div>
 

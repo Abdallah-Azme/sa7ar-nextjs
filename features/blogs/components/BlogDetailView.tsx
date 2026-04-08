@@ -4,9 +4,14 @@ import ImageFallback from "@/components/shared/ImageFallback";
 import Link from "next/link";
 import { CalendarIcon, Share2Icon } from "lucide-react";
 import type { BlogItem } from "../services/blogService";
+import { useTranslations, useLocale } from "next-intl";
 
 export default function BlogDetailView({ blog }: { blog: BlogItem }) {
-  const formattedDate = new Date(blog.created_at).toLocaleDateString("ar-SA", {
+  const t = useTranslations("blogDetails");
+  const tNav = useTranslations("nav");
+  const locale = useLocale();
+
+  const formattedDate = new Date(blog.created_at).toLocaleDateString(locale === "ar" ? "ar-SA" : "en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -17,9 +22,9 @@ export default function BlogDetailView({ blog }: { blog: BlogItem }) {
       {/* 1. Breadcrumbs */}
       <nav className="container pt-10 pb-6">
         <div className="flex items-center gap-3 text-xs font-bold uppercase tracking-widest text-gray-400">
-          <Link href="/" className="hover:text-accent transition-colors">الرئيسية</Link>
+          <Link href="/" className="hover:text-accent transition-colors">{tNav("home")}</Link>
           <span className="size-1 bg-gray-300 rounded-full" />
-          <Link href="/blogs" className="hover:text-accent transition-colors">المدونة الصحية</Link>
+          <Link href="/blogs" className="hover:text-accent transition-colors">{tNav("blog")}</Link>
           <span className="size-1 bg-gray-300 rounded-full" />
           <span className="text-primary truncate max-w-[200px] sm:max-w-none">{blog.title}</span>
         </div>
@@ -79,14 +84,14 @@ export default function BlogDetailView({ blog }: { blog: BlogItem }) {
         <footer className="pt-16 border-t border-gray/5 text-center flex flex-col items-center gap-6">
             <div className="flex items-center gap-3 text-sm font-extrabold text-secondary uppercase tracking-widest">
                 <Share2Icon size={18} className="text-accent" />
-                أوسع محتوى الصحة
+                {t("shareLabel")}
             </div>
             <div className="flex gap-4">
                 <button className="px-8 h-12 bg-primary text-white rounded-full flex items-center gap-3 font-bold hover:bg-accent transition-all shadow-md">
-                    مشاركة
+                    Facebook
                 </button>
                 <button className="px-8 h-12 bg-primary text-white rounded-full flex items-center gap-3 font-bold hover:bg-accent transition-all shadow-md">
-                    تغريد
+                    Twitter (X)
                 </button>
             </div>
         </footer>

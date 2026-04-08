@@ -28,6 +28,8 @@ import {
 	type CarouselApi,
 } from "@/components/ui/carousel";
 
+import { useTranslations } from "next-intl";
+
 export default function Hero({
 	sliders,
     appleStoreLink,
@@ -39,24 +41,25 @@ export default function Hero({
     googlePlayLink?: string | null;
     whatsappNumber?: string | null;
 }) {
+	const t = useTranslations("hero");
 	const [api, setApi] = useState<CarouselApi>();
 	const [currentSlide, setCurrentSlide] = useState<number>(0);
 	const [slides, setSlides] = useState<number>(0);
 
 	const shoppingSteps = [
 		{
-			title: "توصيل سريع",
-			label: "مباشرة لباب بيتك",
+			title: t("steps.fast.title"),
+			label: t("steps.fast.label"),
 			Icon: TruckIcon,
 		},
 		{
-			title: "جودة مضمونة",
-			label: "مياه طبيعية 100%",
+			title: t("steps.quality.title"),
+			label: t("steps.quality.label"),
 			Icon: ShieldCheckIcon,
 		},
 		{
-			title: "الخيار الموثوق",
-			label: "جودة صحار الممتازة",
+			title: t("steps.trust.title"),
+			label: t("steps.trust.label"),
 			Icon: CircleCheckBigIcon,
 		},
 	];
@@ -91,23 +94,23 @@ export default function Hero({
 			<div className="space-y-10">
 				<div className="bg-accent/10 max-w-xs font-bold text-xs text-accent p-2.5 rounded-4xl flex gap-1 justify-between items-center">
 					<CircleDotIcon className="text-white fill-accent" />
-					<span className="text-nowrap">انتعاش نقي</span>
+					<span className="text-nowrap">{t("label")}</span>
 					<WaterDrop className="text-accent" />
 				</div>
 
 				{/* Titles */}
 				<h1 className="text-xl sm:text-2xl lg:text-5xl font-medium">
-					خليك دايماً منتعش
+					{t("title.line1")}
 				</h1>
 				<h1 className="text-xl sm:text-2xl lg:text-5xl">
 					<span className="text-secondary font-extrabold">
-						مياه صحار
+						{t("title.emphasis")}
 					</span>{" "}
-					خيارك الأفضل
+					{t("title.line2")}
 				</h1>
 				{/* Desc */}
 				<p className="font-light text-black text-lg/10">
-					مياه طبيعية نقية المستخرجة من قلب صحار. صافية، نقية، ومنعشة لنمط حياتك الصحي.
+					{t("description")}
 				</p>
 				{/* Actions */}
 				<Button
@@ -117,7 +120,7 @@ export default function Hero({
 					<Link href="/products">
 						<div className="flex items-center gap-2">
 							<ShoppingBasketIcon />
-							<span>تسوق المنتجات</span>
+							<span>{t("actions.shop")}</span>
 						</div>
 						<ArrowUpLeftIcon className="ltr:rotate-90 rtl:rotate-0" />
 					</Link>

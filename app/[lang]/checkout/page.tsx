@@ -6,10 +6,21 @@ import CheckoutPageContent from "@/features/checkout/components/CheckoutPageCont
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 
-export const metadata: Metadata = {
-	title: "إتمام الطلب | مياه صحار",
-	description: "أدخل تفاصيل التوصيل وأتمم طلبك بأمان وسرعة.",
-};
+import { getTranslations } from "next-intl/server";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}): Promise<Metadata> {
+  const { lang } = await params;
+  const t = await getTranslations({ locale: lang, namespace: "seo.checkout" });
+
+  return {
+    title: t("title"),
+    description: t("description"),
+  };
+}
 
 export default async function CheckoutPage({ params }: { params: Promise<{ lang: string }> }) {
     const { lang } = await params;

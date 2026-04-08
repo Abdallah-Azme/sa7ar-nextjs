@@ -23,23 +23,26 @@ import LoginDropdown from "@/components/auth/LoginDropdown";
 import AuthActionWrapper from "@/components/shared/AuthActionWrapper";
 import ScrollToTop from "@/components/shared/ScrollToTop";
 import LanguageSwitcher from "./LanguageSwitcher";
+import { useTranslations } from "next-intl";
 
 /**
  * Nav links — mirrors React's navLinks array exactly (same paths, same icons)
  */
 const navLinks = [
-	{ path: "/", label: "الرئيسية", Icon: ArchiveIcon },
-	{ path: "/products", label: "المنتجات", Icon: ShoppingBagIcon },
-	{ path: "/about", label: "من نحن", Icon: BookTextIcon },
-	{ path: "/faq", label: "الأسئلة الشائعة", Icon: MessageCircleQuestionMarkIcon },
-	{ path: "/blogs", label: "المدونة", Icon: NewspaperIcon },
-	{ path: "/contact", label: "تواصل معنا", Icon: CircleStarIcon },
-];
+	{ path: "/", key: "home", Icon: ArchiveIcon },
+	{ path: "/products", key: "products", Icon: ShoppingBagIcon },
+	{ path: "/about", key: "about", Icon: BookTextIcon },
+	{ path: "/faq", key: "faq", Icon: MessageCircleQuestionMarkIcon },
+	{ path: "/blogs", key: "blog", Icon: NewspaperIcon },
+	{ path: "/contact", key: "contact", Icon: CircleStarIcon },
+] as const;
 
 /**
  * Navbar - Client Component
  */
 export default function Navbar({ logo }: { logo?: ReactNode }) {
+	const t = useTranslations("nav");
+	const tCommon = useTranslations("common");
 	const [isSheetOpen, setIsSheetOpen] = useState(false);
 	const [isScrolled, setIsScrolled] = useState(false);
 	const [isTransitioning, setIsTransitioning] = useState(false);
@@ -127,7 +130,7 @@ export default function Navbar({ logo }: { logo?: ReactNode }) {
 									)}
 								>
 									<item.Icon size={18} />
-									<span>{item.label}</span>
+									<span>{t(item.key)}</span>
 								</Link>
 							</li>
 						))}
@@ -180,7 +183,7 @@ export default function Navbar({ logo }: { logo?: ReactNode }) {
 								</SheetTrigger>
 								<SheetContent side="right" className="w-72 sm:w-80">
 									<div className="flex flex-col gap-6 p-2 mt-10">
-										<div className="text-sm font-bold text-gray">القائمة</div>
+										<div className="text-sm font-bold text-gray">{tCommon("menu")}</div>
 										<div className="flex flex-col gap-2">
 											{navLinks.map((item) => (
 												<Link
@@ -195,7 +198,7 @@ export default function Navbar({ logo }: { logo?: ReactNode }) {
 													)}
 												>
 													<item.Icon size={18} />
-													<span>{item.label}</span>
+													<span>{t(item.key)}</span>
 												</Link>
 											))}
 										</div>

@@ -10,6 +10,7 @@ import { SparklesIcon, MailIcon, Loader2, ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
 import apiClient from "@/lib/apiClient";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 type BlogItem = {
 	id: number;
@@ -37,6 +38,8 @@ interface BlogsViewProps {
  *   - Pagination, ArticleCard reuse
  */
 export default function BlogsView({ blogs, totalPages }: BlogsViewProps) {
+	const t = useTranslations("blogPage");
+	const tCommon = useTranslations("common");
 	const [newsletterEmail, setNewsletterEmail] = useState("");
 	const [isSubscribing, setIsSubscribing] = useState(false);
 
@@ -82,11 +85,11 @@ export default function BlogsView({ blogs, totalPages }: BlogsViewProps) {
 					<div className="max-w-xl space-y-4 text-white">
 						<WaterDrop size={45} className="stroke-2 mb-7" />
 						<h1 className="text-3xl font-bold sm:text-5xl">
-							{featuredArticle?.title || "مدونة الصحة والتعليم"}
+							{featuredArticle?.title || t("title")}
 						</h1>
 						<p className="inline-flex items-center gap-2 text-base text-white/90 sm:text-xl">
 							<SparklesIcon className="size-4 text-[#FDD835]" />
-							نصائح صحية، معايير المياه النقية، وإرشادات الحياة الصحية.
+							{t("meta")}
 						</p>
 
 						<form
@@ -100,7 +103,7 @@ export default function BlogsView({ blogs, totalPages }: BlogsViewProps) {
 									value={newsletterEmail}
 									onChange={(e) => setNewsletterEmail(e.target.value)}
 									required
-									placeholder="اشترك للحصول على التحديثات"
+									placeholder={t("news.placeholder")}
 									className="h-10 w-full bg-transparent px-4 ps-10 text-xs text-primary outline-none placeholder:text-gray"
 								/>
 							</div>
@@ -124,11 +127,11 @@ export default function BlogsView({ blogs, totalPages }: BlogsViewProps) {
 			<section className="container mt-12 space-y-12">
 				<div className="space-y-3 text-start">
 					<h2 className="text-3xl font-extrabold text-primary sm:text-5xl">
-						الأكثر قراءةً
+						{t("mostRead.title")}
 					</h2>
 					<p className="inline-flex items-center gap-2 text-sm font-medium text-gray">
 						<SparklesIcon className="size-4 text-accent" />
-						نصائح صحية، معايير المياه النقية، وإرشادات الحياة الصحية.
+						{t("meta")}
 					</p>
 				</div>
 
@@ -166,7 +169,7 @@ export default function BlogsView({ blogs, totalPages }: BlogsViewProps) {
 								description={article.description}
 								image={article.image}
 								meta={article.subtitle}
-								readMoreLabel="اقرأ المزيد"
+								readMoreLabel={tCommon("readMore")}
 								href={`/blogs/${encodeURIComponent(article.slug)}`}
 							/>
 						))}
@@ -178,11 +181,11 @@ export default function BlogsView({ blogs, totalPages }: BlogsViewProps) {
 			<section className="container mb-20 space-y-10">
 				<div className="space-y-3 text-start">
 					<h2 className="text-3xl font-extrabold text-primary sm:text-5xl">
-						أحدث المقالات
+						{t("latest.title")}
 					</h2>
 					<p className="inline-flex items-center gap-2 text-sm font-medium text-gray">
 						<SparklesIcon className="size-4 text-accent" />
-						نصائح صحية، معايير المياه النقية، وإرشادات الحياة الصحية.
+						{t("meta")}
 					</p>
 				</div>
 
@@ -194,7 +197,7 @@ export default function BlogsView({ blogs, totalPages }: BlogsViewProps) {
 							description={article.description}
 							image={article.image}
 							meta={article.subtitle}
-							readMoreLabel="اقرأ المزيد"
+							readMoreLabel={tCommon("readMore")}
 							href={`/blogs/${encodeURIComponent(article.slug)}`}
 						/>
 					))}

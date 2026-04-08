@@ -4,38 +4,39 @@ import GoogleStore from "@/components/icons/GoogleStore";
 import { Button } from "@/components/ui/button";
 import Logo from "../Logo";
 import { Link } from "@/i18n/routing";
+import { getTranslations } from "next-intl/server";
 
 /**
  * Footer - RSC (Server Component)
- * Full parity with React's Footer:
- * - Arabic text matching i18n translation keys
- * - Same grid structure (grid-cols-12)
- * - Social media links, store buttons, copyright, terms/privacy
  */
 export default async function Footer() {
+    const tFooter = await getTranslations("footer");
+    const tNav = await getTranslations("nav");
+    const tCommon = await getTranslations("common");
+
 	const setting = await getGlobalSettings();
 	const socialMediaLinks = getSocialLinks(setting);
 	const year = new Date().getFullYear();
 
 	const links = [
 		{
-			title: "روابط سريعة", // footer.titles.quickLinks
+			title: tFooter("titles.quickLinks"),
 			items: [
-				{ label: "الرئيسية", link: "/" },
-				{ label: "المنتجات", link: "/products" },
-				{ label: "من نحن", link: "/about" },
-				{ label: "المدونة", link: "/blogs" },
+				{ label: tNav("home"), link: "/" },
+				{ label: tNav("products"), link: "/products" },
+				{ label: tNav("about"), link: "/about" },
+				{ label: tNav("blog"), link: "/blogs" },
 			],
 		},
 		{
-			title: "المساعدة", // footer.titles.help
+			title: tFooter("titles.help"),
 			items: [
-				{ label: "الأسئلة الشائعة", link: "/faq" },
-				{ label: "تواصل معنا", link: "/contact" },
+				{ label: tNav("faq"), link: "/faq" },
+				{ label: tNav("contact"), link: "/contact" },
 			],
 		},
 		{
-			title: "معلومات التواصل", // footer.titles.contact
+			title: tFooter("titles.contact"),
 			items: [
 				{ label: setting?.email, link: `mailto:${setting?.email}` },
 				{
@@ -60,7 +61,7 @@ export default async function Footer() {
 					</p>
 
 					<b className="block font-extrabold text-lg md:text-base lg:text-lg">
-						تابعنا {/* footer.followUs */}
+						{tFooter("followUs")}
 					</b>
 
 					<div className="flex flex-wrap items-center gap-2">
@@ -108,13 +109,13 @@ export default async function Footer() {
 				<div className="flex flex-col items-center gap-5 min-w-0 md:col-span-3 md:items-end">
 					<div>
 						<p className="font-medium text-xl md:text-lg lg:text-xl">
-							حمّل التطبيق الآن {/* footer.downloadNow */}
+							{tFooter("downloadNow")}
 						</p>
 						<p className="bg-primary h-1 w-10 rounded-xl mt-2" />
 					</div>
 
 					<p className="text-gray-500 text-sm text-right font-bold md:text-left md:text-xs lg:text-sm">
-						متوفر على متاجر متعددة {/* footer.storeLine */}
+						{tFooter("storeLine")}
 					</p>
 
 					<div className="gap-y-5 flex flex-col">
@@ -125,9 +126,9 @@ export default async function Footer() {
 						>
 							<a href={setting.google_play_link ?? "#"}>
 								<div>
-									<p className="text-[8px]">تحميل من</p> {/* common.downloadOn */}
+									<p className="text-[8px]">{tCommon("downloadOn")}</p>
 									<b className="text-sm md:text-xs lg:text-sm">
-										Google Play {/* common.stores.google */}
+										{tCommon("stores.google")}
 									</b>
 								</div>
 								<GoogleStore />
@@ -139,9 +140,9 @@ export default async function Footer() {
 						>
 							<a href={setting.apple_store_link ?? "#"}>
 								<div>
-									<p className="text-[8px]">تحميل من</p>
+									<p className="text-[8px]">{tCommon("downloadOn")}</p>
 									<b className="text-sm md:text-xs lg:text-sm">
-										App Store {/* common.stores.apple */}
+										{tCommon("stores.apple")}
 									</b>
 								</div>
 								<AppStore className="text-white" />
@@ -154,12 +155,12 @@ export default async function Footer() {
 			{/* Copyright bar */}
 			<div className="my-12 flex flex-col gap-4 text-center font-bold text-sm text-gray md:flex-row md:items-center md:justify-between md:text-left md:text-xs lg:text-sm">
 				<span>
-					© {year} جميع الحقوق محفوظة {/* footer.copyright */}
+					{tFooter("copyright", { year })}
 				</span>
 				<span className="flex items-center justify-center gap-2 md:justify-end">
-					<Link href="/terms">الشروط والأحكام</Link> {/* common.links.terms */}
+					<Link href="/terms">{tCommon("links.terms")}</Link>
 					<span aria-hidden>·</span>
-					<Link href="/privacy">سياسة الخصوصية</Link> {/* common.links.privacy */}
+					<Link href="/privacy">{tCommon("links.privacy")}</Link>
 				</span>
 			</div>
 		</footer>

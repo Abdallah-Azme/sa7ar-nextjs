@@ -5,10 +5,21 @@ import CartPageContent from "@/features/cart/components/CartPageContent";
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 
-export const metadata: Metadata = {
-	title: "سلة المشتريات | مياه صحار",
-	description: "راجع مشترياتك وقم بتطبيق كوبونات الخصم قبل إتمام الطلب.",
-};
+import { getTranslations } from "next-intl/server";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}): Promise<Metadata> {
+  const { lang } = await params;
+  const t = await getTranslations({ locale: lang, namespace: "seo.cart" });
+
+  return {
+    title: t("title"),
+    description: t("description"),
+  };
+}
 
 export default async function CartPage({ params }: { params: Promise<{ lang: string }> }) {
     const { lang } = await params;

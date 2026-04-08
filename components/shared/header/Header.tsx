@@ -1,6 +1,7 @@
 import { getGlobalSettings } from "@/features/settings/queries";
 import SearchDialog from "@/components/shared/SearchDialog";
 import { ReactNode } from "react";
+import { getTranslations } from "next-intl/server";
 
 /**
  * Header - RSC (Server Component)
@@ -18,9 +19,9 @@ export default async function Header({
 	children?: ReactNode;
 	showSearch?: boolean;
 }) {
+    const t = await getTranslations("header");
 	const setting = await getGlobalSettings();
-	// React uses t("header.notice") — here we use app_title from API as the notice
-	const content = text ?? setting?.app_title ?? "مياه صحار";
+	const content = text ?? setting?.app_title ?? t("notice");
 
 	return (
 		<header className="relative">

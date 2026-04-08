@@ -7,14 +7,28 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "الشراكات التجارية | سحر",
-  description: "انضم إلى شبكة سحر. سجّل مؤسستك للحصول على خدمات توصيل المياه بالجملة.",
-};
+import { getTranslations } from "next-intl/server";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}): Promise<Metadata> {
+  const { lang } = await params;
+  const t = await getTranslations({ locale: lang, namespace: "seo.partnership" });
+
+  return {
+    title: t("title"),
+    description: t("description"),
+  };
+}
 
 export default async function BusinessPartnershipsPage({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
   setRequestLocale(lang);
+
+  const tCommon = await getTranslations({ locale: lang, namespace: "common" });
+  const tPartnership = await getTranslations({ locale: lang, namespace: "partnership" });
 
   const queryClient = makeQueryClient();
   const types = await queryClient.fetchQuery({
@@ -31,7 +45,7 @@ export default async function BusinessPartnershipsPage({ params }: { params: Pro
             <nav className="flex items-center gap-3 text-sm font-bold text-white/70">
                 <Link href="/" className="hover:text-white transition-colors flex items-center gap-2">
                     <ArrowRightIcon className="rtl:rotate-180" size={16} />
-                    العودة إلى الرئيسية
+                    {tCommon("links.backHome") || "العودة إلى الرئيسية"}
                 </Link>
             </nav>
 
@@ -40,10 +54,10 @@ export default async function BusinessPartnershipsPage({ params }: { params: Pro
                     <BuildingIcon size={32} />
                 </div>
                 <h1 className="text-4xl md:text-6xl font-extrabold text-white leading-tight">
-                    الشراكات التجارية
+                    {tPartnership("title.line1")} {tPartnership("title.emphasis")}
                 </h1>
                 <p className="text-lg text-white/80 font-medium">
-                    تشارك مع سحر لتأمين مياه نقية وموثوقة لموظفيك ومنظمتك.
+                    {tPartnership("description")}
                 </p>
             </div>
         </div>

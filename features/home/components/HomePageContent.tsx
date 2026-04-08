@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { useQuery } from "@tanstack/react-query";
 import { homeKeys, fetchHomeData, fetchFaqs } from "../services/homeService";
 import { settingsKeys, fetchGlobalSettings } from "@/features/settings/services/settingsService";
@@ -15,6 +17,7 @@ import FAQ from "./FAQ";
 import BestSellingAccessories from "./BestSellingAccessories";
 
 export default function HomePageContent() {
+  const t = useTranslations("products");
   // useQuery reads from the pre-seeded cache — NO network request on first render
   const { data: homeData }    = useQuery({ queryKey: homeKeys.data(),    queryFn: fetchHomeData });
   const { data: settings }    = useQuery({ queryKey: settingsKeys.global(), queryFn: fetchGlobalSettings });
@@ -36,7 +39,7 @@ export default function HomePageContent() {
 
       {/* 3. Products Section (Most Sold) */}
       <Products
-        title="الأكثر مبيعاً"
+        title={t("mostSold")}
         mostSold={homeData?.most_sold_products}
         queryKey="most-sold"
       />

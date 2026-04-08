@@ -18,7 +18,12 @@ import {
 import apiClient from "@/lib/apiClient";
 import type { OrderDetails, OrderItem } from "@/features/orders/types";
 
+import { useTranslations } from "next-intl";
+
 export default function OrderDetailsView({ order, mapSrc }: { order: OrderDetails; mapSrc: string }) {
+    const tOrders = useTranslations("orders");
+    const tActions = useTranslations("actions");
+    const tCommon = useTranslations("common");
 	const router = useRouter();
 	const [isCancelling, setIsCancelling] = useState(false);
 
@@ -33,19 +38,19 @@ export default function OrderDetailsView({ order, mapSrc }: { order: OrderDetail
                 method: "POST",
                 tokenRequire: true,
             });
-            toast.success("تم إلغاء الطلب بنجاح");
+            toast.success(tOrders("cancelSuccess"));
             router.push("/account/orders");
             router.refresh();
         } catch (err: unknown) {
             const error = err as { message?: string };
-            toast.error(error?.message || "حدث خطأ أثناء إلغاء الطلب");
+            toast.error(error?.message || tCommon("errorOccurred"));
             setIsCancelling(false);
         }
 	};
 
 	return (
 		<div className="space-y-6 animate-in fade-in zoom-in duration-500">
-			<h2 className="text-gray-700 font-extrabold text-lg">تفاصيل الطلب</h2>
+			<h2 className="text-gray-700 font-extrabold text-lg">{tOrders("details")}</h2>
 
 			<div className="relative space-y-10 group">
 				<iframe
@@ -89,12 +94,12 @@ export default function OrderDetailsView({ order, mapSrc }: { order: OrderDetail
 
 						<div className="flex flex-col gap-6 w-full">
 							<div>
-								<span className="font-bold text-xs text-gray-400 uppercase tracking-wider">حالة الطلب</span>
-								<p className="font-extrabold text-sm text-secondary mt-1">{order.delivery_status || "جارٍ التنفيذ"}</p>
+								<span className="font-bold text-xs text-gray-400 uppercase tracking-wider">{tOrders("status")}</span>
+								<p className="font-extrabold text-sm text-secondary mt-1">{order.delivery_status || tOrders("processing")}</p>
 							</div>
 
 							<div>
-								<span className="font-bold text-xs text-gray-400 uppercase tracking-wider">منتجات الطلب</span>
+								<span className="font-bold text-xs text-gray-400 uppercase tracking-wider">{tOrders("itemsTitle")}</span>
 								<p className="font-bold text-sm text-gray-800 mt-1 line-clamp-2 leading-relaxed">
                                     {productsNames}
                                 </p>
@@ -109,7 +114,7 @@ export default function OrderDetailsView({ order, mapSrc }: { order: OrderDetail
                                     variant="destructive"
                                     className="w-full mt-8 h-12 rounded-full bg-destructive/10 text-destructive hover:bg-destructive/20 font-bold transition-all"
                                 >
-                                    إلغاء الطلب
+                                    {tActions("cancelOrder")}
                                     <AlertCircle className="size-5 ms-2" />
                                 </Button>
                             </DialogTrigger>
@@ -119,10 +124,10 @@ export default function OrderDetailsView({ order, mapSrc }: { order: OrderDetail
                                         <AlertCircle className="size-10" />
                                     </div>
                                     <DialogTitle className="text-2xl font-extrabold text-primary text-center">
-                                        إلغاء <span className="text-destructive">الطلب</span>؟
+                                        {tOrders("cancelConfirmTitle")}
                                     </DialogTitle>
                                     <DialogDescription className="text-sm font-medium text-gray-500 text-center mt-2 leading-relaxed">
-                                        هل أنت متأكد تماماً من إلغاء هذا الطلب؟ هذا الإجراء لا يمكن التراجع عنه.
+                                        {tOrders("cancelConfirmDescription")}
                                     </DialogDescription>
                                 </DialogHeader>
                                 <div className="flex flex-col gap-3 mt-6">
@@ -132,11 +137,11 @@ export default function OrderDetailsView({ order, mapSrc }: { order: OrderDetail
                                         disabled={isCancelling}
                                         onClick={handleCancel}
                                     >
-                                        {isCancelling ? "جارٍ الإلغاء..." : "نعم، إلغاء الطلب"}
+                                        {isCancelling ? tActions("cancelling") : tActions("confirmCancel")}
                                     </Button>
                                     <DialogClose asChild>
                                         <Button variant="ghost" className="h-12 rounded-full font-bold text-gray-500 bg-gray-50 hover:bg-gray-100">
-                                            الاحتفاظ بطلبي
+                                            {tActions("keepOrder")}
                                         </Button>
                                     </DialogClose>
                                 </div>

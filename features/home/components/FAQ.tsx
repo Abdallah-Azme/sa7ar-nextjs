@@ -25,6 +25,8 @@ type ApiFaqItem = {
 	answer: string;
 };
 
+import { useTranslations } from "next-intl";
+
 /**
  * FAQ - Client Component
  * Handles the interactive accordion for support questions
@@ -36,6 +38,7 @@ export default function FAQ({
     faqs?: ApiFaqItem[]; 
     isSection?: boolean 
 }) {
+    const t = useTranslations("faq");
     const { data: queryFaqs } = useFaqsQuery();
     const faqs = initialFaqs || queryFaqs || [];
 	const [itemSelected, setItemSelected] = useState<string>("");
@@ -45,18 +48,18 @@ export default function FAQ({
 		<section className={cn("space-y-10", isSection && "container py-20")}>
 			<div className="space-y-6 text-center">
 				<SectionLabel
-					text="الأسئلة الشائعة"
+					text={t("label")}
 					Icon={<MessageCircleQuestionMarkIcon size={15} />}
 					center
 				/>
 
 				<h2 className="text-xl sm:text-2xl lg:text-5xl font-medium">
-					الأسئلة الشائعة حول 
-					<b className="font-extrabold mx-2">الدعم</b>
+					{t("title.line1")} 
+					<b className="font-extrabold mx-2">{t("title.emphasis")}</b>
 				</h2>
 
 				<p className="font-light text-black text-lg/10">
-					كل ما تحتاج معرفته عن منتجاتنا وخدماتنا.
+					{t("help.description")}
 				</p>
 			</div>
 

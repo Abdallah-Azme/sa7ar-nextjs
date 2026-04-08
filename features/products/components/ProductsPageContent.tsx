@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { useQuery } from "@tanstack/react-query";
 import { 
     productKeys, 
@@ -13,6 +15,9 @@ import Banner from "@/components/shared/Banner";
 import BestSellingAccessories from "@/features/home/components/BestSellingAccessories";
 
 export default function ProductsPageContent() {
+  const tCommon = useTranslations("common");
+  const tProducts = useTranslations("products");
+
   const { data: bestSellers = [] } = useQuery({ queryKey: productKeys.bestSelling(), queryFn: fetchBestSellingProducts });
   const { data: bardSizes = [] } = useQuery({ queryKey: productKeys.brandSizes("bard"), queryFn: () => fetchBrandSizes("bard") });
   const { data: rathathSizes = [] } = useQuery({ queryKey: productKeys.brandSizes("rathath"), queryFn: () => fetchBrandSizes("rathath") });
@@ -22,7 +27,7 @@ export default function ProductsPageContent() {
 
   // Helper to build filter options from sizes
   const buildFilters = (sizes: { size: string }[]): ProductFilterOption[] => {
-    const filters: ProductFilterOption[] = [{ value: "all", label: "الكل" }];
+    const filters: ProductFilterOption[] = [{ value: "all", label: tCommon("all") }];
     const seen = new Set();
     sizes.forEach(s => {
         if (!seen.has(s.size)) {
@@ -37,8 +42,8 @@ export default function ProductsPageContent() {
     <main className="space-y-16 pb-20">
       {/* 1. Header Banner */}
       <Banner 
-        title="منتجاتنا" 
-        desc="اختر من تشكيلتنا الواسعة من منتجات المياه الممتازة." 
+        title={tProducts("label")} 
+        desc={tProducts("description")} 
         bannerUrl="/images/products-hero.webp"
       />
 
@@ -46,8 +51,8 @@ export default function ProductsPageContent() {
         {/* 2. Best Sellers */}
         {bestSellers.length > 0 && (
             <ProductsCarouselSection
-                label="منتجاتنا"
-                title="الأكثر مبيعاً"
+                label={tProducts("label")}
+                title={tProducts("mostSold")}
                 filters={[]}
                 products={bestSellers}
                 showMoreTo="/products-list?section=most-sold"
@@ -56,8 +61,8 @@ export default function ProductsPageContent() {
 
         {/* 3. Bard Brand Section */}
         <ProductsCarouselSection
-          label="منتجاتنا"
-          title="منتجات برد"
+          label={tProducts("label")}
+          title={tProducts("bard")}
           filters={buildFilters(bardSizes)}
           products={bardProducts}
           showMoreTo="/products-list?section=bard"
@@ -65,8 +70,8 @@ export default function ProductsPageContent() {
 
         {/* 4. Rathath Brand Section */}
         <ProductsCarouselSection
-          label="منتجاتنا"
-          title="منتجات رذاذ"
+          label={tProducts("label")}
+          title={tProducts("rathath")}
           filters={buildFilters(rathathSizes)}
           products={rathathProducts}
           showMoreTo="/products-list?section=rathath"

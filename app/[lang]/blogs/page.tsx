@@ -5,10 +5,21 @@ import BlogsPageContent from "@/features/blogs/components/BlogsPageContent";
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "مدونة الصحة والتعليم | مياه صحار",
-  description: "تابع أحدث مقالاتنا حول الصحة والترطيب ومعايير جودة المياه النقية.",
-};
+import { getTranslations } from "next-intl/server";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}): Promise<Metadata> {
+  const { lang } = await params;
+  const t = await getTranslations({ locale: lang, namespace: "seo.blog" });
+
+  return {
+    title: t("title"),
+    description: t("description"),
+  };
+}
 
 export default async function BlogsPage({ 
   params, 

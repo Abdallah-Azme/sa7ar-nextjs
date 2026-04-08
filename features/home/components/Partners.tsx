@@ -1,22 +1,26 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import { HandshakeIcon } from "lucide-react";
 import SectionLabel from "@/components/shared/SectionLabel";
 import { Card } from "@/components/ui/card";
 import ImageFallback from "@/components/shared/ImageFallback";
 
-const partners = [
+const partnersList = [
 	{ image: "/rzaz.svg", color: "#52A1FF1A", title: "Rzaz" },
 	{ image: "/barad.svg", color: "#2C6C8D1A", title: "Barad" },
 ];
 
 /**
- * Partners - RSC (Server Component)
- * Partner/Category showcases on home page
+ * Partners Component
  */
 export default function Partners() {
+	const t = useTranslations("partners");
+
 	return (
 		<section className="container grid lg:grid-cols-[1.2fr_0.8fr] gap-10">
 			<div className="grid sm:grid-cols-2 gap-6">
-				{partners.map((item, index) => (
+				{partnersList.map((item, index) => (
 					<Card
 						key={index}
 						style={{ background: item.color, borderColor: item.color }}
@@ -35,19 +39,19 @@ export default function Partners() {
 
 			<div className="gap-6 flex flex-col">
 				<SectionLabel
-					text="شركاؤنا"
+					text={t("label")}
 					Icon={<HandshakeIcon size={15} />}
 				/>
 
 				<h2 className="text-xl sm:text-2xl lg:text-5xl font-medium">
-					شراكات
+					{t("title.line1")}
 					<b className="text-secondary block mt-3 font-extrabold">
-						استراتيجية
+						{t("title.emphasis")}
 					</b>
 				</h2>
 
 				<p className="text-black text-lg/10 text-justify mt-auto">
-					نتعاون مع أفضل الأسماء في الصناعة لضمان وصول مياه صحار إلى كل ركن من أركان المجتمع بأعلى معايير الموثوقية.
+					{t("description")}
 				</p>
 			</div>
 		</section>

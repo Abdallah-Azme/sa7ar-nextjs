@@ -13,6 +13,7 @@ import apiClient from "@/lib/apiClient";
 import { toast } from "sonner";
 import { useGlobalSettingsQuery } from "@/features/settings/hooks/useSettings";
 import { useMutation } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 
 interface ContactFormValues {
 	name: string;
@@ -22,6 +23,8 @@ interface ContactFormValues {
 }
 
 export default function ContactPageContent() {
+	const t = useTranslations("contactPage");
+    const tForm = useTranslations("form");
 	const { data: settings } = useGlobalSettingsQuery();
 
 	const { register, handleSubmit, reset, formState: { errors } } = useForm<ContactFormValues>({
@@ -55,17 +58,17 @@ export default function ContactPageContent() {
 	return (
 		<main className="flex flex-col min-h-screen">
 			<Banner
-				title="تواصل معنا"
-				desc="نحن هنا للإجابة على استفساراتك حول منتجاتنا وخدمات توصيل المياه."
+				title={t("banner.title")}
+				desc={t("banner.description")}
 				bannerUrl="/images/contact-hero.webp"
 			/>
 
 			<section className="bg-accent/5 py-24">
 				<div className="container">
 					<div className="text-center space-y-4 mb-16">
-						<h2 className="text-3xl sm:text-5xl font-extrabold text-primary">معلومات التواصل</h2>
+						<h2 className="text-3xl sm:text-5xl font-extrabold text-primary">{t("form.title")}</h2>
 						<p className="text-gray-600 max-w-2xl mx-auto">
-							يسعدنا الرد على استفساراتك في أقرب وقت ممكن. تواصل معنا عبر النموذج أدناه.
+							{t("form.description")}
 						</p>
 					</div>
 
@@ -74,44 +77,44 @@ export default function ContactPageContent() {
 							<form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
 								<div className="space-y-4">
 									<Label className="text-gray">
-										الاسم الكامل <span className="text-destructive">*</span>
+										{t("form.fields.name")} <span className="text-destructive">*</span>
 									</Label>
 									<ContactUsInput
 										Icon={<UserRound size={15} />}
-										placeholder="مثال: عبدالله أحمد"
-										{...register("name", { required: "هذا الحقل مطلوب" })}
+										placeholder={t("form.placeholders.name")}
+										{...register("name", { required: tForm("errors.required") })}
 									/>
 									<p className="text-destructive text-xs">{errors.name?.message}</p>
 								</div>
 
 								<div className="space-y-4">
 									<Label className="text-gray">
-										رقم الهاتف <span className="text-destructive">*</span>
+										{t("form.fields.phone")} <span className="text-destructive">*</span>
 									</Label>
 									<ContactUsInput
 										Icon={<PhoneIcon size={15} />}
 										type="tel"
-										placeholder="+968 XXXX XXXX"
+										placeholder={t("form.placeholders.phone")}
 										dir="ltr"
 										{...register("mobile", {
-											required: "هذا الحقل مطلوب",
-											minLength: { value: 6, message: "رقم الهاتف قصير جداً" },
-											pattern: { value: /^\d+$/, message: "يرجى إدخال أرقام فقط" },
+											required: tForm("errors.required"),
+											minLength: { value: 6, message: tForm("errors.tooShort", { count: 6 }) },
+											pattern: { value: /^\d+$/, message: tForm("errors.invalidMobile") },
 										})}
 									/>
 									<p className="text-destructive text-xs">{errors.mobile?.message}</p>
 								</div>
 
 								<div className="space-y-4">
-									<Label className="text-gray">البريد الإلكتروني</Label>
+									<Label className="text-gray">{t("form.fields.email")}</Label>
 									<ContactUsInput
 										Icon={<MailIcon size={15} />}
-										placeholder="example@email.com"
+										placeholder={t("form.placeholders.email")}
 										type="email"
 										{...register("email", {
 											pattern: {
 												value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-												message: "بريد إلكتروني غير صحيح",
+												message: tForm("errors.invalidEmail"),
 											},
 										})}
 									/>
@@ -120,13 +123,13 @@ export default function ContactPageContent() {
 
 								<div className="space-y-4">
 									<Label className="text-gray">
-										الرسالة <span className="text-destructive">*</span>
+										{t("form.fields.message")} <span className="text-destructive">*</span>
 									</Label>
 									<textarea
 										rows={5}
-										placeholder="كيف يمكننا مساعدتك؟"
+										placeholder={t("form.placeholders.message")}
 										className="border-b rounded-none shadow-none resize-none w-full outline-none focus:border-primary"
-										{...register("message", { required: "هذا الحقل مطلوب" })}
+										{...register("message", { required: tForm("errors.required") })}
 									/>
 									<p className="text-destructive text-xs">{errors.message?.message}</p>
 								</div>
@@ -136,7 +139,7 @@ export default function ContactPageContent() {
 									disabled={isPending}
 									className="w-full h-12 rounded-full px-5! justify-between"
 								>
-									{isPending ? "جاري الإرسال..." : "إرسال الرسالة"}
+									{isPending ? tForm("labels.savingChanges") : t("form.submit")}
 									<SendHorizontalIcon className="rtl:rotate-180" size={18} />
 								</Button>
 							</form>
@@ -144,50 +147,50 @@ export default function ContactPageContent() {
 
 						<Card className="rounded-4xl p-6 gap-y-8 shadow-none border-none">
 							<div className="space-y-3 text-primary">
-								<span className="text-sm font-medium">تواصل معنا</span>
+								<span className="text-sm font-medium">{t("info.label")}</span>
 								<h3 className="text-2xl md:text-4xl font-medium md:max-w-101">
-									نحن هنا لخدمتك على مدار الساعة
+									{t("info.title")}
 								</h3>
 							</div>
 
 							<div className="space-y-5 text-sm text-black-cu">
 								<div className="space-y-3">
-									<p className="font-medium text-gray">البريد الإلكتروني</p>
+									<p className="font-medium text-gray">{t("info.emailLabel")}</p>
 									<div className="flex items-start gap-3">
 										<div className="size-9 rounded-full bg-accent/15 text-accent flex items-center justify-center">
 											<MailIcon className="size-4" />
 										</div>
-										<p>{settings?.email ?? "info@sa7arwater.om"}</p>
+										<p>{settings?.email ?? t("info.emailValue")}</p>
 									</div>
 								</div>
 
 								<div className="space-y-3">
-									<p className="font-medium text-gray">رقم الهاتف</p>
+									<p className="font-medium text-gray">{t("info.phoneLabel")}</p>
 									<div className="flex items-start gap-3">
 										<div className="size-9 rounded-full bg-accent/15 text-accent flex items-center justify-center">
 											<PhoneIcon className="size-4" />
 										</div>
-										<p>{settings?.whatsapp ?? "+968 2449 0599"}</p>
+										<p>{settings?.whatsapp ?? t("info.phoneValue")}</p>
 									</div>
 								</div>
 
 								<div className="space-y-3">
-									<p className="font-medium text-gray">العنوان</p>
+									<p className="font-medium text-gray">{t("info.addressLabel")}</p>
 									<div className="flex items-start gap-3">
 										<div className="size-9 rounded-full bg-accent/15 text-accent flex items-center justify-center">
 											<MapPinIcon className="size-4" />
 										</div>
-										<p>{settings?.address ?? "المدينة الصناعية، صحار، عُمان"}</p>
+										<p>{settings?.address ?? t("info.addressValue")}</p>
 									</div>
 								</div>
 
 								<div className="space-y-3">
-									<p className="font-medium text-gray">ساعات العمل</p>
+									<p className="font-medium text-gray">{t("info.hoursLabel")}</p>
 									<div className="flex items-start gap-3">
 										<div className="size-9 rounded-full bg-accent/15 text-accent flex items-center justify-center">
 											<Clock4Icon className="size-4" />
 										</div>
-										<p>السبت - الخميس: 8:00 ص - 5:00 م</p>
+										<p>{t("info.hoursValue")}</p>
 									</div>
 								</div>
 							</div>
@@ -199,15 +202,15 @@ export default function ContactPageContent() {
 			<section className="container space-y-10 mb-20">
 				<div className="text-center space-y-4">
 					<SectionLabel
-						text="موقعنا على الخريطة"
+						text={t("map.label")}
 						Icon={<MapPinIcon size={16} />}
 						center
 					/>
 					<h2 className="text-2xl sm:text-4xl font-extrabold text-secondary">
-						زيارة مصنعنا
+						{t("map.title")}
 					</h2>
 					<p className="text-sm sm:text-base font-medium">
-						يمكنكم زيارتنا في المدينة الصناعية بصحار أو التواصل معنا عبر الهاتف.
+						{t("map.description")}
 					</p>
 				</div>
 
@@ -217,7 +220,7 @@ export default function ContactPageContent() {
 						src={staticMapSrc}
 						loading="lazy"
 						referrerPolicy="no-referrer-when-downgrade"
-						title="خريطة موقع مياه صحار"
+						title={t("map.iframeTitle")}
 					/>
 				</div>
 			</section>

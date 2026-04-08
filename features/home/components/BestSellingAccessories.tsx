@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import { ShoppingBagIcon, ShoppingBasketIcon } from "lucide-react";
 import SectionLabel from "@/components/shared/SectionLabel";
 import ShowMore from "@/components/shared/buttons/ShowMore";
@@ -5,9 +8,7 @@ import ProductCard from "@/components/shared/cards/ProductCard";
 import type { Product } from "@/types";
 
 /**
- * BestSellingAccessories - RSC
- * Ported from React BestSellingAccessories.tsx
- * Fetches accessories on the server side instead of useQuery.
+ * BestSellingAccessories Component
  */
 export default function BestSellingAccessories({
 	accessories = [],
@@ -16,6 +17,9 @@ export default function BestSellingAccessories({
 	accessories?: Product[];
 	showMoreTo?: string;
 }) {
+	const tCommon = useTranslations("common");
+	const tMostSeller = useTranslations("mostSeller");
+
 	if (!accessories || accessories.length === 0) return null;
 
 	return (
@@ -23,7 +27,7 @@ export default function BestSellingAccessories({
 			<div className="container space-y-10">
 				<div className="space-y-6 text-center">
 					<SectionLabel
-						text="منتجاتنا"
+						text={tCommon("ourProducts")}
 						Icon={<ShoppingBagIcon size={15} />}
 						center
 						white
@@ -31,7 +35,7 @@ export default function BestSellingAccessories({
 					<div className="flex items-center justify-center text-center gap-2">
 						<ShoppingBasketIcon size={30} />
 						<h2 className="text-xl sm:text-2xl lg:text-5xl font-medium">
-							الإكسسوارات الأكثر مبيعاً
+							{tMostSeller("title")}
 						</h2>
 					</div>
 				</div>

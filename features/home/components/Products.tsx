@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import { ShoppingBagIcon, ShoppingBasketIcon } from "lucide-react";
 import ShowMore from "@/components/shared/buttons/ShowMore";
 import SectionLabel from "@/components/shared/SectionLabel";
@@ -9,11 +12,6 @@ import {
 	CarouselItem,
 } from "@/components/ui/carousel";
 
-/**
- * Products - RSC (Server Component)
- * Grid/Carousel section showing products. 
- * Note: Interactions inside ProductCard are client-side.
- */
 export default function Products({
 	mostSold = [],
     title,
@@ -23,26 +21,27 @@ export default function Products({
     title: string;
     queryKey: string;
 }) {
+	const t = useTranslations("common");
 	return (
 		<section className="container space-y-10">
-            <div className="flex items-center justify-between">
-                {/* Title */}
-                <div className="space-y-6">
-                    <SectionLabel
-                        text="منتجاتنا"
-                        Icon={<ShoppingBagIcon size={15} />}
-                    />
-                    <div className="flex items-center gap-2">
-                        <ShoppingBasketIcon size={30} />
-                        <h2 className="text-xl sm:text-2xl lg:text-5xl font-medium">
-                            {title}
-                        </h2>
-                    </div>
-                </div>
-                {mostSold.length > 5 && (
-                    <ShowMore to={`/products-list?section=${queryKey}`} />
-                )}
-            </div>
+			<div className="flex items-center justify-between">
+				{/* Title */}
+				<div className="space-y-6">
+					<SectionLabel
+						text={t("ourProducts")}
+						Icon={<ShoppingBagIcon size={15} />}
+					/>
+					<div className="flex items-center gap-2">
+						<ShoppingBasketIcon size={30} />
+						<h2 className="text-xl sm:text-2xl lg:text-5xl font-medium">
+							{title}
+						</h2>
+					</div>
+				</div>
+				{mostSold.length > 5 && (
+					<ShowMore to={`/products-list?section=${queryKey}`} />
+				)}
+			</div>
 
             <Carousel opts={{ align: "start" }} className="w-full">
                 <CarouselContent>

@@ -12,6 +12,7 @@ import { useSearchParams } from "next/navigation";
 import { fetchBestSellingAccessories } from "../services/productService";
 import { useQuery } from "@tanstack/react-query";
 import { productKeys } from "../services/productService";
+import { useTranslations } from "next-intl";
 
 const useBestSellingAccessories = () => {
     return useQuery({
@@ -21,6 +22,8 @@ const useBestSellingAccessories = () => {
 };
 
 export default function ProductsListPageContent() {
+    const t = useTranslations("products");
+    const tCommon = useTranslations("common");
     const searchParams = useSearchParams();
     const section = searchParams.get("section") || "most-sold";
     const sizeId = searchParams.get("size_id");
@@ -38,23 +41,23 @@ export default function ProductsListPageContent() {
     switch (section) {
         case "most-sold":
             products = bestSelling.data || [];
-            title = "الأكثر مبيعاً";
+            title = t("mostSold");
             break;
         case "rathath":
             products = rathath.data || [];
-            title = "منتجات رذاذ";
+            title = t("sections.rathath");
             break;
         case "bard":
             products = bard.data || [];
-            title = "منتجات برد";
+            title = t("sections.bard");
             break;
         case "accessories":
             products = accessories.data || [];
-            title = "الإكسسوارات الأكثر مبيعاً";
+            title = t("mostSold"); // Or a specific key if available
             break;
         default:
             products = bestSelling.data || [];
-            title = "الأكثر مبيعاً";
+            title = t("mostSold");
     }
 
     const totalPages = 1;
@@ -65,7 +68,7 @@ export default function ProductsListPageContent() {
                 <div className="flex flex-wrap items-end justify-between gap-6 mb-16">
                     <div className="space-y-4">
                         <SectionLabel 
-                            text="منتجاتنا" 
+                            text={tCommon("ourProducts")} 
                             Icon={<ShoppingBagIcon size={15} />} 
                         />
                         <div className="flex items-center gap-2">

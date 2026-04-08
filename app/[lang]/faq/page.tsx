@@ -8,14 +8,26 @@ import ContactUsSection from "@/components/shared/ContactUsSection";
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "الأسئلة الشائعة | مياه صحار",
-  description: "الأسئلة الشائعة حول منتجات مياه صحار وخدمات التوصيل ومعايير الجودة.",
-};
+import { getTranslations } from "next-intl/server";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}): Promise<Metadata> {
+  const { lang } = await params;
+  const t = await getTranslations({ locale: lang, namespace: "seo.faq" });
+
+  return {
+    title: t("title"),
+    description: t("description"),
+  };
+}
 
 export default async function FaqPage({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
   setRequestLocale(lang);
+  const t = await getTranslations("faq");
 
   const queryClient = makeQueryClient();
   await queryClient.prefetchQuery({
@@ -29,8 +41,8 @@ export default async function FaqPage({ params }: { params: Promise<{ lang: stri
       <div className="absolute top-[40%] -z-1 inset-e-20 size-72 bg-secondary/5 rounded-full blur-[100px]" />
 
       <Banner
-        title="الأسئلة الشائعة"
-        desc="كل ما تحتاج معرفته حول منتجاتنا وخدماتنا."
+        title={t("label")}
+        desc={t("help.description")}
         bannerUrl="/images/placeholder/hero.webp"
       />
 

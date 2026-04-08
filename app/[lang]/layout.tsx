@@ -8,22 +8,36 @@ import { routing } from "@/i18n/config";
 import Header from "@/components/shared/header/Header";
 import Navbar from "@/components/shared/header/Navbar";
 import Footer from "@/components/shared/footer/Footer";
+import Logo from "@/components/shared/Logo";
 
 // next-intl
 import { NextIntlClientProvider } from "next-intl";
-import { getMessages, setRequestLocale } from "next-intl/server";
+import { getMessages, setRequestLocale, getTranslations } from "next-intl/server";
+import DirectionProviderWrapper from "@/components/providers/DirectionProviderWrapper";
+
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ lang: locale }));
+}
 
 const inter = Inter({
   subsets: ["latin", "latin-ext"],
   variable: "--font-inter",
 });
 
-export const metadata: Metadata = {
-  title: "Sohar Water | مياه صحار",
-  description: "Natural water products from Sohar, Oman. - أفضل مياه طبيعية من صحار، عمان.",
-};
 
-import Logo from "@/components/shared/Logo";
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}): Promise<Metadata> {
+  const { lang } = await params;
+  const t = await getTranslations({ locale: lang, namespace: "seo.home" });
+
+  return {
+    title: t("title"),
+    description: t("description"),
+  };
+}
 
 import { QueryProvider } from "@/providers/QueryProvider";
 
@@ -39,15 +53,16 @@ export default async function RootLayout({
 
   // 2. Extract locale and messages
   const paramsResolved = await params;
-  const lang = paramsResolved?.lang ?? routing.defaultLocale;
+  const lang = (paramsResolved?.lang as "ar" | "en") ?? routing.defaultLocale;
   
   setRequestLocale(lang);
   const messages = await getMessages();
+  const dir = lang === "ar" ? "rtl" : "ltr";
 
   return (
     <html
       lang={lang}
-      dir={lang === "ar" ? "rtl" : "ltr"}
+      dir={dir}
       className={`${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans">
@@ -56,24 +71,26 @@ export default async function RootLayout({
           locale={lang}
           timeZone="Asia/Muscat"
         >
-          <QueryProvider>
-            {/* State Providers */}
-            <AuthProvider initialUser={initialUser}>
-              <CartProvider>
-                
-                {/* Global UI Structure */}
-                <Header />
-                <Navbar logo={<Logo />} />
+          <DirectionProviderWrapper dir={dir}>
+            <QueryProvider>
+              {/* State Providers */}
+              <AuthProvider initialUser={initialUser}>
+                <CartProvider>
+                  
+                  {/* Global UI Structure */}
+                  <Header />
+                  <Navbar logo={<Logo />} />
 
-                <main className="flex-1">
-                  {children}
-                </main>
+                  <main className="flex-1">
+                    {children}
+                  </main>
 
-                <Footer />
-                
-              </CartProvider>
-            </AuthProvider>
-          </QueryProvider>
+                  <Footer />
+                  
+                </CartProvider>
+              </AuthProvider>
+            </QueryProvider>
+          </DirectionProviderWrapper>
         </NextIntlClientProvider>
       </body>
     </html>
