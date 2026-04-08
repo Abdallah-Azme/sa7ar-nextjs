@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import dynamic from "next/dynamic";
 
 import { useQuery } from "@tanstack/react-query";
 import { homeKeys, fetchHomeData, fetchFaqs } from "../services/homeService";
@@ -8,13 +9,13 @@ import { settingsKeys, fetchGlobalSettings } from "@/features/settings/services/
 import { productKeys, fetchBestSellingAccessories } from "@/features/products/services/productService";
 
 import Hero from "./Hero";
-import About from "./About";
 import Products from "./Products";
-import Partners from "./Partners";
-import Mobile from "./Mobile";
-import RequestPartnership from "./RequestPartnership";
-import FAQ from "./FAQ";
-import BestSellingAccessories from "./BestSellingAccessories";
+const About = dynamic(() => import("./About"));
+const Partners = dynamic(() => import("./Partners"));
+const Mobile = dynamic(() => import("./Mobile"));
+const RequestPartnership = dynamic(() => import("./RequestPartnership"));
+const FAQ = dynamic(() => import("./FAQ"));
+const BestSellingAccessories = dynamic(() => import("./BestSellingAccessories"));
 
 export default function HomePageContent() {
   const t = useTranslations("products");

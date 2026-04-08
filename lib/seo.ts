@@ -11,7 +11,7 @@ interface SeoProps {
 }
 
 export function generateSeoMetadata({ title, description, lang, path = '', image, noIndex = false }: SeoProps): Metadata {
-  let baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.soharwater.com';
+  let baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://watersohar.om';
   if (!baseUrl.startsWith('http')) baseUrl = `https://${baseUrl}`;
   
   // Format the relative path
@@ -22,23 +22,28 @@ export function generateSeoMetadata({ title, description, lang, path = '', image
   const languages: Record<string, string> = {};
   
   routing.locales.forEach((locale) => {
+    // With localePrefix: 'as-needed', the default locale (ar) has no prefix
     const prefix = locale === routing.defaultLocale ? '' : `/${locale}`;
-    languages[locale] = `${prefix}${isRoot ? '' : normalizedPath}`;
+    const urlPath = `${prefix}${isRoot ? '' : normalizedPath}`;
+    languages[locale] = urlPath || '/';
   });
 
-  // Add x-default
-  languages['x-default'] = `${isRoot ? '/' : normalizedPath}`;
+  // Add x-default (pointing to the default language version)
+  languages['x-default'] = isRoot ? '/' : normalizedPath;
 
   const currentPrefix = lang === routing.defaultLocale ? '' : `/${lang}`;
-  const currentUrl = `${currentPrefix}${isRoot ? '' : normalizedPath}`;
+  const currentUrl = `${currentPrefix}${isRoot ? '' : normalizedPath}` || '/';
+  const absoluteCanonical = new URL(currentUrl, baseUrl).toString();
+
+  const isLocalBaseUrl = /localhost|127\.0\.0\.1/.test(baseUrl);
 
   return {
     title,
     description,
     metadataBase: new URL(baseUrl),
     alternates: {
-      canonical: currentUrl || '/',
-      languages,
+      canonical: absoluteCanonical,
+      ...(isLocalBaseUrl ? {} : { languages }),
     },
     openGraph: {
       title,

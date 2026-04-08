@@ -44,21 +44,21 @@ export default function Mobile({
 						className="flex gap-2 w-40 sm:w-46 items-center h-14 rounded-[24px]"
 						asChild
 					>
-						<a href={googlePlayLink ?? "#"} aria-label={tCommon("googlePlay")}>
+						<a href={googlePlayLink ?? "#"}>
 							<div className="text-start">
 								<p className="text-[8px]">{tCommon("downloadOn")}</p>
 								<b className="text-sm md:text-xs lg:text-sm">{tCommon("stores.google")}</b>
 							</div>
-							<GoogleStore className="size-6" />
+							<GoogleStore className="size-6" aria-hidden="true" />
 						</a>
 					</Button>
 					<Button asChild className="flex w-40 sm:w-46 gap-2 bg-black hover:bg-black/90 items-center h-14 rounded-[24px]">
-						<a href={appleStoreLink ?? "#"} aria-label={tCommon("appleStore")}>
+						<a href={appleStoreLink ?? "#"}>
 							<div className="text-start">
 								<p className="text-[8px]">{tCommon("downloadOn")}</p>
 								<b className="text-sm md:text-xs lg:text-sm">{tCommon("stores.apple")}</b>
 							</div>
-							<AppStore className="text-white size-6" />
+							<AppStore className="text-white size-6" aria-hidden="true" />
 						</a>
 					</Button>
 				</div>
@@ -67,7 +67,7 @@ export default function Mobile({
 			{/* Image */}
             <div className="relative h-full flex items-center justify-center">
                 <ImageFallback
-                    src="/images/mobile.webp"
+                    src="/images/logo-titled.svg"
                     alt={t("imageAlt")}
                     width={1040}
                     height={665}

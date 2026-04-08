@@ -6,6 +6,7 @@ import HelpCard from "@/components/shared/cards/HelpCard";
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { getTranslations } from "next-intl/server";
+import { generateSeoMetadata } from "@/lib/seo";
 
 const TERMS_PAGE_ID = 2;
 
@@ -17,10 +18,12 @@ export async function generateMetadata({
   const { lang } = await params;
   const t = await getTranslations({ locale: lang, namespace: "seo.terms" });
 
-  return {
+  return generateSeoMetadata({
     title: t("title"),
     description: t("description"),
-  };
+    lang,
+    path: "/terms",
+  });
 }
 
 export default async function TermsPage({ params }: { params: Promise<{ lang: string }> }) {

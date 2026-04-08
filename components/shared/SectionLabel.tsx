@@ -19,7 +19,7 @@ export default function SectionLabel({
 	return (
 		<div
 			className={cn(
-				"bg-accent/10 font-bold w-fit text-sm text-accent p-2.5 rounded-4xl flex gap-1 items-center",
+				"bg-accent/10 font-bold w-fit text-sm text-primary p-2.5 rounded-4xl flex gap-1 items-center",
 				center && "mx-auto",
 				white && "bg-white",
 			)}

@@ -13,8 +13,8 @@ export default function Partners() {
 	const t = useTranslations("partners");
 
 	const partnersList = [
-		{ image: "/rzaz.svg", color: "#52A1FF1A", id: "rzaz" },
-		{ image: "/barad.svg", color: "#2C6C8D1A", id: "barad" },
+		{ image: "rzaz.svg", color: "#52A1FF1A", id: "rzaz" },
+		{ image: "barad.svg", color: "#2C6C8D1A", id: "barad" },
 	];
 
 	return (

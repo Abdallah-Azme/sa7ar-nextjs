@@ -7,6 +7,7 @@ import HelpCard from "@/components/shared/cards/HelpCard";
 import ContactUsSection from "@/components/shared/ContactUsSection";
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
+import { generateSeoMetadata } from "@/lib/seo";
 
 import { getTranslations } from "next-intl/server";
 
@@ -18,10 +19,12 @@ export async function generateMetadata({
   const { lang } = await params;
   const t = await getTranslations({ locale: lang, namespace: "seo.faq" });
 
-  return {
+  return generateSeoMetadata({
     title: t("title"),
     description: t("description"),
-  };
+    lang,
+    path: "/faq",
+  });
 }
 
 export default async function FaqPage({ params }: { params: Promise<{ lang: string }> }) {

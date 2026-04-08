@@ -24,7 +24,7 @@ export default async function Logo() {
 				height={100}
 				alt={t("logoAlt")}
 				priority
-				className="max-w-30 shrink-0 max-h-25"
+				className="max-w-30 max-h-25 h-auto w-auto shrink-0"
 			/>
 		</Link>
 	);

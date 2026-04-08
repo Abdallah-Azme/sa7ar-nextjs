@@ -6,6 +6,7 @@ import { ArrowRightIcon, BuildingIcon } from "lucide-react";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
+import { generateSeoMetadata } from "@/lib/seo";
 
 import { getTranslations } from "next-intl/server";
 
@@ -17,10 +18,12 @@ export async function generateMetadata({
   const { lang } = await params;
   const t = await getTranslations({ locale: lang, namespace: "seo.partnership" });
 
-  return {
+  return generateSeoMetadata({
     title: t("title"),
     description: t("description"),
-  };
+    lang,
+    path: "/business-partnerships",
+  });
 }
 
 export default async function BusinessPartnershipsPage({ params }: { params: Promise<{ lang: string }> }) {

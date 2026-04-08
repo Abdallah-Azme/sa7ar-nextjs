@@ -4,6 +4,7 @@ import { fetchBlogs, blogKeys } from "@/features/blogs/services/blogService";
 import BlogsPageContent from "@/features/blogs/components/BlogsPageContent";
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
+import { generateSeoMetadata } from "@/lib/seo";
 
 import { getTranslations } from "next-intl/server";
 
@@ -15,10 +16,12 @@ export async function generateMetadata({
   const { lang } = await params;
   const t = await getTranslations({ locale: lang, namespace: "seo.blog" });
 
-  return {
+  return generateSeoMetadata({
     title: t("title"),
     description: t("description"),
-  };
+    lang,
+    path: "/blogs",
+  });
 }
 
 export default async function BlogsPage({ 

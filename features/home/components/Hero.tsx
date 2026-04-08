@@ -93,21 +93,21 @@ export default function Hero({
 		<section className="grid lg:grid-cols-2 gap-10 container">
 			{/* Label */}
 			<div className="space-y-10">
-				<div className="bg-accent/10 max-w-xs font-bold text-xs text-accent p-2.5 rounded-4xl flex gap-1 justify-between items-center">
+				<div className="bg-accent/10 max-w-xs font-bold text-xs text-primary p-2.5 rounded-4xl flex gap-1 justify-between items-center">
 					<CircleDotIcon className="text-white fill-accent" />
 					<span className="text-nowrap">{t("label")}</span>
 					<WaterDrop className="text-accent" />
 				</div>
 
-				{/* Titles */}
-				<h1 className="text-xl sm:text-2xl lg:text-5xl font-medium">
-					{t("title.line1")}
-				</h1>
-				<h1 className="text-xl sm:text-2xl lg:text-5xl">
-					<span className="text-secondary font-extrabold">
-						{t("title.emphasis")}
-					</span>{" "}
-					{t("title.line2")}
+				{/* Combined Title into single H1 */}
+				<h1 className="text-xl sm:text-2xl lg:text-5xl font-medium flex flex-col gap-2">
+					<span>{t("title.line1")}</span>
+					<span>
+						<span className="text-secondary font-extrabold">
+							{t("title.emphasis")}
+						</span>{" "}
+						{t("title.line2")}
+					</span>
 				</h1>
 				{/* Desc */}
 				<p className="font-light text-black text-lg/10">
@@ -210,7 +210,7 @@ export default function Hero({
 						size={"icon-lg"}
 					>
 						<a href={appleStoreLink ?? "#"} aria-label={tCommon("appleStore")}>
-							<AppStore className="text-black" />
+							<AppStore className="text-black" aria-hidden="true" />
 						</a>
 					</Button>
 					<Button
@@ -219,7 +219,7 @@ export default function Hero({
 						className="rounded-full border bg-background-cu hover:bg-background-cu"
 					>
 						<a href={googlePlayLink ?? "#"} aria-label={tCommon("googlePlay")}>
-							<GoogleStore />
+							<GoogleStore aria-hidden="true" />
 						</a>
 					</Button>
 					<Button
@@ -231,7 +231,7 @@ export default function Hero({
 							href={whatsappNumber ? `https://wa.me/${whatsappNumber}` : "#"}
 							aria-label={tCommon("whatsapp")}
 						>
-							<Whatsapp />
+							<Whatsapp aria-hidden="true" />
 						</a>
 					</Button>
 				</div>

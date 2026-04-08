@@ -4,6 +4,7 @@ import { fetchGlobalSettings, settingsKeys } from "@/features/settings/services/
 import ContactPageContent from "@/features/contact/components/ContactPageContent";
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
+import { generateSeoMetadata } from "@/lib/seo";
 
 import { getTranslations } from "next-intl/server";
 
@@ -15,10 +16,12 @@ export async function generateMetadata({
   const { lang } = await params;
   const t = await getTranslations({ locale: lang, namespace: "seo.contact" });
 
-  return {
+  return generateSeoMetadata({
     title: t("title"),
     description: t("description"),
-  };
+    lang,
+    path: "/contact",
+  });
 }
 
 export default async function ContactPage({ params }: { params: Promise<{ lang: string }> }) {

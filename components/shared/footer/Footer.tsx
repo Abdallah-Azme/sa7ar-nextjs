@@ -65,19 +65,21 @@ export default async function Footer() {
 					</b>
 
 					<div className="flex flex-wrap items-center gap-2">
-						{socialMediaLinks.map(
-							(item) =>
-								item.url && (
-									<Link
-										key={item.id}
-										href={item.url}
-										aria-label="Social Link"
-										className="flex text-white *:size-5 hover:scale-110 transition-transform duration-300 items-center justify-center size-10 rounded-full bg-accent"
-									>
-										<item.Icon />
-									</Link>
-								),
-						)}
+				{socialMediaLinks.map(
+					(item) =>
+						item.url && (
+							<a
+								key={item.id}
+								href={item.url}
+								target="_blank"
+								rel="noopener noreferrer"
+								aria-label="Social Link"
+								className="flex text-white *:size-5 hover:scale-110 transition-transform duration-300 items-center justify-center size-10 rounded-full bg-accent"
+							>
+								<item.Icon />
+							</a>
+						),
+				)}
 					</div>
 				</div>
 
@@ -92,15 +94,31 @@ export default async function Footer() {
 						</div>
 
 						<div className="gap-y-4 flex flex-col">
-							{link.items.map((item, i) => (
-								<Link
-									key={i}
-									href={item.link ?? "#"}
-									className="text-gray font-light md:text-sm lg:text-base wrap-break-word"
-								>
-									{item.label}
-								</Link>
-							))}
+							{link.items.map((item, i) => {
+								const href = item.link ?? "#";
+								const isExternal = href.startsWith("http") || href.startsWith("mailto:");
+								if (isExternal) {
+									return (
+										<a
+											key={i}
+											href={href}
+											className="text-gray font-light md:text-sm lg:text-base wrap-break-word"
+										>
+											{item.label}
+										</a>
+									);
+								}
+
+								return (
+									<Link
+										key={i}
+										href={href}
+										className="text-gray font-light md:text-sm lg:text-base wrap-break-word"
+									>
+										{item.label}
+									</Link>
+								);
+							})}
 						</div>
 					</div>
 				))}

@@ -34,6 +34,11 @@ const nextConfig: NextConfig = {
         hostname: "**.cloudflare.com",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "country-code-au6g.vercel.app",
+        pathname: "/**",
+      },
       // Allow any http for local/dev
       {
         protocol: "http",
@@ -46,6 +51,30 @@ const nextConfig: NextConfig = {
     // Allow unoptimized for SVG and GIF passthrough
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+  },
+  
+  // ⚡ Performance Optimization: Browser Caching
+  async headers() {
+    return [
+      {
+        source: "/fonts/(.*)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
+        source: "/images/(.*)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+    ];
   },
 };
 

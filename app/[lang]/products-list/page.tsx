@@ -9,6 +9,7 @@ import {
 import ProductsListPageContent from "@/features/products/components/ProductsListPageContent";
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
+import { generateSeoMetadata } from "@/lib/seo";
 
 interface Props {
   params: Promise<{ lang: string }>;
@@ -39,16 +40,20 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
       titleSegment = tSeo("title").split("|")[0].trim();
     }
 
-    return {
+    return generateSeoMetadata({
       title: `${titleSegment} | ${tSeo("title").split("|")[1]?.trim() || "Sohar"}`,
       description: tSeo("description"),
-    };
+      lang,
+      path: "/products-list",
+    });
   } catch (error) {
     console.error("Error in products-list metadata:", error);
-    return {
+    return generateSeoMetadata({
       title: tSeo("title"),
       description: tSeo("description"),
-    };
+      lang,
+      path: "/products-list",
+    });
   }
 }
 

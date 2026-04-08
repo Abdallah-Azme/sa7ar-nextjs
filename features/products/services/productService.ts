@@ -10,9 +10,26 @@ export const productKeys = {
   detail:      (id: string) => [...productKeys.all, "detail", id] as const,
 };
 
-export const fetchBestSellingProducts = () =>
-  apiClient<{ data: Product[] }>({ route: "/products/best-selling", next: { revalidate: 3600 } })
-    .then(r => r.data ?? []);
+export const fetchBestSellingProducts = async (): Promise<Product[]> => {
+  try {
+    const direct = await apiClient<{ data: Product[] }>({
+      route: "/products/best-selling",
+      next: { revalidate: 3600 },
+    });
+    return direct.data ?? [];
+  } catch {
+    // Fallback for environments where best-selling endpoint is unavailable.
+    try {
+      const home = await apiClient<{ data: { most_sold_products?: Product[] } }>({
+        route: "/home",
+        next: { revalidate: 3600 },
+      });
+      return home.data?.most_sold_products ?? [];
+    } catch {
+      return [];
+    }
+  }
+};
 
 export const fetchBestSellingAccessories = () =>
   apiClient<{ data: Product[] }>({ route: "/products-accessories", next: { revalidate: 3600 } })

@@ -22,6 +22,7 @@ type SearchProduct = {
 	points_value: number;
 	is_accessory: boolean;
 	size: string;
+	seo?: import("@/types").Seo;
 };
 
 type SearchResponse = {
@@ -157,7 +158,7 @@ export default function SearchDialog() {
 									{products.map((product) => (
 										<Link
 											key={product.id}
-											href={`/products/${product.id}`}
+											href={`/products/${product.seo?.slug || product.id}`}
 											onClick={() => setOpen(false)}
 											className="flex items-center justify-between gap-3 rounded-2xl border border-black/5 bg-background-cu p-3 transition-colors hover:bg-background-cu/70"
 										>

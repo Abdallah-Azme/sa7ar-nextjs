@@ -4,7 +4,25 @@ import { fetchHomeData, fetchFaqs, homeKeys } from "@/features/home/services/hom
 import { fetchGlobalSettings, settingsKeys } from "@/features/settings/services/settingsService";
 import { fetchBestSellingAccessories, productKeys } from "@/features/products/services/productService";
 import HomePageContent from "@/features/home/components/HomePageContent";
-import { setRequestLocale } from "next-intl/server";
+import { setRequestLocale, getTranslations } from "next-intl/server";
+import { generateSeoMetadata } from "@/lib/seo";
+import { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}): Promise<Metadata> {
+  const { lang } = await params;
+  const t = await getTranslations({ locale: lang, namespace: "seo.home" });
+
+  return generateSeoMetadata({
+    title: t("title"),
+    description: t("description"),
+    lang,
+    path: "/",
+  });
+}
 
 /**
  * Home Page - RSC (Server Component)
@@ -21,11 +39,10 @@ export default async function HomePage({
 
   const queryClient = makeQueryClient();
 
-  // 1. Parallel prefetching to seed the server-side cache
   await Promise.all([
-    queryClient.prefetchQuery({ queryKey: homeKeys.data(),    queryFn: fetchHomeData }),
+    queryClient.prefetchQuery({ queryKey: homeKeys.data(), queryFn: fetchHomeData }),
     queryClient.prefetchQuery({ queryKey: settingsKeys.global(), queryFn: fetchGlobalSettings }),
-    queryClient.prefetchQuery({ queryKey: homeKeys.faqs(),    queryFn: fetchFaqs }),
+    queryClient.prefetchQuery({ queryKey: homeKeys.faqs(), queryFn: fetchFaqs }),
     queryClient.prefetchQuery({ queryKey: productKeys.accessories(), queryFn: fetchBestSellingAccessories }),
   ]);
 

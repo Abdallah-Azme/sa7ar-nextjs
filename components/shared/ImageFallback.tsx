@@ -16,6 +16,22 @@ interface ImageFallbackProps {
 
 const FALLBACK_SRC = "/images/logo.svg";
 
+function normalizeImageSrc(src?: string | null): string {
+	if (!src || src.trim() === "") return FALLBACK_SRC;
+	const value = src.trim();
+	// Keep remote, data URI, and root-absolute paths untouched
+	if (
+		value.startsWith("http://") ||
+		value.startsWith("https://") ||
+		value.startsWith("data:") ||
+		value.startsWith("/")
+	) {
+		return value;
+	}
+	// Convert relative asset paths (e.g. images/logo.svg) to root-absolute
+	return `/${value}`;
+}
+
 /**
  * ImageFallback - Client Component
  * Uses next/image for optimization with automatic fallback to logo on error.
@@ -31,9 +47,7 @@ export default function ImageFallback({
 	priority = false,
 	sizes,
 }: ImageFallbackProps) {
-	const [imgSrc, setImgSrc] = useState<string>(
-		src && src.trim() !== "" ? src : FALLBACK_SRC,
-	);
+	const [imgSrc, setImgSrc] = useState<string>(normalizeImageSrc(src));
 
 	const handleError = () => setImgSrc(FALLBACK_SRC);
 

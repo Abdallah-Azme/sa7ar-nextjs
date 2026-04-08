@@ -147,7 +147,7 @@ export default function Navbar({ logo }: { logo?: ReactNode }) {
 								asChild
 								className="rounded-full relative size-12 flex place-content-center bg-accent hover:bg-accent/90 text-accent-foreground"
 							>
-								<Link href="/cart" aria-label="Cart">
+								<Link href="/cart" aria-label={tCommon("cart")}>
 									{cartCount > 0 && (
 										<span
 											className="absolute size-5 border border-white top-0 -inset-e-2 flex justify-center items-center bg-[#FF0084] text-[8px] text-white rounded-full"
@@ -176,7 +176,7 @@ export default function Navbar({ logo }: { logo?: ReactNode }) {
 										size={"icon-lg"}
 										variant="secondary"
 										className="rounded-full size-12 flex place-content-center"
-										aria-label="Open menu"
+										aria-label={tCommon("openMenu")}
 									>
 										<MenuIcon />
 									</Button>

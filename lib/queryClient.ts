@@ -8,8 +8,12 @@ export function makeQueryClient(): QueryClient {
   return new QueryClient({
     defaultOptions: {
       queries: {
-        // On the server: never consider data stale (we prefetch fresh data)
-        staleTime: 60 * 1000, // 1 minute client-side
+        staleTime: 60 * 1000,
+        gcTime: 10 * 60 * 1000,
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
+        refetchOnMount: false,
+        retry: 1,
       },
     },
   });

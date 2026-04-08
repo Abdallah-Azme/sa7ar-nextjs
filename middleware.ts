@@ -9,11 +9,21 @@ const intlMiddleware = createMiddleware(routing);
  * Legacy proxy function for backward compatibility
  */
 export async function proxy(request: NextRequest) {
+  const pathname = request?.nextUrl?.pathname;
+  if (!pathname) return intlMiddleware(request);
+
+  // Guardrail: if any static asset is accidentally requested with locale prefix
+  // (e.g. /en/images/logo.svg), redirect it to root-absolute asset path.
+  const localizedStaticAsset = pathname.match(/^\/(en|ar)\/(images|fonts)\/(.+)$/);
+  if (localizedStaticAsset) {
+    const [, , assetFolder, assetPath] = localizedStaticAsset;
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.pathname = `/${assetFolder}/${assetPath}`;
+    return NextResponse.redirect(redirectUrl);
+  }
+
   // First, let next-intl handle parsing the locale
   const response = intlMiddleware(request);
-  
-  const pathname = request?.nextUrl?.pathname;
-  if (!pathname) return response;
 
   // Protected paths check
   const isProtectedPath = 
@@ -31,7 +41,8 @@ export async function proxy(request: NextRequest) {
     const localeMatch = pathname.match(/^\/(en|ar)(\/|$)/);
     const locale = localeMatch ? localeMatch[1] : routing.defaultLocale;
     
-    loginUrl.pathname = `/${locale}/?auth_required=1`;
+    loginUrl.pathname = locale === routing.defaultLocale ? "/" : `/${locale}`;
+    loginUrl.searchParams.set("auth_required", "1");
     return NextResponse.redirect(loginUrl);
   }
 
@@ -43,12 +54,7 @@ export default proxy;
 export { proxy as middleware };
 
 export const config = {
-  // Match all pathnames except for
-  // - /api (API routes)
-  // - /_next (Next.js internals)
-  // - /_static (static files)
-  // - /_vercel (Vercel internals)
-  // - /static (static assets)
-  // - all root files with an extension (e.g. favicon.ico)
-  matcher: ['/((?!api|_next|_static|_vercel|static|[\\w-]+\\.\\w+).*)']
+  // Exclude API, Next internals, and any path containing a file extension.
+  // This prevents locale middleware from rewriting static assets like /images/*.svg.
+  matcher: ["/((?!api|_next|_vercel|.*\\..*).*)"],
 };

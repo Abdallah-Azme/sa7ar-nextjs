@@ -32,6 +32,8 @@ const cairo = Cairo({
 });
 
 
+import { generateSeoMetadata } from "@/lib/seo";
+
 export async function generateMetadata({
   params,
 }: {
@@ -40,10 +42,12 @@ export async function generateMetadata({
   const { lang } = await params;
   const t = await getTranslations({ locale: lang, namespace: "seo.home" });
 
-  return {
+  return generateSeoMetadata({
     title: t("title"),
     description: t("description"),
-  };
+    lang,
+    path: "/",
+  });
 }
 
 import { QueryProvider } from "@/providers/QueryProvider";

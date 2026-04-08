@@ -12,7 +12,7 @@ export default function RequestPartnership() {
 	const t = useTranslations("partnership");
 
 	return (
-		<section className="bg-[url(/images/request-partinership.webp)] relative min-h-100 bg-center bg-cover flex items-center py-20">
+		<section className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative min-h-100 bg-center bg-cover flex items-center py-20">
 			{/* Overlay */}
 			<div className="absolute inset-0 bg-black/65 z-10" aria-hidden="true" />
 
@@ -30,7 +30,7 @@ export default function RequestPartnership() {
 				</div>
 
 				<Button asChild className="bg-accent h-13 backdrop-blur-md min-w-[200px] rounded-full border border-white/10 hover:bg-accent/80 transition-all mt-8 md:mt-0">
-					<Link href='/business-partnerships' className="flex items-center gap-2" aria-label="Join our business partners">
+					<Link href='/business-partnerships' className="flex items-center gap-2">
 						{t("cta")}
 						<ArrowUpLeft size={16} className="ltr:rotate-90 rtl:rotate-0" aria-hidden="true" />
 					</Link>

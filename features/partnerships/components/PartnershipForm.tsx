@@ -29,7 +29,7 @@ interface PartnershipFormValues {
 }
 
 export default function PartnershipForm({ types: initialTypes }: { types?: InstitutionType[] }) {
-	const t = useTranslations("partnership");
+	const t = useTranslations("account.partnership");
 	const [mobile, setMobile] = useState("");
 	const [institutionTypeId, setInstitutionTypeId] = useState<string>("");
     

@@ -9,9 +9,8 @@ import {
 } from "@/features/products/services/productService";
 import ProductsPageContent from "@/features/products/components/ProductsPageContent";
 import type { Metadata } from "next";
-import { setRequestLocale } from "next-intl/server";
-
-import { getTranslations } from "next-intl/server";
+import { generateSeoMetadata } from "@/lib/seo";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 
 export async function generateMetadata({
   params,
@@ -21,10 +20,12 @@ export async function generateMetadata({
   const { lang } = await params;
   const t = await getTranslations({ locale: lang, namespace: "seo.products" });
 
-  return {
+  return generateSeoMetadata({
     title: t("title"),
     description: t("description"),
-  };
+    lang,
+    path: "/products",
+  });
 }
 
 /**

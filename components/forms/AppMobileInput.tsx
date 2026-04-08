@@ -36,7 +36,7 @@ export default function AppMobileInput({
                 {/* Fixed Oman Code Segment */}
 				<div className="flex h-full items-center ps-4 pe-3 bg-transparent border-none focus-visible:ring-0 gap-2 shrink-0">
                     <Image
-                        src="https://country-code-au6g.vercel.app/om.svg"
+                        src="/images/om.svg"
                         alt="Oman"
                         loading="lazy"
                         width={24}

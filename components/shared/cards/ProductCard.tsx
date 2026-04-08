@@ -57,7 +57,7 @@ export default function ProductCard({ item }: { item: Product }) {
 						)}
 					</div>
 				)}
-				<Link href={`/products/${item?.id}`}>
+				<Link href={`/products/${item?.seo?.slug || item?.id}`}>
 					<ImageFallback
 						src={item?.image}
 						alt={item?.name}

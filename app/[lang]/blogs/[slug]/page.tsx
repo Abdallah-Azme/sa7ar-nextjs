@@ -12,6 +12,8 @@ interface BlogDetailsProps {
   }>;
 }
 
+import { generateSeoMetadata } from "@/lib/seo";
+
 /**
  * Generate Dynamic SEO Metadata for individual blog posts.
  */
@@ -21,15 +23,16 @@ export async function generateMetadata({ params }: BlogDetailsProps): Promise<Me
   
   try {
     const blog = await fetchBlogBySlug(slug);
-    if (!blog) return { title: t("title") };
+    if (!blog) return generateSeoMetadata({ title: t("title"), description: "", lang, path: `/blogs/${slug}` });
 
-    return {
+    return generateSeoMetadata({
       title: `${blog.title} | ${t("title").split("|")[1]?.trim() || "Sohar"}`,
       description: blog.subtitle || blog.description.substring(0, 160).replace(/<[^>]*>/g, ""),
-    };
+      lang,
+      path: `/blogs/${slug}`,
+    });
   } catch (error) {
-    console.error("Error fetching blog for metadata:", error);
-    return { title: t("title") };
+    return generateSeoMetadata({ title: t("title"), description: "", lang, path: `/blogs/${slug}` });
   }
 }
 
@@ -46,8 +49,7 @@ export default async function BlogDetailsPage({ params }: BlogDetailsProps) {
       queryKey: blogKeys.detail(slug),
       queryFn: () => fetchBlogBySlug(slug),
     });
-  } catch (error) {
-    console.error("Error prefetching blog detail:", error);
+  } catch {
   }
 
   return (

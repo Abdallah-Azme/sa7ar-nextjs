@@ -128,7 +128,9 @@
 		"nextSlide": "Next slide",
 		"appleStore": "Apple Store",
 		"googlePlay": "Google Play Store",
-		"whatsapp": "WhatsApp"
+		"whatsapp": "WhatsApp",
+		"cart": "Cart",
+		"openMenu": "Open Menu"
 	},
 	"hero": {
 		"label": "Sohar is your first choice for pure water",
@@ -951,11 +953,34 @@
 		"backHome": "Back to Home",
 		"reload": "Reload Page"
 	},
+	"bestSelling": {
+		"title": "Best Selling Products"
+	},
+	"bestSellingAccessories": {
+		"title": "Best Selling Accessories"
+	},
+	"brandPage": {
+		"title": "Our Brands",
+		"description": "Explore our curated selection of premium water brands, each meeting the highest standards of purity.",
+		"viewCollection": "View Collection"
+	},
 	"seo": {
 		"logo": "Site Icon",
 		"home": {
 			"title": "Home | Sohar",
 			"description": "Sohar provides pure drinking water with high quality and fast, reliable delivery to your doorstep."
+		},
+		"bestSelling": {
+			"title": "Best Selling Products | Sohar",
+			"description": "Discover our top-rated and most popular water products delivered to your door."
+		},
+		"bestSellingAccessories": {
+			"title": "Best Selling Accessories | Sohar",
+			"description": "Complete your water solution with our best-selling accessories."
+		},
+		"brands": {
+			"title": "Our Brands | Sohar",
+			"description": "Explore the different water brands we offer, each with its unique qualities."
 		},
 		"products": {
 			"title": "Products | Sohar",

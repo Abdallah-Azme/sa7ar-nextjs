@@ -51,14 +51,17 @@ export default function AuthDialog({
 	const onSubmit = async (data: { mobile: string; password: string }) => {
         setIsSubmitting(true);
         try {
-            const res = await apiClient<{ token: string; user: Profile }>({
+            const res = await apiClient<{ data?: { token?: string; user?: Profile } }>({
                 route: "/login",
                 method: "POST",
                 body: JSON.stringify(data),
             });
             
-            if (res?.token) {
-                await login(res.token, res.user);
+            const token = res?.data?.token;
+            const user = res?.data?.user;
+
+            if (token && user) {
+                await login(token, user);
                 onOpenChange(false);
             }
         } catch (err: unknown) {
@@ -80,7 +83,7 @@ export default function AuthDialog({
 	return (
 		<>
 			<Dialog open={open && activeDialog === "login"} onOpenChange={handleClose}>
-				<DialogContent showCloseButton={false} className="lg:px-20 lg:py-15 lg:rounded-[40px] max-w-xl mx-auto">
+				<DialogContent showCloseButton={false} className="lg:px-20 lg:py-15 lg:rounded-[40px] max-w-2xl mx-auto">
 					<DialogHeader>
                         <div className="absolute top-6 inset-e-6">
                             <DialogClose asChild>
@@ -236,7 +239,7 @@ function SignupDialog({
 	return (
 		<>
 			<Dialog open={open && !showOtpDialog} onOpenChange={(open) => { reset(); onOpenChange(open); }}>
-				<DialogContent showCloseButton={false} className="lg:px-20 lg:py-15 lg:rounded-[40px] max-w-xl mx-auto max-h-[90vh] overflow-y-auto">
+				<DialogContent showCloseButton={false} className="lg:px-20 lg:py-15 lg:rounded-[40px] max-w-2xl mx-auto max-h-[90vh] overflow-y-auto">
 					<DialogHeader className="mb-6 relative">
                         <DialogTitle className="text-start text-xl font-bold text-primary flex items-center gap-3">
                             <button onClick={onBackToLogin} className="hover:-translate-x-1 transition-transform bg-gray-100 p-2 rounded-full rtl:rotate-180">

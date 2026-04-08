@@ -73,6 +73,7 @@ export default function LoginDropdown({
 						size={"icon-lg"}
 						variant="secondary"
 						className="rounded-full size-12 flex place-content-center"
+						aria-label={tAuth("login")}
 					>
 						<UserRoundIcon />
 					</Button>
