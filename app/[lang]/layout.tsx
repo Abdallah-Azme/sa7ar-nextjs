@@ -15,6 +15,8 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale, getTranslations } from "next-intl/server";
 import DirectionProviderWrapper from "@/components/providers/DirectionProviderWrapper";
 
+import { Cairo } from "next/font/google";
+
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ lang: locale }));
 }
@@ -22,6 +24,11 @@ export function generateStaticParams() {
 const inter = Inter({
   subsets: ["latin", "latin-ext"],
   variable: "--font-inter",
+});
+
+const cairo = Cairo({
+    subsets: ["arabic"],
+    variable: "--font-cairo",
 });
 
 
@@ -63,7 +70,7 @@ export default async function RootLayout({
     <html
       lang={lang}
       dir={dir}
-      className={`${inter.variable} h-full antialiased`}
+      className={`${lang === "ar" ? cairo.variable : inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans">
         <NextIntlClientProvider 

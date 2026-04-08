@@ -42,6 +42,7 @@ export default function Hero({
     whatsappNumber?: string | null;
 }) {
 	const t = useTranslations("hero");
+	const tCommon = useTranslations("common");
 	const [api, setApi] = useState<CarouselApi>();
 	const [currentSlide, setCurrentSlide] = useState<number>(0);
 	const [slides, setSlides] = useState<number>(0);
@@ -127,7 +128,7 @@ export default function Hero({
 				</Button>
 
 				{/* Shopping Steps */}
-				<div className="grid sm:grid-cols-3 divide-x gap-3">
+				<div className="grid sm:grid-cols-3 divide-x rtl:divide-x-reverse gap-3">
 					{shoppingSteps.map((item, i) => (
 						<div
 							key={i}
@@ -174,7 +175,7 @@ export default function Hero({
 							<Button
 								disabled={currentSlide <= 0}
 								data-slot="btn prev"
-								aria-label="Previous slide"
+								aria-label={tCommon("prevSlide")}
 								onClick={() => api?.scrollPrev()}
 							>
 								<ChevronLeftIcon />
@@ -182,7 +183,7 @@ export default function Hero({
 							<Button
 								disabled={currentSlide >= slides}
 								data-slot="btn next"
-								aria-label="Next slide"
+								aria-label={tCommon("nextSlide")}
 								onClick={() => api?.scrollNext()}
 							>
 								<ChevronRightIcon />
@@ -208,7 +209,7 @@ export default function Hero({
 						className="rounded-full border bg-background-cu hover:bg-background-cu"
 						size={"icon-lg"}
 					>
-						<a href={appleStoreLink ?? "#"} aria-label="Apple Store">
+						<a href={appleStoreLink ?? "#"} aria-label={tCommon("appleStore")}>
 							<AppStore className="text-black" />
 						</a>
 					</Button>
@@ -217,7 +218,7 @@ export default function Hero({
 						asChild
 						className="rounded-full border bg-background-cu hover:bg-background-cu"
 					>
-						<a href={googlePlayLink ?? "#"} aria-label="Google Play Store">
+						<a href={googlePlayLink ?? "#"} aria-label={tCommon("googlePlay")}>
 							<GoogleStore />
 						</a>
 					</Button>
@@ -228,7 +229,7 @@ export default function Hero({
 					>
 						<a
 							href={whatsappNumber ? `https://wa.me/${whatsappNumber}` : "#"}
-							aria-label="WhatsApp"
+							aria-label={tCommon("whatsapp")}
 						>
 							<Whatsapp />
 						</a>

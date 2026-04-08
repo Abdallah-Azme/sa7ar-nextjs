@@ -16,26 +16,24 @@ import { useCart } from "@/contexts/CartContext";
 import { toast } from "sonner";
 
 
+import { useTranslations } from "next-intl";
+
+
 interface OrderHistoryViewProps {
 	orders: Order[];
 	totalPages?: number;
 }
 
-const statusTabs = [
-	{ id: OrderStatus.in_progress, label: "قيد التنفيذ" },
-	{ id: OrderStatus.delivered, label: "مُسلَّم" },
-	{ id: OrderStatus.canceled, label: "ملغي" },
-];
-
 /**
  * OrderHistoryView - Client Component
  * Full parity with React's AccountOrder.tsx:
- *   - Arabic status tab labels
+ *   - Localized status tab labels
  *   - Reorder with cart-clear + re-add via apiClient
  *   - Reorder confirmation dialog when cart has items
  *   - Pagination support
  */
 export default function OrderHistoryView({ orders, totalPages = 1 }: OrderHistoryViewProps) {
+	const t = useTranslations("orders");
 	const searchParams = useSearchParams();
 	const router = useRouter();
 
@@ -44,6 +42,12 @@ export default function OrderHistoryView({ orders, totalPages = 1 }: OrderHistor
 	const [reorderDialogId, setReorderDialogId] = useState<number | null>(null);
 	const [isReordering, setIsReordering] = useState(false);
 	const [reorderingId, setReorderingId] = useState<number | null>(null);
+
+	const statusTabs = [
+		{ id: OrderStatus.in_progress, label: t("tabs.in_progress") },
+		{ id: OrderStatus.delivered, label: t("tabs.delivered") },
+		{ id: OrderStatus.canceled, label: t("tabs.canceled") },
+	];
 
 	// Status Filtering
 	const activeTab = useMemo<OrderStatus>(() => {
@@ -81,7 +85,7 @@ export default function OrderHistoryView({ orders, totalPages = 1 }: OrderHistor
 			});
 
 			const order = orderRes.data;
-			if (!order) throw new Error("تعذّر جلب بيانات الطلب");
+			if (!order) throw new Error(t("details.fetchError"));
 
 			// 2. Clear existing cart items
 			const currentItems = cart?.items ?? [];
@@ -107,12 +111,12 @@ export default function OrderHistoryView({ orders, totalPages = 1 }: OrderHistor
 			}
 
 			await refreshCart();
-			toast.success("تمت إعادة الطلب بنجاح");
+			toast.success(t("card.reorderSuccess"));
 			setReorderDialogId(null);
 			router.push("/checkout");
 		} catch (err: unknown) {
 			const error = err as { message?: string };
-			toast.error(error?.message || "حدث خطأ أثناء إعادة الطلب");
+			toast.error(error?.message || t("errors.reorderInvalid"));
 		} finally {
 			setIsReordering(false);
 			setReorderingId(null);
@@ -130,7 +134,7 @@ export default function OrderHistoryView({ orders, totalPages = 1 }: OrderHistor
 	return (
 		<div className="space-y-10">
 			<header className="flex items-center justify-between gap-6 flex-wrap">
-				<h1 className="text-2xl font-extrabold text-primary">طلباتي</h1>
+				<h1 className="text-2xl font-extrabold text-primary">{t("pageTitle")}</h1>
 
 				{/* Tab Selector */}
 				<div className="flex bg-background-cu p-1.5 rounded-full border border-black/5 shadow-sm">
@@ -156,11 +160,11 @@ export default function OrderHistoryView({ orders, totalPages = 1 }: OrderHistor
 				{filteredOrders.length === 0 ? (
 					<div className="bg-white border rounded-4xl p-16 shadow-inner text-center">
 						<EmptyCard
-							title="لا توجد طلبات"
-							description={`ليس لديك أي طلبات في هذه الحالة حتى الآن. تسوّق الآن!`}
+							title={t("emptyTitle")}
+							description={t("emptyDescription")}
 						/>
 						<Button className="rounded-full mt-6 px-10 h-13" asChild>
-							<Link href="/products">تصفح المنتجات</Link>
+							<Link href="/products">{t("details.products")}</Link>
 						</Button>
 					</div>
 				) : (
@@ -186,11 +190,11 @@ export default function OrderHistoryView({ orders, totalPages = 1 }: OrderHistor
 			>
 				<DialogContent className="sm:max-w-md p-6 rounded-3xl" showCloseButton>
 					<DialogHeader>
-						<DialogTitle>إعادة الطلب</DialogTitle>
+						<DialogTitle>{t("reorderDialog.heading")}</DialogTitle>
 					</DialogHeader>
 					<div className="space-y-5 mt-2">
 						<p className="text-sm text-gray">
-							لديك منتجات في سلة التسوق. هل تريد مسحها وإعادة الطلب؟
+							{t("reorderDialog.description")}
 						</p>
 						<div className="flex items-center justify-center gap-3">
 							<Button
@@ -199,14 +203,14 @@ export default function OrderHistoryView({ orders, totalPages = 1 }: OrderHistor
 								onClick={() => setReorderDialogId(null)}
 								className="rounded-full px-6"
 							>
-								إلغاء
+								{t("reorderDialog.cancel")}
 							</Button>
 							<Button
 								disabled={isReordering}
 								onClick={() => reorderDialogId && doReorder(reorderDialogId)}
 								className="rounded-full px-6"
 							>
-								{isReordering ? "جاري الإرسال..." : "تأكيد إعادة الطلب"}
+								{isReordering ? t("reorderDialog.confirmPending") : t("reorderDialog.confirm")}
 							</Button>
 						</div>
 					</div>

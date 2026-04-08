@@ -5,17 +5,29 @@ import CmsPageContent from "@/features/about/components/CmsPageContent";
 import HelpCard from "@/components/shared/cards/HelpCard";
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 
 const TERMS_PAGE_ID = 2;
 
-export const metadata: Metadata = {
-  title: "Terms & Conditions | Sohar Water",
-  description: "Review our service terms, conditions, and usage guidelines at Sohar Water.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}): Promise<Metadata> {
+  const { lang } = await params;
+  const t = await getTranslations({ locale: lang, namespace: "seo.terms" });
+
+  return {
+    title: t("title"),
+    description: t("description"),
+  };
+}
 
 export default async function TermsPage({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
   setRequestLocale(lang);
+
+  const t = await getTranslations("termsPage");
 
   const queryClient = makeQueryClient();
   await queryClient.prefetchQuery({
@@ -31,8 +43,8 @@ export default async function TermsPage({ params }: { params: Promise<{ lang: st
       <HydrationBoundary state={dehydrate(queryClient)}>
         <CmsPageContent 
           id={TERMS_PAGE_ID} 
-          title="Terms & Conditions" 
-          subtitle="By using our services, you agree to the guidelines listed below."
+          title={t("title")}
+          subtitle={t("subtitle")}
           iconType="terms"
         />
       </HydrationBoundary>

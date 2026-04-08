@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { UserRound, XIcon, LockIcon, MailIcon, ArrowLeftIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import ImageFallback from "@/components/shared/ImageFallback";
 import AppInput from "@/components/forms/AppInput";
@@ -37,6 +38,9 @@ export default function AuthDialog({
 	const [showResetPasswordDialog, setShowResetPasswordDialog] = useState(false);
 	const [activeDialogOverride, setActiveDialogOverride] = useState<DialogMode | null>(null);
 	const activeDialog = activeDialogOverride ?? mode;
+	const t = useTranslations("authDialog.login");
+	const tForm = useTranslations("form");
+    const tAuthErrors = useTranslations("auth.errors");
 	const { login, isLoading: isAuthLoading } = useAuth();
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -59,7 +63,7 @@ export default function AuthDialog({
             }
         } catch (err: unknown) {
             const error = err as { message?: string };
-            toast.error(error?.message || "حدث خطأ أثناء تسجيل الدخول");
+            toast.error(error?.message || tAuthErrors("errorLoggingIn"));
         } finally {
             setIsSubmitting(false);
         }
@@ -93,10 +97,10 @@ export default function AuthDialog({
 							height={112}
 						/>
 						<DialogTitle className="text-center text-2xl font-bold mt-4 text-primary">
-							Welcome Back!
+							{t("title")}
 						</DialogTitle>
 						<DialogDescription className="text-center text-sm text-gray-500 mt-2 font-medium">
-							Please enter your credentials to log in.
+							{t("description")}
 						</DialogDescription>
 					</DialogHeader>
 
@@ -104,8 +108,8 @@ export default function AuthDialog({
 						<div>
 							<AppMobileInput
 								{...register("mobile", {
-									required: "Phone is required",
-									minLength: { value: 6, message: "Too short" },
+									required: tForm("errors.required"),
+									minLength: { value: 6, message: tForm("errors.tooShort", { count: 6 }) },
 								})}
 							/>
 							{errors.mobile && <p className="text-destructive text-xs mt-1 font-bold ps-2">{String(errors.mobile.message)}</p>}
@@ -113,15 +117,15 @@ export default function AuthDialog({
 
 						<div className="space-y-3">
 							<label className="font-bold text-gray-700">
-								Password <span className="text-destructive">*</span>
+								{t("password")} <span className="text-destructive">*</span>
 							</label>
 							<AppInput
 								type="password"
-								placeholder="Enter your password"
+								placeholder={t("passwordPlaceholder")}
 								Icon={<LockIcon size={18} className="text-gray-400" />}
 								{...register("password", {
-									required: "Password is required",
-									minLength: { value: 8, message: "Min 8 characters" },
+									required: tForm("errors.required"),
+									minLength: { value: 8, message: tForm("errors.tooShort", { count: 8 }) },
 								})}
 							/>
 							{errors.password && <p className="text-destructive text-xs mt-1 font-bold ps-2">{String(errors.password.message)}</p>}
@@ -130,7 +134,7 @@ export default function AuthDialog({
 						<div className="flex items-center justify-between text-xs font-bold text-gray-500 px-2">
 							<label className="flex items-center gap-2 cursor-pointer hover:text-primary">
 								<input type="checkbox" className="size-4 rounded accent-primary" />
-								Remember me
+								{t("rememberMe")}
 							</label>
 							<button
 								type="button"
@@ -140,7 +144,7 @@ export default function AuthDialog({
 								}}
 								className="text-accent hover:underline"
 							>
-								Forgot Password?
+								{t("forgotPassword")}
 							</button>
 						</div>
 
@@ -149,17 +153,17 @@ export default function AuthDialog({
 							disabled={isSubmitting || isAuthLoading}
 							className="h-14 w-full rounded-full bg-primary text-white text-base font-bold hover:bg-accent hover:scale-[1.02] shadow-lg transition-all"
 						>
-							{isSubmitting ? "Logging in..." : "Login"}
+							{isSubmitting ? tForm("labels.loggingIn") : t("submit")}
 						</Button>
 					</form>
 
 					<div className="text-center text-sm font-medium text-gray-500 mt-6 pb-2">
-						ليس لديك حساب؟;
+						{t("noAccount")}
 						<button
 							className="text-accent ms-2 font-extrabold hover:underline"
 							onClick={() => setActiveDialogOverride("signup")}
 						>
-							إنشاء حساب جديد
+							{t("createNew")}
 						</button>
 					</div>
 				</DialogContent>
@@ -191,6 +195,8 @@ function SignupDialog({
 	onOpenChange: (open: boolean) => void;
 	onBackToLogin: () => void;
 }) {
+	const t = useTranslations("authDialog.signup");
+	const tForm = useTranslations("form");
 	const [showOtpDialog, setShowOtpDialog] = useState(false);
 	const [otpMobile, setOtpMobile] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -200,6 +206,7 @@ function SignupDialog({
 	});
     const password = watch("password");
 
+	const tAuthErrors = useTranslations("auth.errors");
 	const onSubmit = async (data: { name: string; email: string; mobile: string; password: string; confirmPassword: string; consent: boolean }) => {
         setIsSubmitting(true);
         try {
@@ -220,7 +227,7 @@ function SignupDialog({
             reset();
         } catch (err: unknown) {
             const error = err as { message?: string };
-            toast.error(error?.message || "حدث خطأ أثناء إنشاء الحساب");
+            toast.error(error?.message || tAuthErrors("errorSigningUp"));
         } finally {
             setIsSubmitting(false);
         }
@@ -232,10 +239,10 @@ function SignupDialog({
 				<DialogContent showCloseButton={false} className="lg:px-20 lg:py-15 lg:rounded-[40px] max-w-xl mx-auto max-h-[90vh] overflow-y-auto">
 					<DialogHeader className="mb-6 relative">
                         <DialogTitle className="text-start text-xl font-bold text-primary flex items-center gap-3">
-                            <button onClick={onBackToLogin} className="hover:-translate-x-1 transition-transform bg-gray-100 p-2 rounded-full">
+                            <button onClick={onBackToLogin} className="hover:-translate-x-1 transition-transform bg-gray-100 p-2 rounded-full rtl:rotate-180">
                                 <ArrowLeftIcon size={16} />
                             </button>
-                            Join Our Family
+                            {t("title")}
                         </DialogTitle>
                         <DialogClose asChild>
                             <button className="absolute -top-2 inset-e-0 transition-all duration-500 cursor-pointer hover:rotate-90 text-gray-400 hover:text-destructive">
@@ -246,11 +253,11 @@ function SignupDialog({
 
 					<form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
 						<div className="space-y-2">
-							<label className="text-sm font-bold text-gray-700">Full Name <span className="text-destructive">*</span></label>
+							<label className="text-sm font-bold text-gray-700">{t("fullName")} <span className="text-destructive">*</span></label>
 							<AppInput
-								placeholder="e.g. Abdullah Ahmed"
+								placeholder={t("fullNamePlaceholder")}
 								Icon={<UserRound size={17} className="text-gray-400" />}
-								{...register("name", { required: "Name is required" })}
+								{...register("name", { required: tForm("errors.required") })}
 							/>
                             {errors.name && <p className="text-destructive text-xs font-bold ps-2">{String(errors.name.message)}</p>}
 						</div>
@@ -259,43 +266,47 @@ function SignupDialog({
 							<AppMobileInput
                                 withoutLabel
 								{...register("mobile", {
-									required: "Phone is required",
-									minLength: { value: 6, message: "Too short" },
+									required: tForm("errors.required"),
+									minLength: { value: 6, message: tForm("errors.tooShort", { count: 6 }) },
 								})}
 							/>
                             {errors.mobile && <p className="text-destructive text-xs font-bold ps-2">{String(errors.mobile.message)}</p>}
 						</div>
 
 						<div className="space-y-2">
-							<label className="text-sm font-bold text-gray-700">Email Address <span className="text-destructive">*</span></label>
+							<label className="text-sm font-bold text-gray-700">{t("email")} <span className="text-destructive">*</span></label>
 							<AppInput
 								type="email"
-								placeholder="yourname@gmail.com"
+								placeholder={t("emailPlaceholder")}
 								Icon={<MailIcon size={17} className="text-gray-400" />}
-								{...register("email", { required: "Email is required" })}
+								{...register("email", { 
+                                    required: tForm("errors.required"),
+                                    pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: tForm("errors.invalidEmail") }
+                                })}
 							/>
                             {errors.email && <p className="text-destructive text-xs font-bold ps-2">{String(errors.email.message)}</p>}
 						</div>
 
 						<div className="space-y-2 relative">
-							<label className="text-sm font-bold text-gray-700">Password <span className="text-destructive">*</span></label>
+							<label className="text-sm font-bold text-gray-700">{t("password")} <span className="text-destructive">*</span></label>
 							<AppInput
 								type="password"
-								placeholder="Create a strong password"
+								placeholder={t("passwordPlaceholder")}
 								Icon={<LockIcon size={17} className="text-gray-400" />}
-								{...register("password", { required: "Password is required", minLength: { value: 8, message: "Min 8 chars" } })}
+								{...register("password", { required: tForm("errors.required"), minLength: { value: 8, message: tForm("errors.tooShort", { count: 8 }) } })}
 							/>
                             {errors.password && <p className="text-destructive text-xs font-bold ps-2">{String(errors.password.message)}</p>}
 						</div>
 
 						<div className="space-y-2">
-							<label className="text-sm font-bold text-gray-700">Confirm Password <span className="text-destructive">*</span></label>
+							<label className="text-sm font-bold text-gray-700">{t("confirmPassword")} <span className="text-destructive">*</span></label>
 							<AppInput
 								type="password"
-								placeholder="Re-enter password"
+								placeholder={t("confirmPasswordPlaceholder")}
 								Icon={<LockIcon size={17} className="text-gray-400" />}
 								{...register("confirmPassword", { 
-                                    validate: value => value === password || "Passwords do not match" 
+                                    required: tForm("errors.required"),
+                                    validate: value => value === password || tForm("errors.passwordsDoNotMatch") 
                                 })}
 							/>
                             {errors.confirmPassword && <p className="text-destructive text-xs font-bold ps-2">{String(errors.confirmPassword.message)}</p>}
@@ -306,13 +317,13 @@ function SignupDialog({
 								<input
 									type="checkbox"
 									className="size-5 shrink-0 rounded accent-accent mt-0.5"
-									{...register("consent", { required: "You must accept our terms" })}
+									{...register("consent", { required: tForm("errors.mustAcceptTerms") })}
 								/>
 								<p className="text-gray-500 font-medium leading-relaxed">
-									بالضغط على &quot;إرسال&quot;، أقرّ بأنني قرأتووافقت على
-                                    <Link href="/terms" className="font-extrabold text-primary hover:underline mx-1">شروط الاستخدام</Link>
-                                    و
-                                    <Link href="/privacy" className="font-extrabold text-primary hover:underline ms-1">سياسة الخصوصية</Link>.
+									{t("consentPrefix")}
+                                    <Link href="/terms" className="font-extrabold text-primary hover:underline mx-1">{t("consentTerms")}</Link>
+                                    {useTranslations("common")("and")}
+                                    <Link href="/privacy" className="font-extrabold text-primary hover:underline ms-1">{t("consentPrivacy")}</Link>.
 								</p>
 							</div>
 							{errors.consent && <p className="text-destructive text-xs font-bold ps-2 mt-1">{String(errors.consent.message)}</p>}
@@ -323,7 +334,7 @@ function SignupDialog({
 							disabled={isSubmitting}
 							className="h-14 w-full rounded-full bg-primary text-white text-base font-bold hover:bg-accent hover:scale-[1.02] shadow-lg transition-all mt-4"
 						>
-							{isSubmitting ? "Creating Account..." : "Create Account"}
+							{isSubmitting ? tForm("labels.creatingAccount") : t("submit")}
 						</Button>
 					</form>
 				</DialogContent>

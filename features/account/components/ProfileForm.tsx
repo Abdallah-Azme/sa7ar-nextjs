@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { UserRoundIcon, CloudDownloadIcon, MailIcon, Trash2Icon } from "lucide-react";
+import { useTranslations } from "next-intl";
 import ImageFallback from "@/components/shared/ImageFallback";
 import AppInput from "@/components/forms/AppInput";
 import AppMobileInput from "@/components/forms/AppMobileInput";
@@ -38,6 +39,9 @@ export default function ProfileForm() {
     const updateProfile = useUpdateProfileMutation();
     const deleteAccount = useDeleteAccountMutation();
 
+	const t = useTranslations("account.profile");
+	const tDelete = useTranslations("account.deleteAccount");
+	const tForm = useTranslations("form");
 	const { register, handleSubmit, reset } = useForm<ProfileInputs>({
 		defaultValues: {
 			name: user?.name || "",
@@ -99,7 +103,7 @@ export default function ProfileForm() {
 						{displayImage ? (
 							<ImageFallback
 								src={displayImage}
-								alt="صورة الملف الشخصي"
+								alt={t("avatar.alt")}
 								width={96}
 								height={96}
 								className={avatarClass}
@@ -112,11 +116,11 @@ export default function ProfileForm() {
 						<div className="space-y-2">
 							<h3 className="font-extrabold text-sm text-primary">
 								<label htmlFor="avatar-upload" className="text-accent cursor-pointer hover:underline">
-									اضغط للرفع
+									{t("avatar.clickToUpload")}
 								</label>{" "}
-								صورتك الجديدة
+								{t("avatar.title")}
 							</h3>
-							<p className="text-gray-500 text-xs font-medium">يدعم SVG وPNG وJPG وGIF (بحد أقصى 800x400 بكسل)</p>
+							<p className="text-gray-500 text-xs font-medium">{t("avatar.hint")}</p>
 						</div>
 						<input
 							type="file"
@@ -132,7 +136,7 @@ export default function ProfileForm() {
                             <button
                                 type="button"
                                 onClick={() => setImageFile(null)}
-                                title="Remove"
+                                title={t("avatar.remove")}
                                 className="bg-destructive/10 text-destructive flex items-center justify-center size-12 rounded-full hover:bg-destructive/20 transition-colors"
                             >
                                 <Trash2Icon size={18} />
@@ -145,32 +149,35 @@ export default function ProfileForm() {
 				<div className="bg-white p-8 sm:p-12 rounded-3xl border border-black/5 shadow-sm">
 					<form className="grid sm:grid-cols-2 xl:grid-cols-3 gap-8" onSubmit={handleSubmit(onSubmit)}>
 						<div className="space-y-3">
-							<label className="text-sm font-bold text-gray-700">الاسم الكامل</label>
+							<label className="text-sm font-bold text-gray-700">{t("fields.name")}</label>
 							<AppInput
 								placeholder="e.g. Abdullah"
 								Icon={<UserRoundIcon className="text-gray-400 size-5" />}
-								{...register("name", { required: true })}
+								{...register("name", { required: tForm("errors.required") })}
 							/>
 						</div>
 
 						<div className="space-y-3">
-							<label className="text-sm font-bold text-gray-700">البريد الإلكتروني</label>
+							<label className="text-sm font-bold text-gray-700">{t("fields.email")}</label>
 							<AppInput
 								placeholder="e.g. email@domain.com"
 								Icon={<MailIcon className="text-gray-400 size-5" />}
-								{...register("email", { required: true })}
+								{...register("email", { 
+                                    required: tForm("errors.required"),
+                                    pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: tForm("errors.invalidEmail") }
+                                })}
 							/>
 						</div>
 
 						<div className="space-y-3">
-							<AppMobileInput {...register("mobile", { required: true })} />
+							<AppMobileInput {...register("mobile", { required: tForm("errors.required") })} />
 						</div>
 
 						<Button
 							disabled={updateProfile.isPending}
 							className="col-span-full h-14 rounded-full mt-4 bg-primary hover:bg-accent text-white font-bold shadow-md transition-all sm:w-fit px-12"
 						>
-							{updateProfile.isPending ? "جارٍ الحفظ..." : "حفظ التغييرات"}
+							{updateProfile.isPending ? tForm("labels.savingChanges") : tForm("labels.saveChanges")}
 						</Button>
 					</form>
 
@@ -179,20 +186,22 @@ export default function ProfileForm() {
 						<Dialog>
                             <DialogTrigger asChild>
                                 <Button type="button" variant="destructive" className="rounded-full font-bold px-8">
-                                    حذف الحساب
+                                    {tDelete("trigger")}
                                 </Button>
                             </DialogTrigger>
                             <DialogContent className="sm:max-w-md rounded-3xl p-8">
                                 <DialogHeader>
-                                    <DialogTitle className="text-start">هل أنت متأكد تماماً؟</DialogTitle>
+                                    <DialogTitle className="text-start">{tDelete("dialog.heading")}</DialogTitle>
                                     <DialogDescription className="text-start mt-2 leading-relaxed">
-                                        هذا الإجراء لا يمكن التراجع عنه. سيتم حذف حسابك وجميع بياناتك بشكل دائم.
+                                        {tDelete("dialog.description")}
                                     </DialogDescription>
                                 </DialogHeader>
                                 <div className="grid grid-cols-2 gap-4 mt-6">
-                                    <Button variant="outline" className="h-12 rounded-full font-bold shadow-none">إلغاء</Button>
+                                    <Button variant="outline" className="h-12 rounded-full font-bold shadow-none">
+                                        {tDelete("dialog.cancel")}
+                                    </Button>
                                     <Button variant="destructive" className="h-12 rounded-full font-bold shadow-none" onClick={onDeleteAccount} disabled={deleteAccount.isPending}>
-                                        {deleteAccount.isPending ? "جارٍ الحذف..." : "تأكيد الحذف"}
+                                        {deleteAccount.isPending ? tDelete("dialog.deleting") : tDelete("dialog.confirm")}
                                     </Button>
                                 </div>
                             </DialogContent>
@@ -205,8 +214,8 @@ export default function ProfileForm() {
 				open={showVerifyMobileDialog}
 				onOpenChange={setShowVerifyMobileDialog}
 				mobile={mobileVerificationData?.oldMobile ?? ""}
-				title="Verify New Number"
-				description="We sent an OTP to your old number for security before activating the new one."
+				title={t("verifyMobile.title")}
+				description={t("verifyMobile.description")}
 			/>
 		</>
 	);

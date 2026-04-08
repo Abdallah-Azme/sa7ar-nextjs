@@ -13,7 +13,7 @@ import apiClient from "@/lib/apiClient";
 import { toast } from "sonner";
 import { useGlobalSettingsQuery } from "@/features/settings/hooks/useSettings";
 import { useMutation } from "@tanstack/react-query";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 interface ContactFormValues {
 	name: string;
@@ -41,11 +41,11 @@ export default function ContactPageContent() {
             return res as { message?: string };
         },
         onSuccess: (res) => {
-            toast.success(res.message || "تم إرسال رسالتك بنجاح");
+            toast.success(res.message || t("messages.success"));
 			reset();
         },
         onError: (err: { message?: string }) => {
-            toast.error(err?.message || "حدث خطأ ما، يرجى المحاولة مرة أخرى");
+            toast.error(err?.message || t("messages.error"));
         }
     });
 
@@ -53,7 +53,8 @@ export default function ContactPageContent() {
 		submitContact(data);
 	};
 
-	const staticMapSrc = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14545.968600746979!2d56.63467405!3d24.2944321!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e8c3139366650b3%3A0xc48c4805c878937!2sSohar%20Industrial%20City!5e0!3m2!1sar!2som!4v1712210000000!5m2!1sar!2som";
+	const locale = useLocale();
+	const staticMapSrc = `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14545.968600746979!2d56.63467405!3d24.2944321!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e8c3139366650b3%3A0xc48c4805c878937!2sSohar%20Industrial%20City!5e0!3m2!1s${locale}!2som!4v1712210000000!5m2!1s${locale}!2som`;
 
 	return (
 		<main className="flex flex-col min-h-screen">

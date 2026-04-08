@@ -150,7 +150,7 @@ export default function Navbar({ logo }: { logo?: ReactNode }) {
 								<Link href="/cart" aria-label="Cart">
 									{cartCount > 0 && (
 										<span
-											className="absolute size-5 border border-white top-0 -right-2 flex justify-center items-center bg-[#FF0084] text-[8px] text-white rounded-full"
+											className="absolute size-5 border border-white top-0 -inset-e-2 flex justify-center items-center bg-[#FF0084] text-[8px] text-white rounded-full"
 											suppressHydrationWarning
 										>
 											{cartCount}
@@ -181,7 +181,7 @@ export default function Navbar({ logo }: { logo?: ReactNode }) {
 										<MenuIcon />
 									</Button>
 								</SheetTrigger>
-								<SheetContent side="right" className="w-72 sm:w-80">
+								<SheetContent side="end" className="w-72 sm:w-80">
 									<div className="flex flex-col gap-6 p-2 mt-10">
 										<div className="text-sm font-bold text-gray">{tCommon("menu")}</div>
 										<div className="flex flex-col gap-2">

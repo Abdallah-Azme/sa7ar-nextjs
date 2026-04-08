@@ -20,6 +20,8 @@ import { useMutation } from "@tanstack/react-query";
 import { useInstitutionTypesQuery } from "../hooks/usePartnerships";
 import type { InstitutionType } from "../queries";
 
+import { useTranslations } from "next-intl";
+
 interface PartnershipFormValues {
 	name: string;
 	company_name: string;
@@ -27,6 +29,7 @@ interface PartnershipFormValues {
 }
 
 export default function PartnershipForm({ types: initialTypes }: { types?: InstitutionType[] }) {
+	const t = useTranslations("partnership");
 	const [mobile, setMobile] = useState("");
 	const [institutionTypeId, setInstitutionTypeId] = useState<string>("");
     
@@ -50,19 +53,19 @@ export default function PartnershipForm({ types: initialTypes }: { types?: Insti
             });
         },
         onSuccess: () => {
-            toast.success("تم إرسال طلب الشراكة بنجاح. سنتواصل معك قريباً!");
+            toast.success(t("successMessage"));
             reset();
             setMobile("");
             setInstitutionTypeId("");
         },
         onError: (err: { message?: string }) => {
-            toast.error(err?.message || "حدث خطأ أثناء إرسال الطلب");
+            toast.error(err?.message || t("errors.submitError"));
         }
     });
 
 	const onSubmit = (values: PartnershipFormValues) => {
 		if (!mobile.trim() || !institutionTypeId) {
-			toast.error("يرجى تعبئة جميع الحقول المطلوبة");
+			toast.error(t("errors.fillAll"));
 			return;
 		}
         submitForm(values);
@@ -75,13 +78,13 @@ export default function PartnershipForm({ types: initialTypes }: { types?: Insti
         >
             <div className="space-y-4">
                 <Label htmlFor="name" className="text-gray-700 font-bold">
-                    الاسم الكامل <span className="text-destructive">*</span>
+                    {t("fullName")} <span className="text-destructive">*</span>
                 </Label>
                 <AppInput
                     id="name"
-                    placeholder="مثال: محمد عبدالله"
+                    placeholder={t("fullNamePlaceholder")}
                     Icon={<UserRoundIcon className="text-secondary" size={18} />}
-                    {...register("name", { required: "هذا الحقل مطلوب" })}
+                    {...register("name", { required: t("errors.required") })}
                 />
                 {errors.name && <p className="text-destructive text-xs font-bold ps-2">{errors.name.message}</p>}
             </div>
@@ -92,7 +95,7 @@ export default function PartnershipForm({ types: initialTypes }: { types?: Insti
 
             <div className="space-y-4 pt-2">
                 <Label htmlFor="type" className="text-gray-700 font-bold">
-                    نوع المؤسسة <span className="text-destructive">*</span>
+                    {t("institutionType")} <span className="text-destructive">*</span>
                 </Label>
                 <Select
                     value={institutionTypeId}
@@ -104,7 +107,7 @@ export default function PartnershipForm({ types: initialTypes }: { types?: Insti
                         <div className="flex items-center gap-3 w-full">
                             <BoxIcon className="text-primary" size={18} />
                             <span className="text-black/10">|</span>
-                            <SelectValue placeholder="اختر نوع المؤسسة" />
+                            <SelectValue placeholder={t("institutionTypePlaceholder")} />
                         </div>
                         <div className="bg-gray-200 size-8 sm:size-9 rounded-full flex justify-center items-center ms-auto shrink-0">
                             <ChevronDownIcon className="text-primary size-4" />
@@ -126,29 +129,29 @@ export default function PartnershipForm({ types: initialTypes }: { types?: Insti
 
             <div className="space-y-4 pt-2">
                 <Label htmlFor="companyName" className="text-gray-700 font-bold">
-                    اسم الشركة <span className="text-destructive">*</span>
+                    {t("companyName")} <span className="text-destructive">*</span>
                 </Label>
                 <AppInput
                     id="companyName"
-                    placeholder="مثال: شركة النجوم"
+                    placeholder={t("companyNamePlaceholder")}
                     Icon={<WifiIcon className="text-primary" size={18} />}
-                    {...register("company_name", { required: "اسم الشركة مطلوب" })}
+                    {...register("company_name", { required: t("errors.companyName") })}
                 />
                 {errors.company_name && <p className="text-destructive text-xs font-bold ps-2">{errors.company_name.message}</p>}
             </div>
 
             <div className="space-y-4 pt-2">
                 <Label htmlFor="numberOfEmployees" className="text-gray-700 font-bold">
-                    عدد الموظفين <span className="text-destructive">*</span>
+                    {t("numberOfEmployees")} <span className="text-destructive">*</span>
                 </Label>
                 <AppInput
                     id="numberOfEmployees"
                     type="number"
                     min={1}
-                    placeholder="مثال: 50"
+                    placeholder={t("numberOfEmployeesPlaceholder")}
                     {...register("number_of_employees", {
-                        required: "هذا الحقل مطلوب",
-                        pattern: { value: /^\d+$/, message: "أرقام فقط" },
+                        required: t("errors.required"),
+                        pattern: { value: /^\d+$/, message: t("errors.numbersOnly") },
                     })}
                 />
                 {errors.number_of_employees && <p className="text-destructive text-xs font-bold ps-2">{errors.number_of_employees.message}</p>}
@@ -159,7 +162,7 @@ export default function PartnershipForm({ types: initialTypes }: { types?: Insti
                 disabled={isPending}
                 className="h-14 w-full rounded-full bg-primary text-white text-base font-bold hover:bg-accent hover:scale-[1.02] shadow-lg transition-all mt-8"
             >
-                {isPending ? "جارٍ الإرسال..." : "إرسال الطلب"}
+                {isPending ? t("submitting") : t("submit")}
             </Button>
         </form>
 	);

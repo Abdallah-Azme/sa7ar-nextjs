@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import { ChevronDownIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
+import { useTranslations } from "next-intl";
+import Image from "next/image";
 
 interface AppMobileInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 	value?: string;
@@ -22,18 +22,20 @@ export default function AppMobileInput({
 	className,
 	...props
 }: AppMobileInputProps) {
+	const tForm = useTranslations("form.labels");
+
 	return (
 		<div className="space-y-3">
 			{!withoutLabel && (
 				<Label htmlFor="mobile" className="font-bold text-gray-700">
-					Phone Number
+					{tForm("mobile")}
 					<span className="text-destructive ms-1">*</span>
 				</Label>
 			)}
 			<div className="relative flex items-center bg-background-cu sm:h-13 h-12 rounded-full shadow-sm focus-within:ring-2 focus-within:ring-accent/50 overflow-hidden">
                 {/* Fixed Oman Code Segment */}
 				<div className="flex h-full items-center ps-4 pe-3 bg-transparent border-none focus-visible:ring-0 gap-2 shrink-0">
-                    <img
+                    <Image
                         src="https://country-code-au6g.vercel.app/om.svg"
                         alt="Oman"
                         loading="lazy"

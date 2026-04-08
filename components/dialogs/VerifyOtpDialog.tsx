@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { XIcon } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import AppInput from "@/components/forms/AppInput";
 import { Button } from "@/components/ui/button";
 import {
@@ -43,6 +44,8 @@ export default function VerifyOtpDialog({
 	title,
 	description,
 }: VerifyOtpDialogProps) {
+	const t = useTranslations("authDialog.otp");
+	const tForm = useTranslations("form");
 	const {
 		register,
 		handleSubmit,
@@ -77,13 +80,13 @@ export default function VerifyOtpDialog({
 				body: JSON.stringify({ mobile, code: values.code }),
 				tokenRequire: verifyTokenRequire,
 			});
-			toast.success(res.message || "تم التحقق بنجاح");
+			toast.success(res.message || t("success"));
 			onOtpVerified?.(res.data);
 			reset({ code: "" });
 			onOpenChange(false);
 		} catch (err: unknown) {
 			const error = err as { message?: string };
-			toast.error(error?.message || "رمز التحقق غير صحيح");
+			toast.error(error?.message || t("invalidCode"));
 		} finally {
 			setIsLoading(false);
 		}
@@ -99,11 +102,11 @@ export default function VerifyOtpDialog({
 				method: "POST",
 				body: JSON.stringify({ mobile }),
 			});
-			toast.success(res.message || "تم إعادة إرسال الرمز");
+			toast.success(res.message || t("resendSuccess"));
 			setResendCooldown(60);
 		} catch (err: unknown) {
 			const error = err as { message?: string };
-			toast.error(error?.message || "فشل إعادة إرسال الرمز");
+			toast.error(error?.message || t("resendFailed"));
 		} finally {
 			setIsResending(false);
 		}
@@ -118,7 +121,7 @@ export default function VerifyOtpDialog({
 				<DialogHeader className="mb-6">
 					<div className="flex items-center justify-between">
 						<DialogTitle className="text-start text-2xl font-bold text-primary">
-							{title ?? "أدخل رمز التحقق"}
+							{title ?? t("title")}
 						</DialogTitle>
 						<DialogClose asChild>
 							<button className="transition-all duration-500 cursor-pointer hover:rotate-90 text-gray-400 hover:text-destructive">
@@ -127,7 +130,7 @@ export default function VerifyOtpDialog({
 						</DialogClose>
 					</div>
 					<DialogDescription className="text-sm text-gray-500 mt-2 text-start font-medium">
-						{description ?? `أرسلنا رمز تحقق مكوّن من 4 أرقام إلى +968 ${mobile}. أدخله أدناه.`}
+						{description ?? t("fullDescription", { mobile: `+968 ${mobile}` })}
 					</DialogDescription>
 				</DialogHeader>
 
@@ -136,11 +139,11 @@ export default function VerifyOtpDialog({
 						<AppInput
 							inputMode="numeric"
 							maxLength={4}
-							placeholder="أدخل الرمز المكوّن من 4 أرقام"
+							placeholder={t("placeholder")}
 							className="tracking-widest text-lg font-bold text-center"
 							{...register("code", {
-								required: "هذا الحقل مطلوب",
-								pattern: { value: /^\d{4}$/, message: "يجب أن يكون رمزاً مكوّناً من 4 أرقام" },
+								required: tForm("errors.required"),
+								pattern: { value: /^\d{4}$/, message: tForm("errors.invalidOtp") },
 							})}
 						/>
 						{errors.code && (
@@ -155,7 +158,7 @@ export default function VerifyOtpDialog({
 						disabled={isLoading}
 						className="h-14 w-full rounded-full bg-primary text-white text-base font-bold hover:bg-accent hover:scale-[1.02] shadow-lg transition-all"
 					>
-						{isLoading ? "جارٍ التحقق..." : "تحقق من الرمز"}
+						{isLoading ? tForm("labels.submitting") : t("submit")}
 					</Button>
 
 					<Button
@@ -165,7 +168,7 @@ export default function VerifyOtpDialog({
 						disabled={resendCooldown > 0 || isResending}
 						className="w-full text-accent font-bold mt-4"
 					>
-						{isResending ? "جارٍ الإرسال..." : "إعادة إرسال الرمز"}
+						{isResending ? tForm("labels.submitting") : t("resend")}
 						{resendCooldown > 0 && ` (${resendCooldown}s)`}
 					</Button>
 				</form>

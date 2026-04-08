@@ -121,6 +121,14 @@
 	body {
 		@apply bg-background text-foreground;
 	}
+
+    :root[lang="ar"] body {
+        font-family: var(--font-cairo), system-ui, sans-serif;
+    }
+
+    :root[lang="en"] body {
+        font-family: var(--font-inter), system-ui, sans-serif;
+    }
 }
 
 @theme {

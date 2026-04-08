@@ -3,6 +3,7 @@
 import { Suspense, useState, useEffect } from "react";
 import { UserRoundIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -50,6 +51,7 @@ export default function LoginDropdown({
 	open?: boolean;
 	onOpenChange?: (open: boolean) => void;
 }) {
+	const tAuth = useTranslations("auth");
 	const [authMode, setAuthMode] = useState<"login" | "signup">("login");
 	const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
 
@@ -82,7 +84,7 @@ export default function LoginDropdown({
 							type="button"
 							className="w-full"
 						>
-							تسجيل الدخول
+							{tAuth("login")}
 						</button>
 					</DropdownMenuItem>
 					<DropdownMenuItem asChild>
@@ -91,7 +93,7 @@ export default function LoginDropdown({
 							type="button"
 							className="w-full"
 						>
-							إنشاء حساب
+							{tAuth("signup")}
 						</button>
 					</DropdownMenuItem>
 				</DropdownMenuContent>

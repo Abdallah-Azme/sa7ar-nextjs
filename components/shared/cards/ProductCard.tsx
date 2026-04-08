@@ -44,7 +44,7 @@ export default function ProductCard({ item }: { item: Product }) {
 		<Card className="p-0 shadow-none border-0 bg-transparent">
 			<CardHeader className="relative rounded-4xl py-4 sm:py-6 bg-background-cu flex items-center justify-center">
 				{(hasPoints || isMostSold) && (
-					<div className="absolute right-3 top-3 z-10 flex items-center gap-1.5">
+					<div className="absolute inset-e-3 top-3 z-10 flex items-center gap-1.5">
 						{hasPoints && (
 							<span className="rounded-md bg-accent flex gap-px items-center px-2 py-1 text-xs font-extrabold leading-none text-white">
 								<StarIcon size={10} className="fill-white" />{pointsValue}+

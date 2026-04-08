@@ -3,11 +3,14 @@ import ImageFallback from "./ImageFallback";
 import { getGlobalSettings } from "@/features/settings/queries";
 import { Skeleton } from "@/components/ui/skeleton";
 
+import { getTranslations } from "next-intl/server";
+
 /**
  * Logo - RSC (Server Component)
  * Fetches settings directly from server
  */
 export default async function Logo() {
+	const t = await getTranslations("common");
 	const setting = await getGlobalSettings();
 
 	if (!setting)
@@ -19,7 +22,7 @@ export default async function Logo() {
 				src={setting.app_logo}
 				width={120}
 				height={100}
-				alt="شعار سحر"
+				alt={t("logoAlt")}
 				priority
 				className="max-w-30 shrink-0 max-h-25"
 			/>

@@ -59,11 +59,11 @@ export default function BlogsView({ blogs, totalPages }: BlogsViewProps) {
 				method: "POST",
 				body: JSON.stringify({ email }),
 			});
-			toast.success(res.message || "تم الاشتراك بنجاح!");
+			toast.success(res.message || t("messages.success"));
 			setNewsletterEmail("");
 		} catch (err: unknown) {
 			const error = err as { message?: string };
-			toast.error(error?.message || "حدث خطأ ما");
+			toast.error(error?.message || t("messages.error"));
 		} finally {
 			setIsSubscribing(false);
 		}

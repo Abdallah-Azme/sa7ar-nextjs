@@ -45,7 +45,7 @@ export default async function BusinessPartnershipsPage({ params }: { params: Pro
             <nav className="flex items-center gap-3 text-sm font-bold text-white/70">
                 <Link href="/" className="hover:text-white transition-colors flex items-center gap-2">
                     <ArrowRightIcon className="rtl:rotate-180" size={16} />
-                    {tCommon("links.backHome") || "العودة إلى الرئيسية"}
+                    {tCommon("links.backHome")}
                 </Link>
             </nav>
 

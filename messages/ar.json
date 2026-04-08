@@ -12,7 +12,21 @@
 		"signup": "إنشاء حساب",
 		"errors": {
 			"unauthenticated": "يرجى تسجيل الدخول أولاً",
-			"sessionExpired": "انتهت الجلسة. يرجى تسجيل الدخول مرة أخرى"
+			"sessionExpired": "انتهت الجلسة. يرجى تسجيل الدخول مرة أخرى",
+			"errorLoggingIn": "حدث خطأ أثناء تسجيل الدخول",
+			"errorSigningUp": "حدث خطأ أثناء إنشاء الحساب",
+			"errorSendingOtp": "حدث خطأ أثناء إرسال رمز التحقق",
+			"errorResettingPassword": "حدث خطأ أثناء إعادة تعيين كلمة المرور",
+			"errorUpdatingProfile": "حدث خطأ أثناء تحديث الملف الشخصي",
+			"errorDeletingAccount": "حدث خطأ أثناء حذف الحساب"
+		},
+		"messages": {
+			"loginSuccess": "تم تسجيل الدخول بنجاح",
+			"signupSuccess": "تم إنشاء الحساب بنجاح",
+			"logoutSuccess": "تم تسجيل الخروج بنجاح",
+			"passwordResetSuccess": "تم تغيير كلمة المرور بنجاح",
+			"profileUpdateSuccess": "تم تحديث الملف الشخصي بنجاح",
+			"accountDeleted": "تم حذف الحساب بنجاح"
 		}
 	},
 	"authDialog": {
@@ -29,20 +43,40 @@
 		},
 		"signup": {
 			"title": "أنشـــئ حســابك.",
+			"fullName": "الاسم الكامل",
+			"fullNamePlaceholder": "مثال: عبدالله أحمد",
+			"email": "البريد الإلكتروني",
+			"emailPlaceholder": "example@email.com",
+			"password": "كلمة المرور",
+			"passwordPlaceholder": "أنشئ كلمة مرور قوية",
+			"confirmPassword": "تأكيد كلمة المرور",
+			"confirmPasswordPlaceholder": "إعادة إدخال كلمة المرور",
 			"submit": "إنشئ حســابك الان",
-			"consentPrefix": "بالنقر فوق",
-			"consentMiddle": "فإنك توافق على"
+			"consentPrefix": "بالضغط على \"إرسال\"، أقرّ بأنني قرأت ووافقت على",
+			"consentTerms": "شروط الاستخدام",
+			"consentPrivacy": "سياسة الخصوصية"
 		},
 		"otp": {
-			"title": "التحقق من الرمز",
+			"title": "أدخل رمز التحقق",
 			"description": "أدخل رمز التحقق المرسل إلى رقم هاتفك لإكمال إنشاء الحساب.",
+			"fullDescription": "أرسلنا رمز تحقق مكوّن من 4 أرقام إلى {mobile}. أدخله أدناه.",
+			"placeholder": "أدخل الرمز المكوّن من 4 أرقام",
 			"submit": "تأكيد الرمز",
-			"resend": "إعادة إرسال الرمز"
+			"resend": "إعادة إرسال الرمز",
+			"success": "تم التحقق بنجاح",
+			"invalidCode": "رمز التحقق غير صحيح",
+			"resendSuccess": "تم إعادة إرسال الرمز",
+			"resendFailed": "فشل إعادة إرسال الرمز"
 		},
 		"resetPassword": {
 			"title": "إعادة تعيين كلمة المرور",
-			"description": "أدخل كلمة المرور الجديدة ثم أكّدها لإتمام إعادة التعيين.",
-			"submit": "حفظ كلمة المرور"
+			"description": "اختر كلمة مرور قوية لم تستخدمها من قبل.",
+			"invalidToken": "رمز إعادة التعيين غير صالح. يرجى إعادة المحاولة",
+			"newPassword": "كلمة المرور الجديدة",
+			"newPasswordPlaceholder": "أدخل كلمة المرور الجديدة",
+			"confirmPassword": "تأكيد كلمة المرور",
+			"confirmPasswordPlaceholder": "أعد إدخال كلمة المرور",
+			"submit": "تحديث كلمة المرور"
 		},
 		"sendOtp": {
 			"title": "إرسال رمز التحقق",
@@ -61,7 +95,11 @@
 		"businessSolutions": "حلول مياه مخصّصة للشركات والمؤسسات",
 		"downloadOn": "قم بالتنزيل على",
 		"fallbackImageAlt": "صورة افتراضية",
+		"logoAlt": "شعار صحار",
 		"language": "اللغة",
+		"ar": "عربي",
+		"en": "English",
+		"switchTo": "تغيير اللغة إلى {lang}",
 		"and": "و",
 		"menu": "القائمة",
 		"units": {
@@ -70,12 +108,27 @@
 		},
 		"links": {
 			"terms": "الشروط والأحكام",
-			"privacy": "سياسة الخصوصية"
+			"privacy": "سياسة الخصوصية",
+			"backHome": "العودة للرئيسية"
 		},
 		"stores": {
 			"google": "جوجل بلاي",
 			"apple": "أبل ستور"
-		}
+		},
+		"searchPlaceholder": "ابحث عن منتج...",
+		"searchTitle": "البحث",
+		"startTyping": "ابدأ بكتابة اسم المنتج...",
+		"searching": "جاري البحث...",
+		"loading": "جارٍ التحميل...",
+		"noResults": "لا توجد نتائج",
+		"searchResults": "نتائج البحث",
+		"all": "الكل",
+		"errorOccurred": "حدث خطأ، يرجى المحاولة مرة أخرى",
+		"prevSlide": "الشريحة السابقة",
+		"nextSlide": "الشريحة التالية",
+		"appleStore": "متجر آبل",
+		"googlePlay": "متجر جوجل بلاي",
+		"whatsapp": "واتساب"
 	},
 	"hero": {
 		"label": "صحـــار خيارك الأول للمياه النقية",
@@ -131,7 +184,11 @@
 		"sections": {
 			"bard": "منتجـــات برد",
 			"rathath": "منتجـــات رذاذ"
-		}
+		},
+		"label": "منتجاتنا",
+		"description": "تصفح مجموعتنا الكاملة من منتجات المياه",
+		"bard": "منتجـــات برد",
+		"rathath": "منتجـــات رذاذ"
 	},
 	"productsPage": {
 		"title": "قائمة المنتجات",
@@ -176,7 +233,7 @@
 			"line2": "عنـــــا!"
 		},
 		"description": "تجارب حقيقية من عملاء يثقون بخدمتنا وجودة مياهنا",
-		"sample": "أفضل خدمة توصيل مياه جربتها في الرياض. السعر مناسب جدًا مقارنة بالجودة والسرعة.",
+		"sample": "أفضل خدمة توصيل مياه جربتها. السعر مناسب جدًا مقارنة بالجودة والسرعة.",
 		"reviewerAlt": "صورة المراجع"
 	},
 	"mobile": {
@@ -198,7 +255,16 @@
 			"help": "المساعدة",
 			"contact": "تواصل معنا"
 		},
-		"copyright": "{{year}} رذاذ. جميع الحقوق محفوظة."
+		"copyright": "© {year} مياه صحار. جميع الحقوق محفوظة.",
+		"terms": "شروط الخدمة",
+		"privacy": "سياسة الخصوصية"
+	},
+	"helpCard": {
+		"title": "هل تحتاج إلى مساعدة؟",
+		"description": "فريق الدعم لدينا مستعد لمساعدتك في أي وقت."
+	},
+	"cms": {
+		"updating": "جاري تحديث المحتوى..."
 	},
 	"partnership": {
 		"title": {
@@ -221,12 +287,12 @@
 			"employeesCount": "عدد الموظفين"
 		},
 		"organizationTypes": {
-			"company": "Company - شركة",
-			"factory": "Factory - مصنع",
-			"ngo": "NGO - مؤسسة خيرية",
-			"school": "School - مدرسة",
+			"company": "شركة",
+			"factory": "مصنع",
+			"ngo": "مؤسسة خيرية",
+			"school": "مدرسة",
 			"individual": "لست صاحب مؤسسة",
-			"other": "Other - أخرى"
+			"other": "أخرى"
 		},
 		"employeesRanges": {
 			"1-10": "من 1 إلى 10",
@@ -242,16 +308,19 @@
 			"invalidEmail": "يرجى إدخال بريد إلكتروني صحيح",
 			"requiredFields": "يرجى تعبئة جميع الحقول المطلوبة",
 			"requiredField": "يرجى تعبئة هذا الحقل",
-			"passwordsNotMatch": "كلمتا المرور غير متطابقتين",
-			"acceptTerms": "يرجى الموافقة على الشروط وسياسة الخصوصية",
-			"invalidMobile": "يرجى إدخال رقم جوال مكون من 6 أرقام على الأقل",
-			"tooShort": "يجب أن يكون على الأقل {{count}} أحرف",
-			"tooLong": "يجب ألا يتجاوز {{count}} أحرف",
+			"passwordsDoNotMatch": "كلمات المرور غير متطابقة",
+			"mustAcceptTerms": "يجب عليك الموافقة على الشروط والأحكام",
+			"invalidMobile": "يرجى إدخال رقم جوال مكون من {count} أرقام على الأقل",
+			"tooShort": "يجب أن يكون على الأقل {count} أحرف",
+			"tooLong": "يجب ألا يتجاوز {count} أحرف",
 			"invalidOtp": "رمز التحقق يجب أن يكون مكوناً من 4 أرقام"
 		},
 		"labels": {
-			"uploadClick": "إضغط هنا",
-			"uploadAvatar": "لارفع الصورة الشخصية",
+			"loggingIn": "جاري تسجيل الدخول...",
+			"creatingAccount": "جاري إنشاء الحساب...",
+			"savingChanges": "جاري حفظ التغييرات...",
+			"submitting": "جاري الإرسال...",
+			"uploadAvatar": "لرفع الصورة الشخصية",
 			"avatarHint": "الحد الأقصى للحجم: 1 ميغابايت. الصيغ المدعومة: JPG، GIF، أو PNG.",
 			"uploadNewAvatar": "رفع صورة جديدة",
 			"deleteAvatar": "حذف الصورة",
@@ -260,7 +329,7 @@
 			"password": "كلمة المرور",
 			"confirmPassword": "تأكيد كلمة المرور",
 			"otpCode": "رمز التحقق",
-			"saveChanges": "حفظ المتغيــرات",
+			"saveChanges": "حفظ التغييرات",
 			"mobile": "رقــم الجــوال"
 		},
 		"placeholders": {
@@ -356,20 +425,24 @@
 		"info": {
 			"label": "اتصل بنـــــا الان !.",
 			"title": "مستعدون لسماعك وتزويدك بالمعلومات",
-			"emailLabel": "البريد الالكتروني",
-			"emailValue": "info@taifsama.com.sa",
+			"emailLabel": "البريد الإلكتروني",
+			"emailValue": "info@soharwater.com",
 			"phoneLabel": "رقم الهاتف",
-			"phoneValue": "+968 920022757 - FIX: 012-7382015",
-			"addressLabel": "عنواننا",
-			"addressValue": "طريق الملك فهد، الرياض",
+			"phoneValue": "+968 1234 5678",
+			"addressLabel": "العنوان",
+			"addressValue": "صحار، سلطنة عمان",
 			"hoursLabel": "ساعات العمل",
-			"hoursValue": "السبت-الخميس: 8:00 ص - 10:00 م | الجمعة: 4:00 م - 10:00 م"
+			"hoursValue": "الأحد - الخميس: 8 صباحاً - 5 مساءً"
+		},
+		"messages": {
+			"success": "تم إرسال رسالتك بنجاح!",
+			"error": "حدث خطأ أثناء إرسال الرسالة."
 		},
 		"map": {
-			"label": "الخريطة",
-			"title": "موقعنا على الخريطة",
-			"description": "نتشرف بزيارتكم لنـــــــا",
-			"iframeTitle": "موقع الشركة"
+			"label": "موقعنا",
+			"title": "تفضل بزيارتنا",
+			"description": "نحن نرحب بك دائماً في مقرنا الرئيسي بصحار.",
+			"iframeTitle": "خريطة مياه صحار"
 		}
 	},
 	"aboutPage": {
@@ -388,11 +461,32 @@
 				"title": "رسالتنــــــــــــــــــــــــا",
 				"description": "توفير مياه نقيّة مع خدمة توصيل سهلة وسريعة تحسّن حياة عملائنا اليومية، مع الالتزام بالمسؤولية المجتمعية والبيئية."
 			}
-		}
+		},
+		"stats": {
+			"happyCustomers": "عميل سعيد",
+			"partners": "شريك ومورد"
+		},
+		"imageAlt": "صور قصتنا"
+	},
+	"aboutStory": {
+		"label": "قصتنا",
+		"title": {
+			"line1": "نروي عطش",
+			"emphasis": "المجتمع بجــودة",
+			"line2": "وأمــان"
+		},
+		"paragraphs": {
+			"first": "تأسست \"رذاذ\" لتكون الحل الأسهل والأكثر موثوقية لتوصيل المياه، حيث انطلقنا من فكرة بسيطة: المياه النقية حق للجميع، والحصول عليها يجب أن يكون خاليًا من التعقيد.",
+			"second": "تأسست \"رذاذ\" لتكون الحل الأسهل والأكثر موثوقية لتوصيل المياه، حيث انطلقنا من فكرة بسيطة: المياه النقية حق للجميع، والحصول عليها يجب أن يكون خاليًا من التعقيد."
+		},
+		"stats": {
+			"happyCustomers": "عميل سعيد",
+			"partners": "شريك ومورد"
+		},
+		"imageAlt": "صور قصتنا"
 	},
 	"blogPage": {
 		"title": "صحتك مع الماء",
-
 		"meta": "لنبدأ يومك بكوب ماء قبل القهوة بـ 10 دقائق ✨",
 		"news": {
 			"placeholder": "اكتب بريدك الإلكتروني هنا ..."
@@ -457,6 +551,11 @@
 		"createdAt": "16 يناير 2025",
 		"title": "كم لتر من الماء يحتاج جسمك يومياً !",
 		"shareLabel": "شارك هذا المقال على",
+		"social": {
+			"facebook": "فيسبوك",
+			"twitter": "تويتر (X)",
+			"instagram": "إنستغرام"
+		},
 		"tips": {
 			"first": {
 				"title": "النصيحة الأولى - 01 !",
@@ -476,30 +575,15 @@
 			}
 		}
 	},
-	"aboutStory": {
-		"label": "قصتنا",
-		"title": {
-			"line1": "نروي عطش",
-			"emphasis": "المجتمع بجــودة",
-			"line2": "وأمــان"
-		},
-		"paragraphs": {
-			"first": "تأسست \"رذاذ\" لتكون الحل الأسهل والأكثر موثوقية لتوصيل المياه، حيث انطلقنا من فكرة بسيطة: المياه النقية حق للجميع، والحصول عليها يجب أن يكون خاليًا من التعقيد.",
-			"second": "تأسست \"رذاذ\" لتكون الحل الأسهل والأكثر موثوقية لتوصيل المياه، حيث انطلقنا من فكرة بسيطة: المياه النقية حق للجميع، والحصول عليها يجب أن يكون خاليًا من التعقيد."
-		},
-		"stats": {
-			"happyCustomers": "عميل سعيد",
-			"partners": "شريك ومورد"
-		},
-		"imageAlt": "صور قصتنا"
+	"privacyPage": {
+		"title": "سياسة الخصوصية",
+		"description": "نحن نهتم بحماية خصوصيتك وضمان أمان بياناتك الشخصية عند استخدام موقعنا وتطبيقاتنا.",
+		"subtitle": "ثقتكم هي أولويتنا. توضح هذه الوثيقة معاييرنا لحماية البيانات."
 	},
 	"termsPage": {
 		"title": "الشروط والأحكام",
-		"description": "يرجى قراءة الشروط والأحكام التالية قبل استخدام خدماتنا أو تطبيقاتنا."
-	},
-	"privacyPage": {
-		"title": "سياسة الخصوصية",
-		"description": "نحن نهتم بحماية خصوصيتك وضمان أمان بياناتك الشخصية عند استخدام موقعنا وتطبيقاتنا."
+		"description": "من خلال استخدام خدماتنا، فإنك توافق على الإرشادات المذكورة أدناه.",
+		"subtitle": "يرجى مراجعة شروط الخدمة والأحكام وإرشادات الاستخدام الخاصة بنا."
 	},
 	"productCard": {
 		"size": "1.5 لتــر",
@@ -515,56 +599,25 @@
 			"addresses": "العناوين المحفوظة",
 			"support": "الدعم والمساعدة"
 		},
-		"orders": {
-			"tabs": {
-				"in_progress": "الحالية",
-				"delivered": "المكتملة",
-				"canceled": "الملغية"
+		"profile": {
+			"title": "الملف الشخصي",
+			"pageTitle": "تفاصيل الحساب",
+			"pageDescription": "تحديث معلوماتك الشخصية وصورة الملف الشخصي.",
+			"avatar": {
+				"title": "صورتك الجديدة",
+				"clickToUpload": "اضغط للرفع",
+				"hint": "يدعم SVG وPNG وJPG وGIF (بحد أقصى 800x400 بكسل)",
+				"remove": "إزالة",
+				"alt": "صورة الملف الشخصي"
 			},
-			"emptyTitle": "لا توجد طلبات",
-			"emptyDescription": "لا يوجد طلبات في هذا التصنيف حالياً",
-			"card": {
-				"trackOrder": "تتبع الطلب",
-				"reorder": "إعادة الطلب",
-				"cancelled": "ملغية"
+			"fields": {
+				"name": "الاسم الكامل",
+				"email": "البريد الإلكتروني",
+				"mobile": "رقم الهاتف"
 			},
-			"reorderDialog": {
-				"heading": "تأكيد استبدال السلة",
-				"description": "لديك منتجات بالفعل في سلة الشراء. بهذا الإجراء سيتم حذف السلة الحالية وإضافة منتجات هذا الطلب. هل تريد المتابعة؟",
-				"cancel": "إلغاء",
-				"confirm": "تأكيد",
-				"confirmPending": "جارٍ استبدال السلة..."
-			},
-			"errors": {
-				"reorderInvalid": "تعذر إعادة الطلب، حاول مرة أخرى"
-			},
-			"details": {
-				"title": "تتبع الطلب لحظة بلحظة .. 📍",
-				"mapTitle": "موقع الطلب",
-				"inProgress": "حالة التسليم",
-				"orderStatus": "حالة الطلب",
-				"product": "المنتج",
-				"products": "المنتجات",
-				"cancel": {
-					"button": "إلغاء الطلب",
-					"dialog": {
-						"heading": "إلغــاء الطلب",
-						"titlePrefix": "هل أنت متأكد من",
-						"titleHighlight": "إلغاء",
-						"titleSuffix": "الطلب؟",
-						"description": "لن تتمكن من استعادة الطلب بعد إلغائه.",
-						"confirm": "تــأكيد الالغــاء",
-						"confirmPending": "جارٍ إلغاء الطلب...",
-						"close": "إغلاق"
-					}
-				},
-				"messages": {
-					"cancelSuccess": "تم إلغاء الطلب بنجاح",
-					"cancelFailed": "تعذر إلغاء الطلب"
-				},
-				"errors": {
-					"orderNotFound": "تعذر تحميل تفاصيل الطلب"
-				}
+			"verifyMobile": {
+				"title": "التحقق من الرقم الجديد",
+				"description": "لقد أرسلنا رمز تحقق إلى رقمك القديم للأمان قبل تفعيل الرقم الجديد."
 			}
 		},
 		"changePassword": {
@@ -589,11 +642,11 @@
 		"deleteAccount": {
 			"trigger": "حذف الحساب",
 			"dialog": {
-				"heading": "تأكيد حذف الحساب",
-				"description": "سيتم حذف حسابك نهائيًا ولن تتمكن من استعادته لاحقًا. هل تريد المتابعة؟",
+				"heading": "هل أنت متأكد تماماً؟",
+				"description": "هذا الإجراء لا يمكن التراجع عنه. سيتم حذف حسابك وجميع بياناتك بشكل دائم.",
 				"cancel": "إلغاء",
 				"confirm": "تأكيد الحذف",
-				"deleting": "جارٍ حذف الحساب..."
+				"deleting": "جارٍ الحذف..."
 			},
 			"messages": {
 				"success": "تم حذف الحساب بنجاح",
@@ -609,51 +662,98 @@
 		},
 		"addAddress": {
 			"title": "أضـف عـنوان جـديد",
-			"editTitle": "تعديل العنوان",
-			"searchPlaceholder": "ابحث عن الموقع...",
-			"useCurrentLocation": "استخدام الموقع الحالي 📍",
-			"updateCurrentLocation": "تحديث الموقع الحالي 📍",
-			"currentLocationLoaded": "تم تحميل موقعك",
-			"mapIframeTitle": "إضافة عنوان جديد",
-			"deliveryHint": "سيتم تسليم الطلب إلى الموقع الذي اخترته على الخريطة. المعلومات أدناه مقدمة فقط لمساعدة وكيل التوصيل في الوصول إليك بسهولة أكبر.",
+			"description": "حدد موقعك بدقة على الخريطة لضمان توصيل طلباتك بسلاسة.",
+			"editTitle": "تعديل عنوان التوصيل",
+			"editDescription": "حدّث موقع التوصيل وتفاصيل العنوان ومعلومات التواصل.",
+			"searchPlaceholder": "ابحث عن منطقة أو معلم...",
+			"useCurrentLocation": "استخدام الموقع الحالي",
+			"locating": "جاري التحديد...",
 			"confirmLocation": "تأكيد الموقع",
-			"updateLocation": "تحديث الموقع",
-			"dialogHeading": "أكد موقعك!",
-			"editDialogHeading": "تعديل موقعك",
-			"labels": {
-				"homeAddress": "ادخل عنوان المنزل لتوصيل :",
-				"addressInfo": "معلومات العنوان :",
-				"contactInfo": "معلومات الاتصال :"
-			},
-			"placeholders": {
-				"homeAddress": "ادخل عنوان المنزل لتوصيل هنــا ...",
-				"buildingNumber": "أدخل رقم المبنى هنــا ...",
-				"floorNumber": "أدخل الطابق هنــا ...",
-				"description": "أكتب وصف العنوان هنــا ...",
-				"contactName": "أدخل الاســم الأول و الاخيــر هنــا ..."
-			},
-			"saveAddress": "احفظ عنواني",
-			"saveAddressPending": "احفظ عنواني ...",
-			"updateAddress": "تحديث عنواني",
-			"updateAddressPending": "تحديث العنوان ...",
+			"mapHint": "تأكد من دقة موقعك على الخريطة قبل تأكيد الموقع.",
+			"receiverDetails": "بيانات المستلم",
+			"saveAddress": "حفظ العنوان",
+			"updateAddress": "تحديث العنوان",
 			"errors": {
-				"saveFailed": "حدث خطأ أثناء حفظ العنوان",
-				"searchFailed": "تعذر البحث عن الموقع حالياً",
-				"geolocationNotSupported": "المتصفح لا يدعم تحديد الموقع",
-				"currentLocationFailed": "تعذر الوصول إلى الموقع الحالي",
-				"homeAddressRequired": "عنوان المنزل مطلوب"
+				"search": "تعذّر البحث عن الموقع",
+				"noGeo": "المتصفح لا يدعم خاصية تحديد الموقع",
+				"geo": "تعذّر تحديد موقعك الحالي",
+				"addressRequired": "حقل العنوان مطلوب",
+				"save": "حدث خطأ أثناء حفظ العنوان"
+			},
+			"messages": {
+				"success": "تم حفظ العنوان بنجاح"
+			},
+			"fields": {
+				"homeAddress": "العنوان / المنزل",
+				"homeAddressPlaceholder": "مثال: الخوير الجنوبية، مسقط",
+				"buildingNo": "رقم المبنى / الفيلا",
+				"buildingNoPlaceholder": "مثال: 104",
+				"floorApartment": "الطابق / الشقة",
+				"floorApartmentPlaceholder": "مثال: الطابق الثاني",
+				"instructions": "تعليمات إضافية",
+				"instructionsPlaceholder": "أقرب معلم، ملاحظات التوصيل...",
+				"contactName": "اسم المستلم",
+				"contactNamePlaceholder": "مثال: عبدالله أحمد"
 			}
 		},
+		"partnership": {
+			"fullName": "الاسم الكامل",
+			"fullNamePlaceholder": "مثال: محمد عبدالله",
+			"institutionType": "نوع المؤسسة",
+			"institutionTypePlaceholder": "اختر نوع المؤسسة",
+			"companyName": "اسم الشركة",
+			"companyNamePlaceholder": "مثال: شركة النجوم",
+			"numberOfEmployees": "عدد الموظفين",
+			"numberOfEmployeesPlaceholder": "مثال: 50",
+			"submit": "إرسال الطلب",
+			"submitting": "جارٍ الإرسال...",
+			"successMessage": "تم إرسال طلب الشراكة بنجاح. سنتواصل معك قريباً!",
+			"errors": {
+				"required": "هذا الحقل مطلوب",
+				"companyName": "اسم الشركة مطلوب",
+				"numbersOnly": "أرقام فقط",
+				"fillAll": "يرجى تعبئة جميع الحقول المطلوبة",
+				"submitError": "حدث خطأ أثناء إرسال الطلب"
+			}
+		},
+		"checkout": {
+			"pageTitle": "إتمام الطلب",
+			"deliveryAddress": "عنوان التوصيل",
+			"change": "تغيير",
+			"noAddresses": "لا توجد عناوين توصيل محفوظة. يرجى إضافة عنوان.",
+			"addNewAddress": "إضافة عنوان جديد",
+			"orderItems": "عناصر الطلب",
+			"paymentMethod": "طريقة الدفع",
+			"onlinePayment": "دفع إلكتروني",
+			"paymentDescription": "فيزا، ماستركارد، بنفت، ثواني",
+			"deliveryNotes": "ملاحظات التوصيل",
+			"deliveryNotesPlaceholder": "مثل: يرجى ترك الطلب عند الباب أو رن الجرس...",
+			"orderSummary": "ملخص الطلب",
+			"summaryHint": "يرجى مراجعة طلبك قبل التأكيد",
+			"subtotal": "المجموع الفرعي",
+			"delivery": "التوصيل",
+			"total": "الإجمالي",
+			"sendOrder": "أرسل الطلب الآن",
+			"sending": "جاري الإرسال...",
+			"success": "تم إرسال الطلب بنجاح",
+			"error": "حدث خطأ ما",
+			"selectAddressError": "يرجى اختيار عنوان التوصيل أولاً",
+			"changeAddressTitle": "تغيير عنوان التوصيل",
+			"noAddressesFound": "لا توجد عناوين توصيل"
+		},
 		"addressesList": {
-			"addressLabel": "العنوان",
+			"loading": "تحميل...",
+			"title": "عناويني",
+			"addNew": "إضافة عنوان جديد",
+			"noAddressesTitle": "لا توجد عناوين محفوظة",
+			"noAddressesDesc": "أضف عنوانًا جديدًا لبدء الطلب وإتمام عملية الشراء بشكل أسرع!",
+			"defaultLabel": "الافتراضي",
+			"homeAddress": "عنوان المنزل",
+			"note": "ملاحظة:",
+			"setDefault": "تعيين كافتراضي",
+			"active": "نشط",
 			"edit": "تعديل",
 			"delete": "حذف",
-			"setDefault": "تعيين كافتراضي",
-			"addAddress": "إضافة عنوان",
-			"emptyTitle": "لا توجد عناوين محفوظة",
-			"emptyDescription": "أضف عنوانًا جديدًا لبدء الطلب",
-			"errorTitle": "تعذر تحميل العناوين",
-			"errorDescription": "حاول مرة أخرى بعد قليل",
 			"messages": {
 				"deleteSuccess": "تم حذف العنوان بنجاح",
 				"deleteFailed": "حدث خطأ أثناء حذف العنوان",
@@ -682,6 +782,48 @@
 			}
 		}
 	},
+	"orders": {
+		"pageTitle": "طلباتي",
+		"tabs": {
+			"in_progress": "الحالية",
+			"delivered": "المكتملة",
+			"canceled": "الملغية"
+		},
+		"emptyTitle": "لا توجد طلبات",
+		"emptyDescription": "لا يوجد طلبات في هذا التصنيف حالياً",
+		"card": {
+			"trackOrder": "تتبع الطلب",
+			"reorder": "إعادة الطلب",
+			"processing": "جارٍ المعالجة...",
+			"reorderSuccess": "تمت إعادة الطلب بنجاح"
+		},
+		"reorderDialog": {
+			"heading": "تأكيد استبدال السلة",
+			"description": "لديك منتجات بالفعل في سلة الشراء. بهذا الإجراء سيتم حذف السلة الحالية وإضافة منتجات هذا الطلب. هل تريد المتابعة؟",
+			"cancel": "إلغاء",
+			"confirm": "تأكيد",
+			"confirmPending": "جارٍ استبدال السلة..."
+		},
+		"errors": {
+			"reorderInvalid": "تعذر إعادة الطلب، حاول مرة أخرى"
+		},
+		"details": {
+			"title": "تتبع الطلب لحظة بلحظة .. 📍",
+			"mapTitle": "موقع الطلب",
+			"product": "المنتج",
+			"products": "تصفح المنتجات",
+			"fetchError": "فشل في جلب تفاصيل الطلب",
+			"cancel": {
+				"button": "إلغاء الطلب",
+				"dialog": {
+					"heading": "إلغاء الطلب",
+					"description": "هل أنت متأكد أنك تريد إلغاء هذا الطلب؟",
+					"confirm": "نعم، إلغاء الطلب",
+					"cancel": "لا، العودة"
+				}
+			}
+		}
+	},
 	"accountSidebar": {
 		"title": "المعلومات الشخصية",
 		"subscriptionSummary": "ملخص النقاط",
@@ -700,7 +842,7 @@
 		"price": "4.99 ر.ع",
 		"oldPrice": "8.99 ر.ع",
 		"sizeLabel": "الحجم",
-		"packageLabel": "عبوة",
+		"packageLabel": "كرتون",
 		"quantityLabel": "الكمية",
 		"showLess": "إخفاء",
 		"buyNow": "اشترِ الآن",
@@ -714,7 +856,24 @@
 			"fresh": "من مصدر نقي",
 			"delivery": "توصيل سريع",
 			"quality": "جودة مضمونة"
-		}
+		},
+		"chooseSize": "اختر الحجم",
+		"carton": "كرتون"
+	},
+	"actions": {
+		"addToCart": "أضف إلى السلة",
+		"buyNow": "اشترِ الآن",
+		"orderNow": "اطلب الآن",
+		"showMore": "عرض المزيد",
+		"readMore": "اقرأ المزيد",
+		"contactUs": "اتصل بنا",
+		"increase": "زيادة الكمية",
+		"decrease": "نقص الكمية",
+		"remove": "حذف من السلة",
+		"cancelOrder": "إلغاء الطلب",
+		"cancelling": "جارٍ الإلغاء...",
+		"confirmCancel": "نعم، إلغاء الطلب",
+		"keepOrder": "لا، العودة"
 	},
 	"mostSeller": {
 		"title": "إكسسوارات الأكثر مبيعًا"
@@ -724,7 +883,16 @@
 		"empty": {
 			"title": "يبدو أن سلتك فارغة؟",
 			"description": "ماذا تنتظر؟ ابدأ الطلب الآن.",
-			"cta": "ابدا طلبك الان"
+			"cta": "ابدأ طلبك الآن"
+		},
+		"messages": {
+			"added": "تمت الإضافة للسلة بنجاح",
+			"updated": "تم تحديث السلة بنجاح",
+			"couponApplied": "تم تطبيق الكوبون بنجاح",
+			"couponInvalid": "الكوبون غير صالح",
+			"addError": "خطأ في الإضافة للسلة",
+			"updateError": "خطأ في تحديث السلة",
+			"removeSuccess": "تم الحذف من السلة"
 		},
 		"item": {
 			"title": "مياه معدنية",
@@ -762,61 +930,8 @@
 			"question": "هل لديك كوبون خصم!",
 			"description": "أدخل رمز الكوبون لتطبيق الخصم على طلبك.",
 			"label": "رمز الكوبون",
-			"apply": "تطبيق الكوبون"
-		}
-	},
-	"checkout": {
-		"title": "إتمام الطلب",
-		"sections": {
-			"address": {
-				"title": "عنوان التوصيل",
-				"change": "تغيير العنوان",
-				"empty": "لا يوجد عنوان محدد حالياً"
-			},
-			"items": {
-				"title": "منتجات الطلب",
-				"empty": "لا توجد منتجات في السلة"
-			},
-			"payment": {
-				"title": "طريقة الدفع",
-				"methods": {
-					"online": {
-						"title": "الدفع الإلكتروني",
-						"description": "الدفع بأمان عبر بوابة الدفع الإلكترونية"
-					},
-					"points": {
-						"title": "الدفع بالنقاط",
-						"description": "استخدم رصيد نقاطك المتاح لهذا الطلب"
-					}
-				}
-			},
-			"notes": {
-				"title": "ملاحظات التوصيل",
-				"placeholder": "اكتب ملاحظات التوصيل (اختياري)",
-				"hint": "مثال: يرجى التوصيل صباحاً"
-			}
-		},
-		"addressDialog": {
-			"title": "اختيار عنوان التوصيل",
-			"empty": "لا توجد عناوين محفوظة",
-			"addNew": "إضافة عنوان جديد"
-		},
-		"cardDialog": {
-			"title": "إضافة بطاقة ائتمانية",
-			"holderName": "اسم صاحب البطاقة",
-			"holderNamePlaceholder": "أدخل اسم صاحب البطاقة",
-			"cardNumber": "رقم البطاقة",
-			"cardNumberPlaceholder": "أدخل رقم البطاقة",
-			"expiry": "تاريخ الانتهاء",
-			"cvv": "CVV",
-			"save": "حفظ البطاقة"
-		},
-		"placeOrder": "تأكيد الطلب",
-		"placeOrderPending": "جاري تنفيذ الطلب...",
-		"placeOrderHint": "يرجى اختيار عنوان التوصيل لتأكيد الطلب",
-		"errors": {
-			"addressRequired": "يرجى اختيار عنوان التوصيل",
-			"invalidPaymentUrl": "تعذر فتح صفحة الدفع. يمكنك مراجعة صفحة الطلبات."
+			"apply": "تطبيق الكوبون",
+			"error": "يرجى إدخال الكوبون"
 		}
 	},
 	"errors": {
@@ -882,6 +997,17 @@
 		"partnership": {
 			"title": "الشراكات التجارية | مياه صحار",
 			"description": "تشارك مع صحار لتأمين مياه نقية وموثوقة لموظفيك ومنظمتك."
+		},
+		"terms": {
+			"title": "الشروط والأحكام | مياه صحار",
+			"description": "يرجى مراجعة شروط الخدمة والأحكام وإرشادات الاستخدام الخاصة بنا في مياه صحار."
+		},
+		"privacy": {
+			"title": "سياسة الخصوصية | مياه صحار",
+			"description": "تعرف على كيفية تعاملنا مع بياناتك الشخصية وحماية خصوصيتك في مياه صحار."
 		}
-	}
+	},
+	"status": "حالة التوصيل",
+	"itemsTitle": "عناصر الطلب",
+	"processing": "قيد المعالجة"
 }

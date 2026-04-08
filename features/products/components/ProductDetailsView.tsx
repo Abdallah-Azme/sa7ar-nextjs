@@ -48,9 +48,9 @@ import { useTranslations } from "next-intl";
  * Interactive view for a single product.
  */
 export default function ProductDetailsView({ product, relatedProducts }: ProductDetailsViewProps) {
-	const tProducts = useTranslations("products");
+	const tProducts = useTranslations("productDetails");
+	const tNav = useTranslations("products");
 	const tActions = useTranslations("actions");
-	const tCommon = useTranslations("common");
 
 	const { addToCart, addToCartPending } = useCart();
 	const [quantity, setQuantity] = useState(1);
@@ -81,8 +81,8 @@ export default function ProductDetailsView({ product, relatedProducts }: Product
 								</CarouselItem>
 							))}
 						</CarouselContent>
-						<CarouselNext className="right-4" />
-						<CarouselPrevious className="left-4" />
+						<CarouselNext className="end-4" />
+						<CarouselPrevious className="start-4" />
 					</Carousel>
 				</div>
 
@@ -96,7 +96,7 @@ export default function ProductDetailsView({ product, relatedProducts }: Product
 							</div>
                             {product?.is_most_sold ? (
                                 <span className="rounded-md bg-orange-500 px-2 py-1 text-[10px] font-bold text-white">
-                                    {tProducts("mostSold")}
+                                    {tNav("mostSold")}
                                 </span>
                             ) : null}
 						</div>
@@ -116,7 +116,7 @@ export default function ProductDetailsView({ product, relatedProducts }: Product
 					<div className="space-y-4">
 						<label className="text-gray font-bold text-sm inline-block">
 							<CartIcon className="inline me-2" />
-							{tProducts("descriptionTitle")}
+							{tProducts("descriptionLabel")}
 						</label>
 						<p className="font-light text-gray text-sm leading-relaxed">
 							{product?.description}
@@ -126,7 +126,7 @@ export default function ProductDetailsView({ product, relatedProducts }: Product
 					{/* Size Selection */}
 					{product?.sizes?.length > 0 && (
                         <div className="space-y-4">
-                            <p className="text-sm font-bold text-gray">{tProducts("chooseSize")}</p>
+                            <p className="text-sm font-bold text-gray">{tProducts("sizeLabel")}</p>
                             <div className="flex gap-3 w-full">
                                 {product.sizes.map((option: ProductSize) => (
                                     <Button
@@ -136,7 +136,7 @@ export default function ProductDetailsView({ product, relatedProducts }: Product
                                         onClick={() => setSelectedSizeId(option.id)}
                                     >
                                         {option.size}
-                                        <span className="font-light text-xs">{tProducts("carton")}</span>
+                                        <span className="font-light text-xs">{tProducts("packageLabel")}</span>
                                     </Button>
                                 ))}
                             </div>
@@ -147,7 +147,7 @@ export default function ProductDetailsView({ product, relatedProducts }: Product
 					<div className="space-y-4">
 						<label className="text-gray font-bold text-sm inline-block">
 							<CartIcon className="inline me-2" />
-							{tProducts("quantity")}
+							{tProducts("quantityLabel")}
 						</label>
 						<div className="flex items-center justify-between rounded-full py-2 px-5 bg-background-cu gap-3">
 							<Button
@@ -198,8 +198,8 @@ export default function ProductDetailsView({ product, relatedProducts }: Product
 			{relatedProducts.length > 0 && (
 				<section className="container space-y-6 pb-20">
 					<SectionHeader
-						label={tProducts("label")}
-						title={tProducts("related")}
+						label={tNav("mostSold")}
+						title={tProducts("similarTitle")}
 						labelIcon={<ShoppingBagIcon size={15} />}
 						titleIcon={<ShoppingBasketIcon size={30} />}
 					/>

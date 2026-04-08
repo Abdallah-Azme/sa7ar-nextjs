@@ -12,7 +12,21 @@
 		"signup": "Sign up",
 		"errors": {
 			"unauthenticated": "Please log in first",
-			"sessionExpired": "Session expired. Please log in again."
+			"sessionExpired": "Session expired. Please log in again.",
+			"errorLoggingIn": "An error occurred during login",
+			"errorSigningUp": "An error occurred during account creation",
+			"errorSendingOtp": "An error occurred while sending the verification code",
+			"errorResettingPassword": "An error occurred during password reset",
+			"errorUpdatingProfile": "An error occurred while updating profile",
+			"errorDeletingAccount": "An error occurred while deleting account"
+		},
+		"messages": {
+			"loginSuccess": "Logged in successfully",
+			"signupSuccess": "Account created successfully",
+			"logoutSuccess": "Logged out successfully",
+			"passwordResetSuccess": "Password changed successfully",
+			"profileUpdateSuccess": "Profile updated successfully",
+			"accountDeleted": "Account deleted successfully"
 		}
 	},
 	"authDialog": {
@@ -24,52 +38,68 @@
 			"rememberMe": "Remember me",
 			"forgotPassword": "Forgot your password?",
 			"submit": "Log in",
-			"noAccount": "Don’t have an account?",
+			"noAccount": "Don't have an account?",
 			"createNew": "Create a new account"
 		},
 		"signup": {
 			"title": "Create your account.",
-			"fullName": "Full name",
-			"fullNamePlaceholder": "Enter your full name here...",
-			"email": "Email",
-			"emailPlaceholder": "Enter your email here...",
+			"fullName": "Full Name",
+			"fullNamePlaceholder": "e.g. Abdullah Ahmed",
+			"email": "Email Address",
+			"emailPlaceholder": "example@email.com",
 			"password": "Password",
-			"passwordPlaceholder": "Enter your password here...",
-			"confirmPassword": "Confirm password",
-			"confirmPasswordPlaceholder": "Re-enter your password here...",
+			"passwordPlaceholder": "Create a strong password",
+			"confirmPassword": "Confirm Password",
+			"confirmPasswordPlaceholder": "Re-enter your password",
 			"submit": "Create your account now",
-			"consentPrefix": "By clicking",
-			"consentMiddle": "you agree to"
+			"consentPrefix": "By clicking \"Submit\", I acknowledge that I have read and agree to the",
+			"consentTerms": "Terms of Use",
+			"consentPrivacy": "Privacy Policy"
 		},
 		"otp": {
-			"title": "OTP Verification",
-			"description": "Enter the verification code sent to your phone number to complete signup.",
-			"submit": "Verify code",
-			"resend": "Resend code"
+			"title": "Enter Verification Code",
+			"description": "Enter the verification code sent to your phone to complete account creation.",
+			"fullDescription": "We sent a 4-digit verification code to {mobile}. Enter it below.",
+			"placeholder": "Enter 4-digit code",
+			"submit": "Confirm Code",
+			"resend": "Resend Code",
+			"success": "Verified successfully",
+			"invalidCode": "Incorrect verification code",
+			"resendSuccess": "Code resent successfully",
+			"resendFailed": "Failed to resend code"
 		},
 		"resetPassword": {
 			"title": "Reset Password",
-			"description": "Enter your new password and confirm it to complete reset.",
-			"submit": "Save Password"
+			"description": "Choose a strong password you haven't used before.",
+			"invalidToken": "Invalid reset token. Please try again.",
+			"newPassword": "New Password",
+			"newPasswordPlaceholder": "Enter new password",
+			"confirmPassword": "Confirm Password",
+			"confirmPasswordPlaceholder": "Re-enter password",
+			"submit": "Update Password"
 		},
 		"sendOtp": {
-			"title": "Send OTP",
-			"description": "Enter your mobile number to receive a verification code.",
-			"submit": "Send code"
+			"title": "Send Verification Code",
+			"description": "Enter mobile number to send verification code.",
+			"submit": "Send Code"
 		}
 	},
 	"header": {
 		"notice": "Order your water now... fast delivery to your door .. 💧"
 	},
 	"common": {
-		"ourProducts": "Our products",
-		"showMore": "See more",
+		"ourProducts": "Our Products",
+		"showMore": "Show more",
 		"readMore": "Read more",
-		"contactUs": "Contact us",
-		"businessSolutions": "Tailored water solutions for companies and institutions",
+		"contactUs": "Contact Us",
+		"businessSolutions": "Customized water solutions for companies and organizations",
 		"downloadOn": "Download on",
-		"fallbackImageAlt": "Fallback image",
+		"fallbackImageAlt": "Default image",
+		"logoAlt": "Sohar Logo",
 		"language": "Language",
+		"ar": "Arabic",
+		"en": "English",
+		"switchTo": "Switch language to {lang}",
 		"and": "and",
 		"menu": "Menu",
 		"units": {
@@ -78,85 +108,104 @@
 		},
 		"links": {
 			"terms": "Terms and Conditions",
-			"privacy": "Privacy Policy"
+			"privacy": "Privacy Policy",
+			"backHome": "Back to Home"
 		},
 		"stores": {
 			"google": "Google Play",
-			"apple": "App Store"
-		}
+			"apple": "Apple Store"
+		},
+		"searchPlaceholder": "Search for a product...",
+		"searchTitle": "Search",
+		"startTyping": "Start typing product name...",
+		"searching": "Searching...",
+		"loading": "Loading...",
+		"noResults": "No results found",
+		"searchResults": "Search Results",
+		"all": "All",
+		"errorOccurred": "An error occurred, please try again",
+		"prevSlide": "Previous slide",
+		"nextSlide": "Next slide",
+		"appleStore": "Apple Store",
+		"googlePlay": "Google Play Store",
+		"whatsapp": "WhatsApp"
 	},
 	"hero": {
 		"label": "Sohar is your first choice for pure water",
 		"title": {
-			"line1": "Water delivery",
-			"emphasis": "Pure water to your",
-			"line2": "home!"
+			"line1": "Delivery of",
+			"emphasis": "pure water to your",
+			"line2": "doorstep!"
 		},
-		"description": "Enjoy high-quality drinking water with fast, reliable delivery. We care for your health and your family's health with every drop.",
+		"description": "Enjoy high-quality drinking water, with fast and reliable delivery service. We care for your health and your family's health with every drop.",
 		"actions": {
-			"shop": "Shop",
+			"shop": "Store",
 			"order": "Order now with Sohar"
 		},
 		"steps": {
 			"fast": {
-				"title": "Fast delivery",
+				"title": "Fast Delivery",
 				"label": "Same day"
 			},
 			"quality": {
-				"title": "Guaranteed quality",
-				"label": "Global standards"
+				"title": "Guaranteed Quality",
+				"label": "International standards"
 			},
 			"trust": {
-				"title": "Reliable service",
+				"title": "Reliable Service",
 				"label": "24/7 support"
 			}
 		}
 	},
 	"about": {
-		"label": "About us",
+		"label": "About Us",
 		"title": {
 			"line1": "Rathath.. pure water",
 			"emphasis": "with trust and quality"
 		},
-		"description": "At Rathath, we provide high-quality pure water with an easy and fast delivery service to give you more comfort in daily life.",
+		"description": "At Rathath, we work to provide high-quality pure water with easy and fast delivery service, to give you more comfort in your daily life.",
 		"features": {
 			"accreditation": {
 				"title": "Accreditation",
-				"description": "A service you can trust every time."
+				"description": "Service you can trust every time .."
 			},
 			"comfort": {
 				"title": "Comfort",
-				"description": "Easy ordering and direct delivery to your door."
+				"description": "Easy ordering and direct delivery to your door .."
 			},
 			"sustainability": {
 				"title": "Sustainability",
-				"description": "Responsible solutions that preserve the environment and ideal quality."
+				"description": "Responsible solutions that maintain environment and ideal quality .."
 			}
 		}
 	},
 	"products": {
-		"mostSold": "Most sold products",
+		"mostSold": "Best Selling Products",
 		"sections": {
-			"bard": "Bard products",
-			"rathath": "Rathath products"
-		}
+			"bard": "Bard Products",
+			"rathath": "Rathath Products"
+		},
+		"label": "Our Products",
+		"description": "Browse our full range of water products",
+		"bard": "Bard Products",
+		"rathath": "Rathath Products"
 	},
 	"productsPage": {
-		"title": "Products list",
-		"searchPlaceholder": "Search products",
+		"title": "Products List",
+		"searchPlaceholder": "Search for a product",
 		"searchDialog": {
-			"title": "Search products",
-			"startTyping": "Type a product name to search",
+			"title": "Search Products",
+			"startTyping": "Type product name to search",
 			"loading": "Searching...",
-			"noResults": "No matching products found",
-			"results": "Search results"
+			"noResults": "No matching products",
+			"results": "Search Results"
 		},
 		"empty": {
-			"title": "No products available in this section",
+			"title": "No products in this section currently",
 			"description": "Try another section or come back later"
 		},
 		"banner": {
-			"title": "Exclusive discounts!",
+			"title": "Exclusive Discounts!",
 			"description": "On subscriptions and quick orders ✨"
 		},
 		"filters": {
@@ -169,64 +218,75 @@
 		}
 	},
 	"partners": {
-		"label": "Our partners",
+		"label": "Success Partners",
 		"title": {
-			"line1": "We trust partners",
-			"emphasis": "who share our quality"
+			"line1": "Join our list of",
+			"emphasis": "Success Partners"
 		},
-		"description": "We collaborate with trusted suppliers and companies to ensure top water quality and continuous service."
+		"description": "We are proud of our wide network of success partners that help us deliver the best products to our customers.",
+		"rzaz": "Rzaz",
+		"barad": "Barad"
 	},
 	"reviews": {
-		"label": "Customer reviews",
+		"label": "Customer Reviews",
 		"title": {
 			"line1": "What our",
 			"emphasis": "customers",
-			"line2": "say about us!"
+			"line2": "say!"
 		},
-		"description": "Real experiences from customers who trust our service and water quality.",
-		"sample": "The best water delivery service I have tried in Riyadh. The price is very fair compared to the quality and speed.",
+		"description": "Real experiences from customers who trust our service and water quality",
+		"sample": "Best water delivery service I tried. Price is very good compared to quality and speed.",
 		"reviewerAlt": "Reviewer image"
 	},
 	"mobile": {
-		"label": "Our app",
+		"label": "Our App",
 		"title": {
-			"line1": "Download the app...",
-			"emphasis": "your water delivered to your door"
+			"line1": "Download the app…",
+			"emphasis": "your water arrives at your door"
 		},
-		"description": "We always strive to deliver an experience beyond expectations, because we know water is the basis of life, and its quality is non-negotiable.",
-		"imageAlt": "App photo"
+		"description": "We always strive to provide an experience that exceeds expectations, because we realize that water is the basis of life, and its quality is non-negotiable.",
+		"imageAlt": "App image"
 	},
 	"footer": {
-		"description": "We provide pure, high-quality water with easy, fast delivery to meet your daily needs.",
-		"followUs": "Follow us",
+		"description": "We provide you with high-quality pure water with easy and fast delivery service to meet your daily needs.",
+		"followUs": "Follow us on ـــــ",
 		"downloadNow": "Download the app now",
-		"storeLine": "Apple Store | Google Play",
+		"storeLine": "Apple store | Google store",
 		"titles": {
-			"quickLinks": "Quick links",
+			"quickLinks": "Quick Links",
 			"help": "Help",
-			"contact": "Contact us"
+			"contact": "Contact Us"
 		},
-		"copyright": "{{year}} Rathadh. All rights reserved."
+		"copyright": "© {year} Sohar Water. All rights reserved.",
+		"terms": "Terms of Service",
+		"privacy": "Privacy Policy"
+	},
+	"helpCard": {
+		"title": "Need Any Help?",
+		"description": "Our support team is ready to assist you anytime."
+	},
+	"cms": {
+		"updating": "Content is being updated..."
 	},
 	"partnership": {
 		"title": {
-			"line1": "Start a",
+			"line1": "Start",
 			"emphasis": "partnership",
 			"line2": "with us"
 		},
-		"description": "Tailored water solutions for companies and institutions.",
-		"cta": "Request a partnership now"
+		"description": "Customized water solutions for companies and organizations",
+		"cta": "Request partnership now"
 	},
 	"businessPartnerships": {
 		"title": "Business Partnerships",
 		"fields": {
-			"fullName": "First and last name",
-			"fullNamePlaceholder": "Enter your first and last name here...",
-			"organizationType": "Organization type",
-			"organizationTypePlaceholder": "Select organization type here...",
-			"companyName": "Company / Organization name",
+			"fullName": "First and Last Name",
+			"fullNamePlaceholder": "Enter first and last name here ...",
+			"organizationType": "Organization Type",
+			"organizationTypePlaceholder": "Choose organization type here ...",
+			"companyName": "Company / Organization Name",
 			"companyNamePlaceholder": "Write your answer here…",
-			"employeesCount": "Number of employees"
+			"employeesCount": "Number of Employees"
 		},
 		"organizationTypes": {
 			"company": "Company",
@@ -247,39 +307,42 @@
 	"form": {
 		"errors": {
 			"required": "This field is required",
-			"invalidEmail": "Please enter a valid email",
+			"invalidEmail": "Please enter a valid email address",
 			"requiredFields": "Please fill in all required fields",
 			"requiredField": "Please fill in this field",
-			"passwordsNotMatch": "Passwords do not match",
-			"acceptTerms": "Please accept the terms and privacy policy",
-			"invalidMobile": "Please enter a valid mobile number",
-			"tooShort": "Must be at least {{count}} characters",
-			"tooLong": "Must be at most {{count}} characters",
-			"invalidOtp": "OTP code must be 4 digits"
+			"passwordsDoNotMatch": "Passwords do not match",
+			"mustAcceptTerms": "You must agree to the terms and conditions",
+			"invalidMobile": "Please enter a mobile number with at least {count} digits",
+			"tooShort": "Must be at least {count} characters",
+			"tooLong": "Must not exceed {count} characters",
+			"invalidOtp": "Verification code must be 4 digits"
 		},
 		"labels": {
-			"uploadClick": "Click here",
-			"uploadAvatar": "to upload your profile image",
-			"avatarHint": "Maximum size: 1 MB. Supported formats: JPG, GIF, or PNG.",
-			"uploadNewAvatar": "Upload new avatar",
-			"deleteAvatar": "Delete avatar",
-			"fullName": "First and last name",
-			"email": "Email",
+			"loggingIn": "Logging in...",
+			"creatingAccount": "Creating account...",
+			"savingChanges": "Saving changes...",
+			"submitting": "Submitting...",
+			"uploadAvatar": "Upload profile picture",
+			"avatarHint": "Max size: 1MB. Supported formats: JPG, GIF, or PNG.",
+			"uploadNewAvatar": "Upload new image",
+			"deleteAvatar": "Delete image",
+			"fullName": "First and Last Name",
+			"email": "Email Address",
 			"password": "Password",
-			"confirmPassword": "Confirm password",
-			"otpCode": "Verification code",
-			"saveChanges": "Save changes",
-			"mobile": "Mobile number"
+			"confirmPassword": "Confirm Password",
+			"otpCode": "Verification Code",
+			"saveChanges": "Save Changes",
+			"mobile": "Mobile Number"
 		},
 		"placeholders": {
-			"fullName": "Enter your first and last name here...",
-			"email": "Enter your email here...",
-			"password": "Enter your password here...",
-			"confirmPassword": "Re-enter your password here...",
-			"otpCode": "Enter verification code here..."
+			"fullName": "Enter first and last name here ...",
+			"email": "Enter email address here ...",
+			"password": "Enter password here ...",
+			"confirmPassword": "Re-enter password here ...",
+			"otpCode": "Enter verification code here ..."
 		},
 		"hints": {
-			"onlyOmanNumbers": "Registration is available for Omani phone numbers only"
+			"onlyOmanNumbers": "Registration is only available for Omani phone numbers"
 		}
 	},
 	"faq": {
@@ -291,67 +354,67 @@
 		"items": [
 			{
 				"value": "req",
-				"trigger": "Can I schedule delivery?",
-				"content": "We are committed to delivering your order as quickly as possible. Delivery usually takes 30 to 60 minutes depending on your location and driver availability in the area."
+				"trigger": "Can I schedule the delivery?",
+				"content": "We are committed to delivering your order as quickly as possible. Delivery usually takes 30 to 60 minutes depending on your location and driver availability."
 			},
 			{
 				"value": "month",
-				"trigger": "Do you offer monthly subscriptions?",
-				"content": "We are committed to delivering your order as quickly as possible. Delivery usually takes 30 to 60 minutes depending on your location and driver availability in the area."
+				"trigger": "Are there monthly subscriptions?",
+				"content": "We follow up on your order as quickly as possible. Delivery usually takes 30 to 60 minutes depending on your location and driver availability."
 			},
 			{
 				"value": "time",
 				"trigger": "How long does delivery take?",
-				"content": "We are committed to delivering your order as quickly as possible. Delivery usually takes 30 to 60 minutes depending on your location and driver availability in the area."
+				"content": "We follow up on your order as quickly as possible. Delivery usually takes 30 to 60 minutes depending on your location and driver availability."
 			},
 			{
 				"value": "payment",
 				"trigger": "What payment methods are available?",
-				"content": "We are committed to delivering your order as quickly as possible. Delivery usually takes 30 to 60 minutes depending on your location and driver availability in the area."
+				"content": "We follow up on your order as quickly as possible. Delivery usually takes 30 to 60 minutes depending on your location and driver availability."
 			},
 			{
 				"value": "edit",
-				"trigger": "Can I edit my order after confirmation?",
-				"content": "We are committed to delivering your order as quickly as possible. Delivery usually takes 30 to 60 minutes depending on your location and driver availability in the area."
+				"trigger": "Can I edit the order after confirmation?",
+				"content": "We follow up on your order as quickly as possible. Delivery usually takes 30 to 60 minutes depending on your location and driver availability."
 			},
 			{
 				"value": "possible",
-				"trigger": "Is delivery available in all areas?",
-				"content": "We are committed to delivering your order as quickly as possible. Delivery usually takes 30 to 60 minutes depending on your location and driver availability in the area."
+				"trigger": "Is delivery available to all regions?",
+				"content": "We follow up on your order as quickly as possible. Delivery usually takes 30 to 60 minutes depending on your location and driver availability."
 			}
 		],
 		"help": {
 			"title": "Didn't find an answer to your question?",
-			"description": "Our customer support team is ready to help anytime"
+			"description": "Our customer service team is ready to help you at any time"
 		}
 	},
 	"faqPage": {
 		"banner": {
-			"title": "Frequently asked questions",
-			"description": "Clear answers about delivery, payment, and service details"
+			"title": "FAQ",
+			"description": "Clear answers about delivery, payment methods, and service details"
 		},
 		"imageAlt": "FAQ support image"
 	},
 	"contactSection": {
-		"label": "We are waiting for you",
+		"label": "Our team is waiting for you",
 		"title": "Didn't find an answer to your question?",
-		"description": "Our customer support team is ready to help anytime. Reach out and we will get back to you quickly.",
+		"description": "Our customer service team is ready to help you at any time. Contact us and we will respond quickly.",
 		"cta": "Contact us now"
 	},
 	"contactPage": {
 		"banner": {
-			"title": "Contact us",
+			"title": "Contact Us",
 			"description": "We are here to answer your questions and help you"
 		},
 		"form": {
 			"label": "Send us a message",
 			"title": "Send us a message",
-			"description": "We are happy to hear from you. We respond during business hours.",
+			"description": "We are happy to receive your inquiry. We will respond during official working hours.",
 			"fields": {
-				"name": "Full name",
-				"phone": "Phone number",
-				"email": "Email",
-				"message": "Message"
+				"name": "Full Name",
+				"phone": "Phone Number",
+				"email": "Email Address",
+				"message": "Message Content"
 			},
 			"placeholders": {
 				"name": "Enter full name",
@@ -362,22 +425,26 @@
 			"submit": "Send"
 		},
 		"info": {
-			"label": "Contact us now!.",
-			"title": "We are ready to listen and provide information",
+			"label": "Contact us now!",
+			"title": "Ready to hear from you and provide information",
 			"emailLabel": "Email",
-			"emailValue": "info@taifsama.com.sa",
+			"emailValue": "info@soharwater.com",
 			"phoneLabel": "Phone",
-			"phoneValue": "+968 920022757 - FIX: 012-7382015",
+			"phoneValue": "+968 1234 5678",
 			"addressLabel": "Address",
-			"addressValue": "King Fahd Road, Riyadh",
-			"hoursLabel": "Working hours",
-			"hoursValue": "Sat-Thu: 8:00 AM - 10:00 PM | Fri: 4:00 PM - 10:00 PM"
+			"addressValue": "Sohar, Sultanate of Oman",
+			"hoursLabel": "Working Hours",
+			"hoursValue": "Sun - Thu: 8 AM - 5 PM"
+		},
+		"messages": {
+			"success": "Your message has been sent successfully!",
+			"error": "An error occurred while sending the message."
 		},
 		"map": {
-			"label": "Location",
-			"title": "Our location on the map",
-			"description": "We would be honored by your visit",
-			"iframeTitle": "Company location"
+			"label": "Our Location",
+			"title": "Visit Us",
+			"description": "We always welcome you at our headquarters in Sohar.",
+			"iframeTitle": "Sohar Water Map"
 		}
 	},
 	"aboutPage": {
@@ -396,7 +463,29 @@
 				"title": "Our Mission",
 				"description": "To provide pure water with easy and fast delivery that improves our customers' daily lives, while committing to social and environmental responsibility."
 			}
-		}
+		},
+		"stats": {
+			"happyCustomers": "Happy Customer",
+			"partners": "Partner & Supplier"
+		},
+		"imageAlt": "Our story images"
+	},
+	"aboutStory": {
+		"label": "Our story",
+		"title": {
+			"line1": "We quench the thirst",
+			"emphasis": "of the community",
+			"line2": "with quality and safety"
+		},
+		"paragraphs": {
+			"first": "Rathadh was founded to be the easiest and most reliable water delivery solution. We started from a simple idea: pure water is a right for everyone, and getting it should be free of complexity.",
+			"second": "Rathadh was founded to be the easiest and most reliable water delivery solution. We started from a simple idea: pure water is a right for everyone, and getting it should be free of complexity."
+		},
+		"stats": {
+			"happyCustomers": "Happy customers",
+			"partners": "Partners and suppliers"
+		},
+		"imageAlt": "Our story images"
 	},
 	"blogPage": {
 		"title": "Your health with water",
@@ -464,6 +553,11 @@
 		"createdAt": "January 16, 2025",
 		"title": "How many liters of water does your body need daily?",
 		"shareLabel": "Share this article on",
+		"social": {
+			"facebook": "Facebook",
+			"twitter": "Twitter (X)",
+			"instagram": "Instagram"
+		},
 		"tips": {
 			"first": {
 				"title": "Tip One - 01!",
@@ -483,245 +577,305 @@
 			}
 		}
 	},
-	"aboutStory": {
-		"label": "Our story",
-		"title": {
-			"line1": "We quench the thirst",
-			"emphasis": "of the community",
-			"line2": "with quality and safety"
-		},
-		"paragraphs": {
-			"first": "Rathadh was founded to be the easiest and most reliable water delivery solution. We started from a simple idea: pure water is a right for everyone, and getting it should be free of complexity.",
-			"second": "Rathadh was founded to be the easiest and most reliable water delivery solution. We started from a simple idea: pure water is a right for everyone, and getting it should be free of complexity."
-		},
-		"stats": {
-			"happyCustomers": "Happy customers",
-			"partners": "Partners and suppliers"
-		},
-		"imageAlt": "Our story images"
+	"privacyPage": {
+		"title": "Privacy Policy",
+		"description": "We care about protecting your privacy and ensuring the security of your personal data when using our website and apps.",
+		"subtitle": "Your trust is our priority. This document explains our data protection standards."
 	},
 	"termsPage": {
 		"title": "Terms and Conditions",
-		"description": "Please read the following terms and conditions before using our services or applications."
-	},
-	"privacyPage": {
-		"title": "Privacy Policy",
-		"description": "We care about protecting your privacy and ensuring the security of your personal data when using our website and applications."
+		"description": "By using our services, you agree to the guidelines mentioned below.",
+		"subtitle": "Please review our service terms, conditions, and usage guidelines."
 	},
 	"productCard": {
 		"size": "1.5 L",
-		"title": "Mineral water",
+		"title": "Mineral Water",
 		"addToCart": "Add to cart",
 		"mostSoldBadge": "Most Sold"
 	},
 	"account": {
 		"links": {
-			"profile": "My profile",
-			"orders": "My orders",
-			"cart": "Cart",
-			"addresses": "Saved addresses",
-			"support": "Support & Help"
+			"profile": "My Profile",
+			"orders": "My Orders",
+			"cart": "Shopping Cart",
+			"addresses": "Saved Addresses",
+			"support": "Help & Support"
 		},
-		"orders": {
-			"tabs": {
-				"in_progress": "Current",
-				"delivered": "Completed",
-				"canceled": "Cancelled"
+		"profile": {
+			"title": "Profile",
+			"pageTitle": "Account Details",
+			"pageDescription": "Update your personal information and profile picture.",
+			"avatar": {
+				"title": "Your New Picture",
+				"clickToUpload": "Click to upload",
+				"hint": "Supports SVG, PNG, JPG, or GIF (max 800x400px)",
+				"remove": "Remove",
+				"alt": "Profile Picture"
 			},
-			"emptyTitle": "No orders found",
-			"emptyDescription": "There are no orders in this category right now",
-			"card": {
-				"trackOrder": "Track order",
-				"reorder": "Reorder",
-				"cancelled": "Cancelled"
+			"fields": {
+				"name": "Full Name",
+				"email": "Email Address",
+				"mobile": "Phone Number"
 			},
-			"reorderDialog": {
-				"heading": "Confirm cart replacement",
-				"description": "You already have products in your cart. This action will clear your current cart and add this order's products. Do you want to continue?",
-				"cancel": "Cancel",
-				"confirm": "Confirm",
-				"confirmPending": "Replacing cart..."
-			},
-			"errors": {
-				"reorderInvalid": "Unable to reorder, please try again"
-			},
-			"details": {
-				"title": "Track your order moment by moment .. 📍",
-				"mapTitle": "Order location",
-				"inProgress": "Delivery status",
-				"orderStatus": "Order status",
-				"product": "Product",
-				"products": "Products",
-				"cancel": {
-					"button": "Cancel order",
-					"dialog": {
-						"heading": "Cancel order",
-						"titlePrefix": "Are you sure you want to",
-						"titleHighlight": "cancel",
-						"titleSuffix": "the order?",
-						"description": "You will not be able to restore this order after cancellation.",
-						"confirm": "Confirm cancellation",
-						"confirmPending": "Cancelling order...",
-						"close": "Close"
-					}
-				},
-				"messages": {
-					"cancelSuccess": "Order cancelled successfully",
-					"cancelFailed": "Unable to cancel order"
-				},
-				"errors": {
-					"orderNotFound": "Unable to load order details"
-				}
+			"verifyMobile": {
+				"title": "Verify New Number",
+				"description": "We've sent a verification code to your old number for security before activating the new one."
 			}
 		},
 		"changePassword": {
-			"trigger": "Change password",
+			"trigger": "Change Password",
 			"fields": {
-				"currentPassword": "Current password",
-				"password": "New password",
-				"confirmPassword": "Confirm new password"
+				"currentPassword": "Current Password",
+				"password": "New Password",
+				"confirmPassword": "Confirm New Password"
 			},
 			"placeholders": {
-				"currentPassword": "Enter your current password here...",
-				"password": "Enter your new password here...",
-				"confirmPassword": "Re-enter your new password here..."
+				"currentPassword": "Enter current password here ...",
+				"password": "Enter new password here ...",
+				"confirmPassword": "Re-enter new password here ..."
 			},
 			"dialog": {
-				"heading": "Change password",
+				"heading": "Change Password",
 				"cancel": "Cancel",
-				"confirm": "Save password",
+				"confirm": "Save Password",
 				"submitting": "Saving password..."
 			}
 		},
 		"deleteAccount": {
-			"trigger": "Delete account",
+			"trigger": "Delete Account",
 			"dialog": {
-				"heading": "Confirm account deletion",
-				"description": "Your account will be permanently deleted and cannot be recovered later. Do you want to continue?",
+				"heading": "Are you absolutely sure?",
+				"description": "This action cannot be undone. Your account and all data will be permanently deleted.",
 				"cancel": "Cancel",
-				"confirm": "Confirm deletion",
-				"deleting": "Deleting account..."
+				"confirm": "Confirm Delete",
+				"deleting": "Deleting..."
 			},
 			"messages": {
 				"success": "Account deleted successfully",
-				"failed": "Unable to delete account, please try again"
+				"failed": "Failed to delete account, try again"
 			}
 		},
 		"logoutDialog": {
 			"trigger": "Log out",
-			"heading": "Confirm logout",
+			"heading": "Confirm Log out",
 			"description": "Are you sure you want to log out of your account?",
 			"cancel": "Cancel",
 			"confirm": "Log out"
 		},
 		"addAddress": {
-			"title": "Add new address",
-			"editTitle": "Edit address",
-			"searchPlaceholder": "Search location...",
-			"useCurrentLocation": "Use current location 📍",
-			"updateCurrentLocation": "Update current location 📍",
-			"currentLocationLoaded": "Your location is loaded",
-			"mapIframeTitle": "Add new address",
-			"deliveryHint": "Your order will be delivered to the location selected on the map. The details below are provided only to help the delivery agent reach you more easily.",
-			"confirmLocation": "Confirm location",
-			"updateLocation": "Update location",
-			"dialogHeading": "Confirm your location!",
-			"editDialogHeading": "Edit your location",
-			"labels": {
-				"homeAddress": "Enter home delivery address:",
-				"addressInfo": "Address information:",
-				"contactInfo": "Contact information:"
-			},
-			"placeholders": {
-				"homeAddress": "Enter home delivery address here...",
-				"buildingNumber": "Enter building number here...",
-				"floorNumber": "Enter floor number here...",
-				"description": "Write address description here...",
-				"contactName": "Enter first and last name here..."
-			},
-			"saveAddress": "Save my address",
-			"saveAddressPending": "Saving address ...",
-			"updateAddress": "Update my address",
-			"updateAddressPending": "Updating address ...",
+			"title": "Add New Address",
+			"description": "Pin your location accurately on the map to ensure smooth delivery.",
+			"editTitle": "Edit Delivery Address",
+			"editDescription": "Update delivery location, address details, and contact info.",
+			"searchPlaceholder": "Search for an area or landmark...",
+			"useCurrentLocation": "Use Current Location",
+			"locating": "Locating...",
+			"confirmLocation": "Confirm Location",
+			"mapHint": "Ensure your location is accurate on the map before confirming.",
+			"receiverDetails": "Receiver Details",
+			"saveAddress": "Save Address",
+			"updateAddress": "Update Address",
 			"errors": {
-				"saveFailed": "An error occurred while saving the address",
-				"searchFailed": "Unable to search for the location right now",
-				"geolocationNotSupported": "This browser does not support geolocation",
-				"currentLocationFailed": "Unable to access current location",
-				"homeAddressRequired": "Home address is required"
+				"search": "Failed to search for location",
+				"noGeo": "Browser does not support geolocation",
+				"geo": "Failed to determine current location",
+				"addressRequired": "Address field is required",
+				"save": "Error saving address"
+			},
+			"messages": {
+				"success": "Address saved successfully"
+			},
+			"fields": {
+				"homeAddress": "Home Address",
+				"homeAddressPlaceholder": "e.g. Al Khuwair South, Muscat",
+				"buildingNo": "Building / Villa No.",
+				"buildingNoPlaceholder": "e.g. 104",
+				"floorApartment": "Floor / Apartment",
+				"floorApartmentPlaceholder": "e.g. 2nd Floor",
+				"instructions": "Additional Instructions",
+				"instructionsPlaceholder": "Nearest landmark, delivery notes...",
+				"contactName": "Receiver Name",
+				"contactNamePlaceholder": "e.g. Abdullah Ahmed"
 			}
 		},
+		"partnership": {
+			"fullName": "Full Name",
+			"fullNamePlaceholder": "e.g. Mohamed Abdullah",
+			"institutionType": "Institution Type",
+			"institutionTypePlaceholder": "Choose institution type",
+			"companyName": "Company Name",
+			"companyNamePlaceholder": "e.g. Al Nojoum Co.",
+			"numberOfEmployees": "Number of Employees",
+			"numberOfEmployeesPlaceholder": "e.g. 50",
+			"submit": "Submit Request",
+			"submitting": "Submitting...",
+			"successMessage": "Partnership request sent successfully. We will contact you soon!",
+			"errors": {
+				"required": "This field is required",
+				"companyName": "Company name is required",
+				"numbersOnly": "Numbers only",
+				"fillAll": "Please fill all required fields",
+				"submitError": "Error sending request"
+			}
+		},
+		"checkout": {
+			"pageTitle": "Checkout",
+			"deliveryAddress": "Delivery Address",
+			"change": "Change",
+			"noAddresses": "No saved addresses. Please add an address.",
+			"addNewAddress": "Add New Address",
+			"orderItems": "Order Items",
+			"paymentMethod": "Payment Method",
+			"onlinePayment": "Online Payment",
+			"paymentDescription": "Visa, Mastercard, Benefit, Thawani",
+			"deliveryNotes": "Delivery Notes",
+			"deliveryNotesPlaceholder": "e.g. please leave at the door or ring the bell...",
+			"orderSummary": "Order Summary",
+			"summaryHint": "Please review your order before confirmation",
+			"subtotal": "Subtotal",
+			"delivery": "Delivery",
+			"total": "Total",
+			"sendOrder": "Send Order Now",
+			"sending": "Sending...",
+			"success": "Order sent successfully",
+			"error": "Something went wrong",
+			"selectAddressError": "Please select a delivery address first",
+			"changeAddressTitle": "Change Delivery Address",
+			"noAddressesFound": "No addresses found"
+		},
 		"addressesList": {
-			"addressLabel": "Address",
+			"loading": "Loading...",
+			"title": "My Addresses",
+			"addNew": "Add New Address",
+			"noAddressesTitle": "No saved addresses",
+			"noAddressesDesc": "Add a new address to start ordering and complete checkout faster!",
+			"defaultLabel": "Default",
+			"homeAddress": "Home Address",
+			"note": "Note:",
+			"setDefault": "Set as Default",
+			"active": "Active",
 			"edit": "Edit",
 			"delete": "Delete",
-			"setDefault": "Set as default",
-			"addAddress": "Add address",
-			"emptyTitle": "No saved addresses",
-			"emptyDescription": "Add a new address to start ordering",
-			"errorTitle": "Unable to load addresses",
-			"errorDescription": "Please try again later",
 			"messages": {
 				"deleteSuccess": "Address deleted successfully",
-				"deleteFailed": "An error occurred while deleting the address",
+				"deleteFailed": "Error deleting address",
 				"setDefaultSuccess": "Default address set successfully",
-				"setDefaultFailed": "Unable to set default address"
+				"setDefaultFailed": "Failed to set default address"
 			},
 			"setDefaultDialog": {
-				"heading": "Set default address",
+				"heading": "Set Default Address",
 				"description": "Are you sure you want to set this address as default?",
 				"cancel": "Cancel",
 				"confirm": "Confirm",
 				"setting": "Setting..."
 			},
 			"deleteDialog": {
-				"heading": "Delete address",
-				"description": "This address will be deleted permanently and cannot be recovered later.",
+				"heading": "Delete Address",
+				"description": "This address will be permanently deleted.",
 				"cancel": "Cancel",
-				"confirm": "Confirm deletion",
+				"confirm": "Confirm Delete",
 				"deleting": "Deleting..."
 			}
 		},
 		"changeMobile": {
 			"dialog": {
-				"title": "Verify new mobile number",
+				"title": "Verify New Mobile Number",
 				"description": "Enter the verification code sent to your new mobile number to confirm the change."
 			}
 		}
 	},
+	"orders": {
+		"pageTitle": "My Orders",
+		"tabs": {
+			"in_progress": "In Progress",
+			"delivered": "Delivered",
+			"canceled": "Canceled"
+		},
+		"emptyTitle": "No orders",
+		"emptyDescription": "No orders in this category currently",
+		"card": {
+			"trackOrder": "Track Order",
+			"reorder": "Reorder",
+			"processing": "Processing...",
+			"reorderSuccess": "Reordered successfully"
+		},
+		"reorderDialog": {
+			"heading": "Confirm Cart Replacement",
+			"description": "You already have items in your cart. This will clear your current cart and add items from this order. Do you want to continue?",
+			"cancel": "Cancel",
+			"confirm": "Confirm",
+			"confirmPending": "Replacing cart..."
+		},
+		"errors": {
+			"reorderInvalid": "Failed to reorder, please try again"
+		},
+		"details": {
+			"title": "Track order step by step .. 📍",
+			"mapTitle": "Order Location",
+			"product": "Product",
+			"products": "Browse Products",
+			"fetchError": "Failed to fetch order details",
+			"cancel": {
+				"button": "Cancel Order",
+				"dialog": {
+					"heading": "Cancel Order",
+					"description": "Are you sure you want to cancel this order?",
+					"confirm": "Yes, Cancel",
+					"cancel": "No, Go back"
+				}
+			}
+		}
+	},
 	"accountSidebar": {
-		"title": "Personal information",
-		"subscriptionSummary": "Points summary",
-		"pointsUsageHint": "To benefit from your points and use them in purchases, please download the app.",
-		"downloadApp": "Download the app"
+		"title": "Personal Information",
+		"subscriptionSummary": "Points Summary",
+		"pointsUsageHint": "To benefit from and use points, please download the app.",
+		"downloadApp": "Download the App"
 	},
 	"points": {
-		"label": "points"
+		"label": "Point"
 	},
 	"productDetails": {
-		"title": "Natural mineral water",
-		"description": "Pure mineral water with balanced taste and fresh source quality.",
+		"title": "Natural Mineral Water",
+		"description": "Pure mineral water with a balanced taste and quality from the source.",
 		"descriptionLabel": "Description",
 		"rating": "4.5 (120 reviews)",
-		"stock": "In stock",
-		"price": "4.99 ر.ع",
-		"oldPrice": "8.99 ر.ع",
+		"stock": "In Stock",
+		"price": "4.99 OMR",
+		"oldPrice": "8.99 OMR",
 		"sizeLabel": "Size",
-		"packageLabel": "Pack",
+		"packageLabel": "Carton",
 		"quantityLabel": "Quantity",
-		"showLess": "Show less",
-		"buyNow": "Buy now",
-		"similarTitle": "Similar products",
+		"showLess": "Show Less",
+		"buyNow": "Buy Now",
+		"similarTitle": "Similar Products",
 		"sizes": {
 			"250": "250 ml",
 			"500": "500 ml",
 			"1500": "1500 ml"
 		},
 		"features": {
-			"fresh": "Fresh source",
+			"fresh": "From pure source",
 			"delivery": "Fast delivery",
-			"quality": "Quality guaranteed"
-		}
+			"quality": "Guaranteed quality"
+		},
+		"chooseSize": "Choose size",
+		"carton": "Carton"
+	},
+	"actions": {
+		"addToCart": "Add to cart",
+		"buyNow": "Buy now",
+		"orderNow": "Order now",
+		"showMore": "Show more",
+		"readMore": "Read more",
+		"contactUs": "Contact us",
+		"increase": "Increase quantity",
+		"decrease": "Decrease quantity",
+		"remove": "Remove from cart",
+		"cancelOrder": "Cancel Order",
+		"cancelling": "Cancelling...",
+		"confirmCancel": "Yes, Cancel",
+		"keepOrder": "No, Go Back"
 	},
 	"mostSeller": {
 		"title": "Best-selling accessories"
@@ -732,6 +886,15 @@
 			"title": "Looks like your cart is empty?",
 			"description": "What are you waiting for? Start your order now.",
 			"cta": "Start your order now"
+		},
+		"messages": {
+			"added": "Added to cart successfully",
+			"updated": "Cart updated successfully",
+			"couponApplied": "Coupon applied successfully",
+			"couponInvalid": "Invalid coupon",
+			"addError": "Error adding to cart",
+			"updateError": "Error updating cart",
+			"removeSuccess": "Removed from cart"
 		},
 		"item": {
 			"title": "Mineral water",
@@ -745,150 +908,108 @@
 		},
 		"features": {
 			"fast": {
-				"title": "Fast delivery",
+				"title": "Fast Delivery",
 				"label": "Same day"
 			},
 			"secure": {
-				"title": "100% secure payment",
+				"title": "100% Secure Payment",
 				"label": "Global standards"
 			}
 		},
 		"summary": {
-			"title": "Order summary",
-			"subtitle": "Review your order before checkout",
-			"itemsTotal": "Items total",
+			"title": "Order Summary",
+			"subtitle": "Review your order before completing purchase",
+			"itemsTotal": "Items Total",
 			"tax": "Tax",
-			"discount": "Coupon discount",
-			"shipping": "Shipping",
-			"total": "Total",
-			"promo": "I have a promo code",
-			"checkout": "Place order"
+			"discount": "Coupon Discount",
+			"shipping": "Shipping Fees",
+			"total": "Grand Total",
+			"promo": "I have a discount code",
+			"checkout": "Checkout"
 		},
 		"coupon": {
-			"title": "Apply promo code",
-			"question": "Do you have a promo code?",
-			"description": "Enter your coupon code to apply the discount.",
-			"label": "Coupon code",
-			"apply": "Apply coupon"
-		}
-	},
-	"checkout": {
-		"title": "Checkout",
-		"sections": {
-			"address": {
-				"title": "Delivery address",
-				"change": "Change address",
-				"empty": "No address is selected yet"
-			},
-			"items": {
-				"title": "Order items",
-				"empty": "Your cart is empty"
-			},
-			"payment": {
-				"title": "Payment method",
-				"methods": {
-					"online": {
-						"title": "Pay online",
-						"description": "Pay securely using the online payment gateway"
-					},
-					"points": {
-						"title": "Pay with points",
-						"description": "Use your available points balance for this order"
-					}
-				}
-			},
-			"notes": {
-				"title": "Delivery notes",
-				"placeholder": "Write delivery notes (optional)",
-				"hint": "Example: Please deliver in the morning"
-			}
-		},
-		"addressDialog": {
-			"title": "Choose delivery address",
-			"empty": "No saved addresses",
-			"addNew": "Add new address"
-		},
-		"cardDialog": {
-			"title": "Add credit card",
-			"holderName": "Card holder name",
-			"holderNamePlaceholder": "Enter card holder name",
-			"cardNumber": "Card number",
-			"cardNumberPlaceholder": "Enter card number",
-			"expiry": "Expiry date",
-			"cvv": "CVV",
-			"save": "Save card"
-		},
-		"placeOrder": "Place order",
-		"placeOrderPending": "Processing order...",
-		"placeOrderHint": "Select a delivery address to place your order",
-		"errors": {
-			"addressRequired": "Please select a delivery address",
-			"invalidPaymentUrl": "Could not open payment page. Check your orders page."
+			"title": "Apply Discount Code",
+			"question": "Have a coupon code?",
+			"description": "Enter coupon code to apply discount to your order.",
+			"label": "Coupon Code",
+			"apply": "Apply Coupon",
+			"error": "Please enter coupon code"
 		}
 	},
 	"errors": {
-		"lang": "An error occurred while changing language"
+		"lang": "Error occurred while changing language"
 	},
 	"notFoundPage": {
 		"title": "Page Not Found",
-		"description": "The page you are looking for does not exist or may have been moved.",
-		"backHome": "Back to home"
+		"description": "The page you are looking for doesn't exist or might have been moved.",
+		"backHome": "Back to Home"
 	},
 	"generalErrorPage": {
-		"title": "Something went wrong",
-		"description": "An unexpected error occurred while loading this page.",
-		"backHome": "Back to home",
-		"reload": "Reload page"
+		"title": "Unexpected Error Occurred",
+		"description": "An error occurred while loading the page.",
+		"backHome": "Back to Home",
+		"reload": "Reload Page"
 	},
 	"seo": {
-		"logo": "",
+		"logo": "Site Icon",
 		"home": {
 			"title": "Home | Sohar",
-			"description": "Sohar provides high-quality pure drinking water with fast and reliable delivery to your doorstep."
+			"description": "Sohar provides pure drinking water with high quality and fast, reliable delivery to your doorstep."
 		},
 		"products": {
 			"title": "Products | Sohar",
-			"description": "Browse our water products and enjoy exclusive offers on subscriptions and quick orders."
+			"description": "Browse our water products and benefit from exclusive offers on subscriptions and quick orders."
 		},
 		"about": {
 			"title": "About Us | Sohar",
-			"description": "Learn about Sohar's story and mission to deliver pure water with convenient, fast service."
+			"description": "Learn about Sohar's story and our mission to provide pure water and convenient delivery service."
 		},
 		"faq": {
 			"title": "FAQ | Sohar",
-			"description": "Find clear answers about delivery, payment methods, and service details before ordering."
+			"description": "Clear answers about delivery, payment methods, and service details."
 		},
 		"contact": {
 			"title": "Contact Us | Sohar",
-			"description": "Get in touch with Sohar for any inquiry or feedback, and our team will assist you quickly."
+			"description": "Contact Sohar team for any inquiry or feedback, we'll be happy to serve you quickly."
 		},
 		"blog": {
 			"title": "Blog | Sohar",
-			"description": "Explore the latest articles and tips about healthy hydration, water quality, and better daily habits."
+			"description": "Discover latest articles and tips on healthy hydration, water quality, and daily habits."
 		},
 		"blogDetails": {
 			"title": "Article Details | Sohar",
-			"description": "Read full article details and practical daily tips about healthy hydration and the right water intake for your body."
+			"description": "Read article details and practical daily tips on healthy hydration and water amount for your body."
 		},
 		"notFound": {
 			"title": "Page Not Found | Sohar",
-			"description": "The requested page could not be found. Return to Sohar home page to continue browsing."
+			"description": "Could not find requested page. You can return to home page to continue browsing."
 		},
 		"error": {
 			"title": "Error | Sohar",
-			"description": "An unexpected error occurred while loading this page."
+			"description": "An unexpected error occurred while loading the page."
 		},
 		"checkout": {
 			"title": "Checkout | Sohar Water",
-			"description": "Enter your delivery details and complete your order securely and quickly."
+			"description": "Enter delivery details and complete your order safely and quickly."
 		},
 		"cart": {
 			"title": "Shopping Cart | Sohar Water",
-			"description": "Review your items and apply discount coupons before completing your order."
+			"description": "Review your purchases and apply discount coupons before completing purchase."
 		},
 		"partnership": {
 			"title": "Business Partnerships | Sohar Water",
 			"description": "Partner with Sohar to secure pure and reliable water for your employees and organization."
+		},
+		"terms": {
+			"title": "Terms and Conditions | Sohar Water",
+			"description": "Please review our service terms, conditions, and usage guidelines at Sohar Water."
+		},
+		"privacy": {
+			"title": "Privacy Policy | Sohar Water",
+			"description": "Learn how we handle your personal data and protect your privacy at Sohar Water."
 		}
-	}
+	},
+	"status": "Delivery Status",
+	"itemsTitle": "Order Items",
+	"processing": "Processing"
 }

@@ -7,6 +7,8 @@ import { loginAction, logoutAction } from "@/features/auth/actions";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 
+import { useTranslations } from "next-intl";
+
 export function useProfile() {
   return useQuery({
     queryKey: authKeys.profile(),
@@ -19,6 +21,7 @@ export function useLoginMutation() {
   const queryClient = useQueryClient();
   const router = useRouter();
   const { setUser } = useAuth();
+  const t = useTranslations("auth");
 
   return useMutation({
     mutationFn: async (payload: LoginPayload) => {
@@ -30,13 +33,13 @@ export function useLoginMutation() {
     onSuccess: (data) => {
       queryClient.setQueryData(authKeys.profile(), data.user);
       setUser(data.user);
-      toast.success("تم تسجيل الدخول بنجاح");
+      toast.success(t("messages.loginSuccess"));
       router.push("/");
       router.refresh();
     },
     onError: (error: unknown) => {
       const err = error as { message?: string };
-      toast.error(err?.message || "خطأ في تسجيل الدخول");
+      toast.error(err?.message || t("errors.errorLoggingIn"));
     }
   });
 }
@@ -45,6 +48,7 @@ export function useRegisterMutation() {
   const queryClient = useQueryClient();
   const router = useRouter();
   const { setUser } = useAuth();
+  const t = useTranslations("auth");
 
   return useMutation({
     mutationFn: async (payload: RegisterPayload) => {
@@ -55,13 +59,13 @@ export function useRegisterMutation() {
     onSuccess: (data) => {
       queryClient.setQueryData(authKeys.profile(), data.user);
       setUser(data.user);
-      toast.success("تم إنشاء الحساب بنجاح");
+      toast.success(t("messages.signupSuccess"));
       router.push("/");
       router.refresh();
     },
     onError: (error: unknown) => {
       const err = error as { message?: string };
-      toast.error(err?.message || "خطأ في إنشاء الحساب");
+      toast.error(err?.message || t("errors.errorSigningUp"));
     }
   });
 }
@@ -70,6 +74,7 @@ export function useLogoutMutation() {
   const queryClient = useQueryClient();
   const router = useRouter();
   const { logout: contextLogout } = useAuth();
+  const t = useTranslations("auth.messages");
 
   return useMutation({
     mutationFn: async () => {
@@ -79,7 +84,7 @@ export function useLogoutMutation() {
     onSuccess: () => {
       queryClient.removeQueries({ queryKey: authKeys.all });
       contextLogout();
-      toast.success("تم تسجيل الخروج");
+      toast.success(t("logoutSuccess"));
       router.push("/auth/login");
       router.refresh();
     }
@@ -88,16 +93,17 @@ export function useLogoutMutation() {
 
 export function useUpdateProfileMutation() {
   const queryClient = useQueryClient();
+  const t = useTranslations("auth");
 
   return useMutation({
     mutationFn: postEditProfile,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: authKeys.profile() });
-      toast.success("تم تحديث الملف الشخصي بنجاح");
+      toast.success(t("messages.profileUpdateSuccess"));
     },
     onError: (error: unknown) => {
       const err = error as { message?: string };
-      toast.error(err?.message || "حدث خطأ أثناء تحديث الملف الشخصي");
+      toast.error(err?.message || t("errors.errorUpdatingProfile"));
     }
   });
 }
@@ -105,17 +111,18 @@ export function useUpdateProfileMutation() {
 export function useDeleteAccountMutation() {
   const queryClient = useQueryClient();
   const { logout: contextLogout } = useAuth();
+  const t = useTranslations("auth");
 
   return useMutation({
     mutationFn: postDeleteAccount,
     onSuccess: () => {
       queryClient.removeQueries({ queryKey: authKeys.all });
       contextLogout();
-      toast.success("تم حذف الحساب بنجاح");
+      toast.success(t("messages.accountDeleted"));
     },
     onError: (error: unknown) => {
         const err = error as { message?: string };
-        toast.error(err?.message || "حدث خطأ أثناء حذف الحساب");
+        toast.error(err?.message || t("errors.errorDeletingAccount"));
     }
   });
 }

@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import {  } from "react";
 import Link from "next/link";
-import { CheckIcon, EditIcon, Trash2Icon, PlusIcon, MapPinIcon } from "lucide-react";
+import { EditIcon, Trash2Icon, PlusIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import LocationPinIcon from "@/components/icons/LocationPinIcon";
@@ -13,23 +13,24 @@ interface AddressListViewProps {
 	addresses: Address[];
 }
 
+import { useTranslations } from "next-intl";
+
 /**
  * AddressListView - Client Component
  * Interactive list of delivery addresses with actions for setting default, editing, or deleting.
  */
 export default function AddressListView({ addresses }: AddressListViewProps) {
-	const [selectedId, setSelectedId] = useState<number | null>(
-        addresses.find(a => a.is_default === 1)?.id || null
-    );
+	const t = useTranslations("addressesList");
+
 
 	return (
 		<div className="space-y-10">
 			<header className="flex items-center justify-between gap-6 flex-wrap">
-				<h1 className="text-2xl font-extrabold text-primary">My Addresses</h1>
+				<h1 className="text-2xl font-extrabold text-primary">{t("title")}</h1>
 				<Button className="rounded-full bg-black hover:bg-black/90 px-8" asChild>
 					<Link href="/account/addresses/new">
                         <PlusIcon size={18} className="me-2" />
-                        Add New Address
+                        {t("addNew")}
                     </Link>
 				</Button>
 			</header>
@@ -39,8 +40,8 @@ export default function AddressListView({ addresses }: AddressListViewProps) {
 				{addresses.length === 0 ? (
 					<div className="bg-white border rounded-4xl p-16 shadow-inner text-center">
 						<EmptyCard
-							title="No addresses found"
-							description="You haven't added any delivery addresses yet. Add one to speed up your checkout process!"
+							title={t("noAddressesTitle")}
+							description={t("noAddressesDesc")}
 						/>
 					</div>
 				) : (
@@ -66,11 +67,11 @@ export default function AddressListView({ addresses }: AddressListViewProps) {
                                         <div className="text-start space-y-1">
                                             <div className="flex items-center gap-2">
                                                 <h3 className="font-extrabold text-primary text-lg">
-                                                    {address.address_label || "Home Address"}
+                                                    {address.address_label || t("homeAddress")}
                                                 </h3>
                                                 {isDefault && (
                                                     <span className="px-2 py-0.5 bg-accent text-white text-[10px] font-bold rounded uppercase tracking-wider">
-                                                        Default
+                                                        {t("defaultLabel")}
                                                     </span>
                                                 )}
                                             </div>
@@ -79,7 +80,7 @@ export default function AddressListView({ addresses }: AddressListViewProps) {
                                             </p>
                                             {address.notes && (
                                                 <p className="text-xs text-gray/70 italic italic pt-1 flex items-center gap-1">
-                                                    <span className="font-bold shrink-0">Note:</span> {address.notes}
+                                                    <span className="font-bold shrink-0">{t("note")}</span> {address.notes}
                                                 </p>
                                             )}
                                         </div>
@@ -93,7 +94,7 @@ export default function AddressListView({ addresses }: AddressListViewProps) {
                                                 size="sm" 
                                                 className="rounded-full h-9 px-4 text-xs font-bold border-accent/20 text-accent hover:bg-accent/5"
                                             >
-                                                Set Default
+                                                {t("setDefault")}
                                             </Button>
                                         )}
                                         <Button variant="ghost" size="icon" className="rounded-full size-10 hover:bg-primary/5" asChild>
@@ -108,9 +109,9 @@ export default function AddressListView({ addresses }: AddressListViewProps) {
                                 </div>
                                 
                                 {isDefault && (
-                                    <div className="absolute top-0 right-0 w-16 h-16 pointer-events-none">
-                                        <div className="absolute transform rotate-45 bg-accent text-white text-[8px] font-bold py-1 px-10 right-[-30px] top-[10px] shadow-sm">
-                                            ACTIVE
+                                    <div className="absolute top-0 end-0 w-16 h-16 pointer-events-none">
+                                        <div className="absolute transform rotate-45 bg-accent text-white text-[8px] font-bold py-1 px-10 end-[-30px] top-[10px] shadow-sm">
+                                            {t("active")}
                                         </div>
                                     </div>
                                 )}

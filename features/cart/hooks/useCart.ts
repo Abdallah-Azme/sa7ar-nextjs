@@ -4,6 +4,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { cartKeys, fetchCart, postAddToCart, postUpdateCart, postApplyCoupon } from "../services/cartService";
 import { toast } from "sonner";
 
+import { useTranslations } from "next-intl";
+
 export function useCartQuery(enabled = true) {
   return useQuery({
     queryKey: cartKeys.all,
@@ -15,22 +17,24 @@ export function useCartQuery(enabled = true) {
 
 export function useAddToCartMutation() {
   const queryClient = useQueryClient();
+  const t = useTranslations("cart.messages");
 
   return useMutation({
     mutationFn: postAddToCart,
     onSuccess: (res: any) => {
       queryClient.invalidateQueries({ queryKey: cartKeys.all });
-      toast.success(res?.message || "تمت الإضافة للسلة");
+      toast.success(res?.message || t("added"));
     },
     onError: (error: unknown) => {
       const err = error as { message?: string };
-      toast.error(err?.message || "خطأ في الإضافة");
+      toast.error(err?.message || t("addError"));
     }
   });
 }
 
 export function useUpdateCartMutation() {
   const queryClient = useQueryClient();
+  const t = useTranslations("cart.messages");
 
   return useMutation({
     mutationFn: postUpdateCart,
@@ -39,17 +43,18 @@ export function useUpdateCartMutation() {
         ...old,
         ...res.data,
       }));
-      toast.success("تم تحديث السلة");
+      toast.success(res?.message || t("updated"));
     },
     onError: (error: unknown) => {
       const err = error as { message?: string };
-      toast.error(err?.message || "خطأ في التحديث");
+      toast.error(err?.message || t("updateError"));
     }
   });
 }
 
 export function useApplyCouponMutation() {
   const queryClient = useQueryClient();
+  const t = useTranslations("cart.messages");
 
   return useMutation({
     mutationFn: postApplyCoupon,
@@ -58,11 +63,11 @@ export function useApplyCouponMutation() {
         ...old,
         ...res.data,
       }));
-      toast.success("تم تطبيق الكوبون");
+      toast.success(res?.message || t("couponApplied"));
     },
     onError: (error: unknown) => {
       const err = error as { message?: string };
-      toast.error(err?.message || "الكوبون غير صالح");
+      toast.error(err?.message || t("couponInvalid"));
     }
   });
 }

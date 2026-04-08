@@ -114,7 +114,7 @@ export default async function Footer() {
 						<p className="bg-primary h-1 w-10 rounded-xl mt-2" />
 					</div>
 
-					<p className="text-gray-500 text-sm text-right font-bold md:text-left md:text-xs lg:text-sm">
+					<p className="text-gray-500 text-sm text-end font-bold md:text-start md:text-xs lg:text-sm">
 						{tFooter("storeLine")}
 					</p>
 
@@ -153,7 +153,7 @@ export default async function Footer() {
 			</div>
 
 			{/* Copyright bar */}
-			<div className="my-12 flex flex-col gap-4 text-center font-bold text-sm text-gray md:flex-row md:items-center md:justify-between md:text-left md:text-xs lg:text-sm">
+			<div className="my-12 flex flex-col gap-4 text-center font-bold text-sm text-gray md:flex-row md:items-center md:justify-between md:text-start md:text-xs lg:text-sm">
 				<span>
 					{tFooter("copyright", { year })}
 				</span>

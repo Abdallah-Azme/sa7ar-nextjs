@@ -20,15 +20,7 @@ import Link from "next/link";
 import { useState } from "react";
 import ImageFallback from "@/components/shared/ImageFallback";
 
-/**
- * Account links matching React's `accountLinks` from data/index.ts
- * React routes: /account/details, /account/orders, /account/addresses
- */
-const accountLinks = [
-	{ to: "/account/details", name: "حسابي" },
-	{ to: "/account/orders", name: "طلباتي" },
-	{ to: "/account/addresses", name: "عناويني" },
-];
+import { useTranslations } from "next-intl";
 
 export default function AccountDropdown({
 	open,
@@ -37,6 +29,16 @@ export default function AccountDropdown({
 	open?: boolean;
 	onOpenChange?: (open: boolean) => void;
 }) {
+	const t = useTranslations("account");
+	const tCommon = useTranslations("common");
+	const tPoints = useTranslations("points");
+
+	const accountLinks = [
+		{ to: "/account/details", name: t("links.profile") },
+		{ to: "/account/orders", name: t("links.orders") },
+		{ to: "/account/addresses", name: t("links.addresses") },
+	];
+
 	const [_open, _onOpenChange] = useState(open ?? false);
 	const [showLogoutDialog, setShowLogoutDialog] = useState(false);
 	const { user, logout, isLoading } = useAuth();
@@ -70,7 +72,7 @@ export default function AccountDropdown({
 								{user?.image ? (
 									<ImageFallback
 										src={user.image}
-										alt={user?.name || "صورة المستخدم"}
+										alt={user?.name || tCommon("fallbackImageAlt")}
 										width={40}
 										height={40}
 										className="rounded-full"
@@ -85,7 +87,7 @@ export default function AccountDropdown({
 								{user?.name}
 							</h2>
 							<span className="text-gray text-[10px]">
-								{(user?.points ?? 0).toFixed(0)} نقطة
+								{(user?.points ?? 0).toFixed(0)} {tPoints("label")}
 							</span>
 						</div>
 					</div>
@@ -105,7 +107,7 @@ export default function AccountDropdown({
 						}}
 						variant="destructive"
 					>
-						تسجيل الخروج
+						{t("logoutDialog.trigger")}
 					</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>
@@ -114,9 +116,9 @@ export default function AccountDropdown({
 			<Dialog open={showLogoutDialog} onOpenChange={setShowLogoutDialog}>
 				<DialogContent className="sm:max-w-md p-6 rounded-3xl">
 					<DialogHeader>
-						<DialogTitle>تسجيل الخروج</DialogTitle>
+						<DialogTitle>{t("logoutDialog.heading")}</DialogTitle>
 						<DialogDescription>
-							هل أنت متأكد أنك تريد تسجيل الخروج من حسابك؟
+							{t("logoutDialog.description")}
 						</DialogDescription>
 					</DialogHeader>
 					<div className="space-y-5">
@@ -125,14 +127,14 @@ export default function AccountDropdown({
 								variant="secondary"
 								onClick={() => setShowLogoutDialog(false)}
 							>
-								إلغاء
+								{t("logoutDialog.cancel")}
 							</Button>
 							<Button
 								variant="destructive"
 								onClick={handleConfirmLogout}
 								disabled={isLoading}
 							>
-								تسجيل الخروج {isLoading && "..."}
+								{t("logoutDialog.confirm")} {isLoading && "..."}
 							</Button>
 						</div>
 					</div>

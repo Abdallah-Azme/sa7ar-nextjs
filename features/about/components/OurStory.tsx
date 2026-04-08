@@ -3,6 +3,7 @@
 import { CircleDotIcon, DropletsIcon } from "lucide-react";
 import { useMemo } from "react";
 import ImageFallback from "@/components/shared/ImageFallback";
+import { useTranslations } from "next-intl";
 
 interface OurStoryProps {
 	title?: string;
@@ -23,6 +24,7 @@ export default function OurStory({
 	numberOfWorkers,
 	numberOfProducts,
 }: OurStoryProps) {
+    const t = useTranslations("aboutStory");
     
     // Simplistic HTML cleaner for RSC parity
     const cleanDescription = useMemo(() => {
@@ -38,7 +40,7 @@ export default function OurStory({
 			<div className="rounded-[80px] overflow-hidden relative shadow-2xl">
 				<ImageFallback
 					src={imageUrl || "/images/placeholder/our-story.webp"}
-					alt="Our Story"
+					alt={t("imageAlt")}
 					width={955}
 					height={720}
 					className="w-full h-full object-cover max-h-[600px]"
@@ -48,12 +50,18 @@ export default function OurStory({
 			<div className="flex flex-col gap-8 text-start">
 				<div className="bg-accent/10 w-fit font-bold text-sm text-accent px-6 py-3 rounded-full flex gap-3 items-center">
 					<CircleDotIcon size={18} className="text-white fill-accent" />
-					<span className="uppercase tracking-widest text-xs">Our Journey</span>
+					<span className="uppercase tracking-widest text-xs">{t("label")}</span>
 					<DropletsIcon size={18} className="text-accent" />
 				</div>
 
 				<h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-primary leading-tight">
-					{title || "Crafting Premium Water Since 2002"}
+					{title || (
+                        <>
+                            {t("title.line1")}<br/>
+                            <span className="text-secondary">{t("title.emphasis")}</span>{" "}
+                            {t("title.line2")}
+                        </>
+                    )}
 				</h2>
 
 				<div className="space-y-6 text-gray-700">
@@ -66,10 +74,10 @@ export default function OurStory({
                     ) : (
                         <>
                             <p className="text-lg leading-relaxed text-justify">
-                                Sohar Water started with a simple vision: to provide the purest, most refreshing drinking water to every household in Oman. Our journey is paved with innovation and a commitment to quality that transcends expectations.
+                                {t("paragraphs.first")}
                             </p>
                             <p className="text-lg leading-relaxed text-justify">
-                                From our state-of-the-art filtration systems to our sustainable bottling processes, we ensure that every drop is as pristine as nature intended.
+                                {t("paragraphs.second")}
                             </p>
                         </>
                     )}
@@ -79,13 +87,13 @@ export default function OurStory({
 					<div className="space-y-1">
 						<p className="text-4xl font-extrabold text-secondary">{numberOfWorkers || "350+"}</p>
 						<p className="text-gray-500 text-sm font-medium uppercase tracking-wide">
-							Happy Customers
+							{t("stats.happyCustomers")}
 						</p>
 					</div>
 					<div className="space-y-1">
 						<p className="text-4xl font-extrabold text-secondary">{numberOfProducts || "120+"}</p>
 						<p className="text-gray-500 text-sm font-medium uppercase tracking-wide">
-							Premium Partners
+							{t("stats.partners")}
 						</p>
 					</div>
 				</div>

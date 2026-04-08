@@ -9,6 +9,8 @@ import TargetIcon from "@/components/icons/TargetIcon";
 import ImageFallback from "@/components/shared/ImageFallback";
 import { OrderStatus, type Order } from "../types";
 
+import { useTranslations } from "next-intl";
+
 interface OrderCardProps {
 	order: Order;
 	onReorder?: (orderId: number) => void;
@@ -24,6 +26,7 @@ export default function OrderCard({
 	onReorder,
 	isReordering = false,
 }: OrderCardProps) {
+	const t = useTranslations("orders");
 	return (
 		<Card className="border border-black/5 rounded-4xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
 			<div className="flex items-center gap-4 px-4 py-5 sm:px-6 sm:py-6">
@@ -66,13 +69,13 @@ export default function OrderCard({
                                 disabled={isReordering}
                                 onClick={() => onReorder?.(order.id)}
                             >
-                            {isReordering ? "جارٍ المعالجة..." : "إعادة الطلب"}
+                            {isReordering ? t("card.processing") : t("card.reorder")}
                             </Button>
                         ) : (
                             <Button size="sm" variant="outline" className="rounded-full px-6" asChild>
                                 <Link href={`/account/orders/${order.id}`}>
                                     <TargetIcon size={14} className="me-2" />
-                                    تتبع الطلب
+                                    {t("card.trackOrder")}
                                 </Link>
                             </Button>
                         )}

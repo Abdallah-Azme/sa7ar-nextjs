@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "@/i18n/routing";
 import { SearchIcon, StarIcon, Loader2Icon, AlertTriangleIcon, UserRoundIcon } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import AppInput from "@/components/forms/AppInput";
 import AppMobileInput from "@/components/forms/AppMobileInput";
 import { Button } from "@/components/ui/button";
@@ -33,6 +34,7 @@ interface AddressInitialData {
 }
 
 export default function AddressForm({ addressId, initialData }: { addressId?: string; initialData?: AddressInitialData }) {
+	const t = useTranslations("account.addAddress");
 	const router = useRouter();
 	const isEditMode = Boolean(addressId);
 	
@@ -77,7 +79,7 @@ export default function AddressForm({ addressId, initialData }: { addressId?: st
 			setSearchResults(results);
 			if (results.length === 1) applyLocation(results[0].lat, results[0].lon, results[0].display_name);
 		} catch {
-			toast.error("تعذّر البحث عن الموقع");
+			toast.error(t("errors.search"));
 		}
 	};
 
@@ -89,7 +91,7 @@ export default function AddressForm({ addressId, initialData }: { addressId?: st
 
 	const handleGeoLocation = () => {
 		if (!navigator.geolocation) {
-			toast.error("المتصفح لا يدعم خاصية تحديد الموقع");
+			toast.error(t("errors.noGeo"));
 			return;
 		}
 
@@ -108,7 +110,7 @@ export default function AddressForm({ addressId, initialData }: { addressId?: st
 				}
 			},
 			() => {
-				toast.error("تعذّر تحديد موقعك الحالي");
+				toast.error(t("errors.geo"));
 				setIsLocating(false);
 			}
 		);
@@ -117,7 +119,7 @@ export default function AddressForm({ addressId, initialData }: { addressId?: st
 	const onSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		if (!formValues.home_address.trim()) {
-			toast.error("حقل العنوان مطلوب");
+			toast.error(t("errors.addressRequired"));
 			return;
 		}
 
@@ -141,13 +143,13 @@ export default function AddressForm({ addressId, initialData }: { addressId?: st
                 body: JSON.stringify(payload)
             });
 
-			toast.success("تم حفظ العنوان بنجاح");
+			toast.success(t("messages.success"));
 			setDialogOpen(false);
 			router.push("/account/addresses");
             router.refresh();
 		} catch (err: unknown) {
 			const error = err as { message?: string };
-			toast.error(error?.message || "حدث خطأ أثناء حفظ العنوان");
+			toast.error(error?.message || t("errors.save"));
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -157,17 +159,17 @@ export default function AddressForm({ addressId, initialData }: { addressId?: st
 		<div className="space-y-8">
 			<div className="relative group/map rounded-[40px] overflow-hidden shadow-md">
                 {/* Search Bar Overlay */}
-				<div className="absolute top-8 left-8 right-8 z-10 flex flex-col md:flex-row gap-4">
+				<div className="absolute top-8 inset-x-8 z-10 flex flex-col md:flex-row gap-4">
 					<form className="flex-1 relative" onSubmit={handleSearch}>
 						<AppInput
 							Icon={<SearchIcon className="text-gray-400 size-5" />}
-							placeholder="Search for an area or landmark..."
+							placeholder={t("searchPlaceholder")}
 							className="bg-white/95 backdrop-blur shadow-lg h-14 font-medium"
 							value={searchText}
 							onValueChange={setSearchText}
 						/>
                         {searchResults.length > 0 && (
-                            <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl overflow-hidden max-h-48 z-20">
+                            <div className="absolute top-full inset-x-0 mt-2 bg-white rounded-2xl shadow-xl overflow-hidden max-h-48 z-20">
                                 {searchResults.map((item, idx) => (
                                     <button
                                         type="button"
@@ -187,7 +189,7 @@ export default function AddressForm({ addressId, initialData }: { addressId?: st
 						disabled={isLocating}
 					>
 						{isLocating ? <Loader2Icon className="animate-spin size-5" /> : <StarIcon className="size-5" />}
-						استخدام موقعي الحالي
+						{isLocating ? t("locating") : t("useCurrentLocation")}
 					</Button>
 				</div>
 
@@ -203,13 +205,13 @@ export default function AddressForm({ addressId, initialData }: { addressId?: st
 				/>
 
                 {/* Confirm Overlay */}
-				<div className="absolute bottom-8 left-8 right-8 z-10 flex flex-col md:flex-row items-center justify-between gap-4">
+				<div className="absolute bottom-8 inset-x-8 z-10 flex flex-col md:flex-row items-center justify-between gap-4">
 					<div className="bg-white/90 backdrop-blur rounded-2xl px-6 py-4 flex items-center gap-4 shadow-lg w-full md:w-auto">
 						<div className="bg-primary/10 text-primary p-3 rounded-full shrink-0">
 							<AlertTriangleIcon size={20} />
 						</div>
 						<p className="text-xs font-bold text-gray-700 leading-relaxed uppercase tracking-wide">
-							تأكد من دقة موقعك على الخريطة قبل تأكيد الموقع.
+							{t("mapHint")}
 						</p>
 					</div>
 
@@ -221,21 +223,21 @@ export default function AddressForm({ addressId, initialData }: { addressId?: st
                     }}>
 						<DialogTrigger asChild>
 							<Button className="h-14 rounded-full bg-white text-primary border-2 border-primary hover:bg-primary/5 font-extrabold shadow-lg shrink-0 px-8 w-full md:w-auto gap-3 text-sm transition-all duration-300">
-								تأكيد الموقع
+								{t("confirmLocation")}
 							</Button>
 						</DialogTrigger>
 						<DialogContent className="sm:max-w-xl rounded-[40px] p-8 md:p-12 shadow-2xl bg-gray-50 border-none max-h-[90vh] overflow-y-auto">
                             <DialogHeader>
                                 <DialogTitle className="text-2xl font-extrabold text-primary">
-                                    {isEditMode ? "تحديث عنوان التوصيل" : "حفظ عنوان التوصيل"}
+                                    {isEditMode ? t("editTitle") : t("title")}
                                 </DialogTitle>
                             </DialogHeader>
 
 							<form className="space-y-6 mt-6" onSubmit={onSubmit}>
 								<div className="space-y-3">
-									<label className="text-sm font-bold text-gray-700">Address Label / Home Address <span className="text-destructive">*</span></label>
+									<label className="text-sm font-bold text-gray-700">{t("fields.homeAddress")} <span className="text-destructive">*</span></label>
 									<AppInput
-										placeholder="e.g. Al Khuwair South, Muscat"
+										placeholder={t("fields.homeAddressPlaceholder")}
                                         className="bg-white"
 										value={formValues.home_address}
 										onValueChange={(val) => setFormValues((p) => ({ ...p, home_address: val }))}
@@ -244,18 +246,18 @@ export default function AddressForm({ addressId, initialData }: { addressId?: st
 
 								<div className="grid grid-cols-2 gap-6">
 									<div className="space-y-3">
-                                        <label className="text-sm font-bold text-gray-700">Building / Villa No.</label>
+                                        <label className="text-sm font-bold text-gray-700">{t("fields.buildingNo")}</label>
                                         <AppInput
-                                            placeholder="e.g. 104"
+                                            placeholder={t("fields.buildingNoPlaceholder")}
                                             className="bg-white"
                                             value={formValues.building_number}
                                             onValueChange={(val) => setFormValues((p) => ({ ...p, building_number: val }))}
                                         />
                                     </div>
 									<div className="space-y-3">
-                                        <label className="text-sm font-bold text-gray-700">Floor / Apartment</label>
+                                        <label className="text-sm font-bold text-gray-700">{t("fields.floorApartment")}</label>
                                         <AppInput
-                                            placeholder="e.g. Floor 2"
+                                            placeholder={t("fields.floorApartmentPlaceholder")}
                                             className="bg-white"
                                             value={formValues.floor_number}
                                             onValueChange={(val) => setFormValues((p) => ({ ...p, floor_number: val }))}
@@ -264,21 +266,21 @@ export default function AddressForm({ addressId, initialData }: { addressId?: st
 								</div>
 
                                 <div className="space-y-3">
-                                    <label className="text-sm font-bold text-gray-700">Additional Instructions</label>
+                                    <label className="text-sm font-bold text-gray-700">{t("fields.instructions")}</label>
                                     <Textarea
                                         className="bg-white min-h-[100px] border-none shadow-sm rounded-2xl p-4 font-medium"
-                                        placeholder="Nearest landmark, delivery notes..."
+                                        placeholder={t("fields.instructionsPlaceholder")}
                                         value={formValues.description}
                                         onChange={(e) => setFormValues((p) => ({ ...p, description: e.target.value }))}
                                     />
                                 </div>
 
                                 <div className="border-t border-gray-200 pt-6 space-y-6">
-                                    <h3 className="font-extrabold text-primary">Receiver Details</h3>
+                                    <h3 className="font-extrabold text-primary">{t("receiverDetails")}</h3>
                                     <div className="space-y-3">
-                                        <label className="text-sm font-bold text-gray-700">Contact Person Name</label>
+                                        <label className="text-sm font-bold text-gray-700">{t("fields.contactName")}</label>
                                         <AppInput
-                                            placeholder="e.g. Abdullah"
+                                            placeholder={t("fields.contactNamePlaceholder")}
                                             Icon={<UserRoundIcon className="text-gray-400 size-5" />}
                                             className="bg-white"
                                             value={formValues.contact_name}
@@ -298,7 +300,7 @@ export default function AddressForm({ addressId, initialData }: { addressId?: st
 									disabled={isSubmitting}
 									className="h-14 w-full rounded-full bg-primary hover:bg-accent text-white font-bold shadow-lg transition-transform hover:scale-[1.02] mt-4"
 								>
-									{isSubmitting ? "جارٍ الحفظ..." : isEditMode ? "تحديث العنوان" : "حفظ العنوان"}
+									{isSubmitting ? t("locating") : isEditMode ? t("updateAddress") : t("saveAddress")}
 								</Button>
 							</form>
 						</DialogContent>

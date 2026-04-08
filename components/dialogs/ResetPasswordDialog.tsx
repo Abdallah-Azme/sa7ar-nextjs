@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import apiClient from "@/lib/apiClient";
 import AppInput from "@/components/forms/AppInput";
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
 import {
 	Dialog,
 	DialogClose,
@@ -24,6 +25,8 @@ export default function ResetPasswordDialog({
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
 }) {
+	const t = useTranslations("authDialog.resetPassword");
+	const tForm = useTranslations("form");
 	const [showResetPasswordDialog, setShowResetPasswordDialog] = useState(false);
 	const [showVerifyOtpDialog, setShowVerifyOtpDialog] = useState(false);
 	const [values, setValues] = useState({ password: "", passwordConfirmation: "" });
@@ -31,24 +34,27 @@ export default function ResetPasswordDialog({
 	const [mobile, setMobile] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
+	const tAuthErrors = useTranslations("auth.errors");
+	const tAuthMessages = useTranslations("auth.messages");
+
 	const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
 		if (!values.password || !values.passwordConfirmation) {
-			toast.error("يرجى تعبئة حقلي كلمة المرور");
+			toast.error(tForm("errors.requiredFields"));
 			return;
 		}
 		if (values.password.length < 8) {
-			toast.error("كلمة المرور يجب أن تكون 8 أحرف على الأقل");
+			toast.error(tForm("errors.tooShort", { count: 8 }));
 			return;
 		}
 		if (values.password !== values.passwordConfirmation) {
-			toast.error("كلمتا المرور غير متطابقتين");
+			toast.error(tForm("errors.passwordsDoNotMatch"));
 			return;
 		}
 
 		if (!resetPasswordToken) {
-			toast.error("رمز إعادة التعيين غير صالح. يرجى إعادة المحاولة");
+			toast.error(t("invalidToken"));
 			return;
 		}
 
@@ -63,13 +69,13 @@ export default function ResetPasswordDialog({
                     password_confirmation: values.passwordConfirmation,
                 }),
             });
-            toast.success(res.message || "تم تغيير كلمة المرور بنجاح");
+            toast.success(res.message || tAuthMessages("passwordResetSuccess"));
             setValues({ password: "", passwordConfirmation: "" });
             setResetPasswordToken(null);
             setShowResetPasswordDialog(false);
         } catch (err: unknown) {
             const error = err as { message?: string };
-            toast.error(error?.message || "حدث خطأ أثناء إعادة تعيين كلمة المرور");
+            toast.error(error?.message || tAuthErrors("errorResettingPassword"));
         } finally {
             setIsLoading(false);
         }
@@ -110,7 +116,7 @@ export default function ResetPasswordDialog({
 					<DialogHeader className="mb-6">
 						<div className="flex items-center justify-between">
 							<DialogTitle className="text-start text-2xl font-bold text-primary">
-								تعيين كلمة مرور جديدة
+								{t("title")}
 							</DialogTitle>
 							<DialogClose asChild>
 								<button className="transition-all duration-500 cursor-pointer hover:rotate-90 text-gray-400 hover:text-destructive">
@@ -119,18 +125,18 @@ export default function ResetPasswordDialog({
 							</DialogClose>
 						</div>
 						<DialogDescription className="text-sm text-gray-500 mt-2 text-start font-medium">
-							اختر كلمة مرور قوية لم تستخدمها من قبل.
+							{t("description")}
 						</DialogDescription>
 					</DialogHeader>
 
 					<form onSubmit={onSubmit} className="space-y-6">
 						<div className="space-y-3">
 							<label className="text-sm font-bold text-gray-700">
-								كلمة المرور الجديدة <span className="text-destructive">*</span>
+								{t("newPassword")} <span className="text-destructive">*</span>
 							</label>
 							<AppInput
 								type="password"
-								placeholder="أدخل كلمة المرور الجديدة"
+								placeholder={t("newPasswordPlaceholder")}
 								value={values.password}
 								onChange={(e) => setValues((prev) => ({ ...prev, password: e.target.value }))}
 								Icon={<LockIcon size={18} className="text-gray-400" />}
@@ -139,11 +145,11 @@ export default function ResetPasswordDialog({
 
 						<div className="space-y-3">
 							<label className="text-sm font-bold text-gray-700">
-								تأكيد كلمة المرور <span className="text-destructive">*</span>
+								{t("confirmPassword")} <span className="text-destructive">*</span>
 							</label>
 							<AppInput
 								type="password"
-								placeholder="أعد إدخال كلمة المرور"
+								placeholder={t("confirmPasswordPlaceholder")}
 								value={values.passwordConfirmation}
 								onChange={(e) => setValues((prev) => ({ ...prev, passwordConfirmation: e.target.value }))}
 								Icon={<LockIcon size={18} className="text-gray-400" />}
@@ -155,7 +161,7 @@ export default function ResetPasswordDialog({
 							disabled={isLoading}
 							className="h-14 w-full rounded-full bg-primary text-white text-base font-bold hover:bg-accent hover:scale-[1.02] shadow-lg transition-all"
 						>
-							{isLoading ? "جارٍ التحديث..." : "تحديث كلمة المرور"}
+							{isLoading ? tForm("labels.savingChanges") : t("submit")}
 						</Button>
 					</form>
 				</DialogContent>

@@ -16,6 +16,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAddressesQuery } from "@/features/addresses/hooks/useAddresses";
 
+import { useLocale, useTranslations } from "next-intl";
+
 type AddressItem = {
 	id: number;
 	location: string;
@@ -25,6 +27,7 @@ type AddressItem = {
 };
 
 export default function CheckoutPageContent() {
+	const t = useTranslations("checkout");
 	const { cart, refreshCart } = useCart();
 	const router = useRouter();
     
@@ -50,9 +53,11 @@ export default function CheckoutPageContent() {
 		[addresses, selectedAddressId],
 	);
 
+	const locale = useLocale();
+
 	const handleCheckout = async () => {
 		if (!selectedAddressId) {
-			toast.error("يرجى اختيار عنوان التوصيل أولاً");
+			toast.error(t("selectAddressError"));
 			return;
 		}
 
@@ -76,19 +81,19 @@ export default function CheckoutPageContent() {
 				tokenRequire: true,
 			});
 
-			toast.success(res.message || "تم إرسال الطلب بنجاح");
+			toast.success(res.message || t("success"));
 			await refreshCart();
 
 			const paymentUrl = res.data?.payment_url;
 			if (paymentUrl) {
 				const checkoutUrl = new URL(paymentUrl);
-				checkoutUrl.searchParams.set("lang", "ar");
+				checkoutUrl.searchParams.set("lang", locale);
 				window.location.assign(checkoutUrl.toString());
 				return;
 			}
 			router.push("/account/orders");
 		} catch {
-			toast.error("حدث خطأ ما");
+			toast.error(t("error"));
 		} finally {
 			setCheckoutPending(false);
 		}
@@ -104,7 +109,7 @@ export default function CheckoutPageContent() {
 					onClick={() => router.back()}
 				>
 					<ArrowIcon className="rtl:rotate-180 group-hover:-translate-x-1 transition-transform" />
-					<h1 className="text-xl font-extrabold text-primary">إتمام الطلب</h1>
+					<h1 className="text-xl font-extrabold text-primary">{t("pageTitle")}</h1>
 				</Button>
 
 				<div className="grid lg:grid-cols-[1.3fr_0.7fr] gap-10 items-start">
@@ -114,9 +119,9 @@ export default function CheckoutPageContent() {
                         {/* 1. Delivery Address */}
 						<section className="bg-background-cu border border-black/5 rounded-4xl p-8 space-y-6">
 							<div className="flex items-center justify-between">
-								<h2 className="text-xl font-extrabold text-primary">عنوان التوصيل</h2>
+								<h2 className="text-xl font-extrabold text-primary">{t("deliveryAddress")}</h2>
 								<Button variant="outline" className="rounded-full h-10" onClick={() => setIsAddressDialogOpen(true)}>
-									تغيير
+									{t("change")}
 								</Button>
 							</div>
 
@@ -144,7 +149,7 @@ export default function CheckoutPageContent() {
 								</div>
 							) : (
 								<p className="text-sm text-gray">
-									لا توجد عناوين توصيل محفوظة. يرجى إضافة عنوان.
+									{t("noAddresses")}
 								</p>
 							)}
 
@@ -154,13 +159,13 @@ export default function CheckoutPageContent() {
 								className="inline-flex items-center gap-2 text-accent font-bold text-sm hover:underline underline-offset-4"
 							>
 								<PlusIcon size={16} />
-								إضافة عنوان جديد
+								{t("addNewAddress")}
 							</Link>
 						</section>
 
                         {/* 2. Order Items */}
 						<section className="bg-background-cu border border-black/5 rounded-4xl p-8 space-y-6">
-							<h2 className="text-xl font-extrabold text-primary">عناصر الطلب</h2>
+							<h2 className="text-xl font-extrabold text-primary">{t("orderItems")}</h2>
 							<div className="space-y-4">
 								{cart?.items?.map((item) => (
                                     <div key={item.id} className="opacity-80 grayscale-[0.5]">
@@ -172,11 +177,11 @@ export default function CheckoutPageContent() {
 
                         {/* 3. Payment Method */}
 						<section className="bg-background-cu border border-black/5 rounded-4xl p-8 space-y-6">
-							<h2 className="text-xl font-extrabold text-primary">طريقة الدفع</h2>
+							<h2 className="text-xl font-extrabold text-primary">{t("paymentMethod")}</h2>
 							<div className="border border-accent ring-1 ring-accent rounded-2xl p-5 bg-white flex items-center justify-between">
 								<div className="text-start">
-                                    <h3 className="font-bold text-primary">دفع إلكتروني</h3>
-                                    <p className="text-xs text-gray">فيزا، ماستركارد، بنفت، ثواني</p>
+                                    <h3 className="font-bold text-primary">{t("onlinePayment")}</h3>
+                                    <p className="text-xs text-gray">{t("paymentDescription")}</p>
                                 </div>
                                 <div className="size-6 bg-accent text-white rounded-full flex items-center justify-center">
                                     <CheckIcon size={14} />
@@ -186,11 +191,11 @@ export default function CheckoutPageContent() {
 
                         {/* 4. Delivery Notes */}
 						<section className="bg-background-cu border border-black/5 rounded-4xl p-8 space-y-4">
-							<h2 className="text-xl font-extrabold text-primary">ملاحظات التوصيل</h2>
+							<h2 className="text-xl font-extrabold text-primary">{t("deliveryNotes")}</h2>
 							<textarea
 								value={deliveryNotes}
 								onChange={(e) => setDeliveryNotes(e.target.value)}
-								placeholder="مثل: يرجى ترك الطلب عند الباب أو رن الجرس..."
+								placeholder={t("deliveryNotesPlaceholder")}
 								className="w-full min-h-32 rounded-2xl border bg-white px-5 py-4 text-sm outline-none focus:ring-2 focus:ring-secondary transition-all"
 							/>
 						</section>
@@ -199,20 +204,20 @@ export default function CheckoutPageContent() {
 					{/* Summary Sidebar */}
 					<aside className="bg-background-cu border border-black/5 rounded-4xl p-8 space-y-8 sticky top-24">
 						<div className="space-y-2 text-start">
-							<h2 className="text-xl font-extrabold text-primary">ملخص الطلب</h2>
-							<p className="text-gray text-sm">يرجى مراجعة طلبك قبل التأكيد</p>
+							<h2 className="text-xl font-extrabold text-primary">{t("orderSummary")}</h2>
+							<p className="text-gray text-sm">{t("summaryHint")}</p>
 						</div>
 
 						<div className="space-y-4 text-sm font-semibold text-gray">
 							<div className="flex items-center justify-between">
-								<span>المجموع الفرعي</span>
+								<span>{t("subtotal")}</span>
 								<span className="text-accent flex items-center gap-2">
 									{cart?.subtotal?.toFixed(3)}
 									<PriceIcon className="size-5" />
 								</span>
 							</div>
 							<div className="flex items-center justify-between">
-								<span>التوصيل</span>
+								<span>{t("delivery")}</span>
 								<span className="text-accent flex items-center gap-2">
 									{cart?.delivery_price?.toFixed(3)}
 									<PriceIcon className="size-5" />
@@ -221,7 +226,7 @@ export default function CheckoutPageContent() {
 						</div>
 
 						<div className="border-t pt-6 flex items-center justify-between text-lg font-extrabold text-secondary">
-							<span>الإجمالي</span>
+							<span>{t("total")}</span>
 							<span className="text-accent flex items-center gap-2">
 								{cart?.total?.toFixed(3)}
 								<PriceIcon className="size-6" />
@@ -234,7 +239,7 @@ export default function CheckoutPageContent() {
 							disabled={checkoutPending || !selectedAddressId}
 							onClick={handleCheckout}
 						>
-							{checkoutPending ? "جاري الإرسال..." : "أرسل الطلب الآن"}
+							{checkoutPending ? t("sending") : t("sendOrder")}
 							<ArrowIcon className="rtl:rotate-180" />
 						</Button>
 					</aside>
@@ -244,7 +249,7 @@ export default function CheckoutPageContent() {
 			<Dialog open={isAddressDialogOpen} onOpenChange={setIsAddressDialogOpen}>
 				<DialogContent className="sm:max-w-xl" showCloseButton>
 					<DialogHeader>
-						<DialogTitle>تغيير عنوان التوصيل</DialogTitle>
+						<DialogTitle>{t("changeAddressTitle")}</DialogTitle>
 					</DialogHeader>
 					<div className="space-y-3 mt-4">
 						{isLoadingAddresses ? (
@@ -286,7 +291,7 @@ export default function CheckoutPageContent() {
 								);
 							})
 						) : (
-							<p className="text-sm text-gray">لا توجد عناوين توصيل</p>
+							<p className="text-sm text-gray">{t("noAddressesFound")}</p>
 						)}
 					</div>
 				</DialogContent>

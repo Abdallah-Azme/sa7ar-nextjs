@@ -6,16 +6,16 @@ import SectionLabel from "@/components/shared/SectionLabel";
 import { Card } from "@/components/ui/card";
 import ImageFallback from "@/components/shared/ImageFallback";
 
-const partnersList = [
-	{ image: "/rzaz.svg", color: "#52A1FF1A", title: "Rzaz" },
-	{ image: "/barad.svg", color: "#2C6C8D1A", title: "Barad" },
-];
-
 /**
  * Partners Component
  */
 export default function Partners() {
 	const t = useTranslations("partners");
+
+	const partnersList = [
+		{ image: "/rzaz.svg", color: "#52A1FF1A", id: "rzaz" },
+		{ image: "/barad.svg", color: "#2C6C8D1A", id: "barad" },
+	];
 
 	return (
 		<section className="container grid lg:grid-cols-[1.2fr_0.8fr] gap-10">
@@ -28,7 +28,7 @@ export default function Partners() {
 					>
 						<ImageFallback
 							src={`/images/placeholder/${item.image}`}
-							alt={item.title}
+							alt={t(item.id)}
 							width={260}
 							height={260}
 							className="size-60 object-contain"

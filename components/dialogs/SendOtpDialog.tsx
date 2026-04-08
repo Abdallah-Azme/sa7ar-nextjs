@@ -3,6 +3,7 @@
 import { useForm } from "react-hook-form";
 import { XIcon } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import AppMobileInput from "@/components/forms/AppMobileInput";
 import { Button } from "@/components/ui/button";
 import {
@@ -30,6 +31,9 @@ export default function SendOtpDialog({
 	onOpenChange,
 	onOtpSent,
 }: SendOtpDialogProps) {
+	const t = useTranslations("authDialog.sendOtp");
+	const tForm = useTranslations("form");
+	const tAuthErrors = useTranslations("auth.errors");
 	const { register, handleSubmit, formState: { errors }, reset } = useForm<{ mobile: string }>({
 		defaultValues: { mobile: "" },
 	});
@@ -37,7 +41,7 @@ export default function SendOtpDialog({
 	const onSubmit = async (data: { mobile: string }) => {
 		const mobile = data.mobile || "";
 		if (!mobile.trim()) {
-			toast.error("يرجى إدخال رقم الهاتف");
+			toast.error(tForm("errors.required"));
 			return;
 		}
 
@@ -48,7 +52,7 @@ export default function SendOtpDialog({
             reset();
         } catch (err: unknown) {
             const error = err as { message?: string };
-            toast.error(error?.message || "حدث خطأ أثناء إرسال رمز OTP");
+            toast.error(error?.message || tAuthErrors("errorSendingOtp"));
         }
 	};
 
@@ -61,7 +65,7 @@ export default function SendOtpDialog({
 				<DialogHeader className="mb-6">
 					<div className="flex items-center justify-between">
 						<DialogTitle className="text-start text-2xl font-bold text-primary">
-							نسيت كلمة المرور؟
+							{t("title")}
 						</DialogTitle>
 						<DialogClose asChild>
 							<button className="transition-all duration-500 cursor-pointer hover:rotate-90 text-gray-400 hover:text-destructive">
@@ -70,7 +74,7 @@ export default function SendOtpDialog({
 						</DialogClose>
 					</div>
 					<DialogDescription className="text-sm text-gray-500 mt-2 text-start font-medium">
-					أدخل رقم هاتفك المسجل لدينا، وسنرسل لك رمز لإعادة تعيين كلمة المرور.
+					{t("description")}
 					</DialogDescription>
 				</DialogHeader>
 
@@ -78,9 +82,9 @@ export default function SendOtpDialog({
 					<div>
 						<AppMobileInput
 							{...register("mobile", {
-								required: "Mobile is required",
-								minLength: { value: 6, message: "Must be at least 6 digits" },
-								pattern: { value: /^\d+$/, message: "Only numbers allowed" },
+								required: tForm("errors.required"),
+								minLength: { value: 6, message: tForm("errors.tooShort", { count: 6 }) },
+								pattern: { value: /^\d+$/, message: tForm("errors.invalidMobile") },
 							})}
 						/>
 						{errors.mobile && (
@@ -94,7 +98,7 @@ export default function SendOtpDialog({
 						type="submit"
 						className="h-14 w-full rounded-full bg-primary text-white text-base font-bold hover:bg-accent hover:scale-[1.02] shadow-lg transition-all"
 					>
-					إرسال رمز OTP
+					{t("submit")}
 					</Button>
 				</form>
 			</DialogContent>

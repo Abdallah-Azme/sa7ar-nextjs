@@ -3,6 +3,8 @@
 import { useCmsPageQuery } from "../hooks/useCms";
 import { ShieldCheckIcon, FileTextIcon } from "lucide-react";
 
+import { useTranslations } from "next-intl";
+
 interface CmsPageContentProps {
   id: number;
   title: string;
@@ -12,6 +14,7 @@ interface CmsPageContentProps {
 
 export default function CmsPageContent({ id, title, subtitle, iconType }: CmsPageContentProps) {
   const { data } = useCmsPageQuery(id);
+  const t = useTranslations("cms");
 
   return (
     <section className="container py-16 space-y-12 grow">
@@ -38,9 +41,10 @@ export default function CmsPageContent({ id, title, subtitle, iconType }: CmsPag
             dangerouslySetInnerHTML={{ __html: data.description }} 
           />
         ) : (
-          <p className="text-center text-gray-400 italic py-10">Content is being updated...</p>
+          <p className="text-center text-gray-400 italic py-10">{t("updating")}</p>
         )}
       </article>
     </section>
   );
 }
+

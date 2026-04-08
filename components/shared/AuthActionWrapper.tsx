@@ -14,15 +14,12 @@ type AuthActionWrapperProps = {
 	children: ReactElement<AuthClickableChildProps>;
 };
 
-/**
- * AuthActionWrapper - Client Component
- * Mirrors React's AuthActionWrapper:
- * If user is NOT authenticated, intercepts clicks and shows an error toast.
- * If authenticated, renders the child as-is (no interception).
- */
+import { useTranslations } from "next-intl";
+
 export default function AuthActionWrapper({
 	children,
 }: AuthActionWrapperProps) {
+	const t = useTranslations("auth.errors");
 	const { isAuthenticated } = useAuth();
 
 	if (isAuthenticated || !isValidElement(children)) {
@@ -32,11 +29,11 @@ export default function AuthActionWrapper({
 	const onUnauthorizedClick = (event: MouseEvent<HTMLElement>) => {
 		event.preventDefault();
 		event.stopPropagation();
-		toast.error("يجب تسجيل الدخول أولاً للوصول إلى هذه الميزة");
+		toast.error(t("unauthenticated"));
 	};
 
 	return cloneElement(children as ReactElement<AuthClickableChildProps>, {
 		onClick: onUnauthorizedClick,
-		title: "يجب تسجيل الدخول أولاً",
+		title: t("unauthenticated"),
 	});
 }

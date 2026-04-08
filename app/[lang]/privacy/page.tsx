@@ -5,17 +5,29 @@ import CmsPageContent from "@/features/about/components/CmsPageContent";
 import HelpCard from "@/components/shared/cards/HelpCard";
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 
 const PRIVACY_PAGE_ID = 3;
 
-export const metadata: Metadata = {
-  title: "Privacy Policy | Sohar Water",
-  description: "Learn how we handle your personal data and protect your privacy at Sohar Water.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}): Promise<Metadata> {
+  const { lang } = await params;
+  const t = await getTranslations({ locale: lang, namespace: "seo.privacy" });
+
+  return {
+    title: t("title"),
+    description: t("description"),
+  };
+}
 
 export default async function PrivacyPage({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
   setRequestLocale(lang);
+
+  const t = await getTranslations("privacyPage");
 
   const queryClient = makeQueryClient();
   await queryClient.prefetchQuery({
@@ -31,8 +43,8 @@ export default async function PrivacyPage({ params }: { params: Promise<{ lang: 
       <HydrationBoundary state={dehydrate(queryClient)}>
         <CmsPageContent 
           id={PRIVACY_PAGE_ID} 
-          title="Privacy Policy" 
-          subtitle="Your trust is our priority. This document outlines our standards for data protection."
+          title={t("title")}
+          subtitle={t("subtitle")}
           iconType="privacy"
         />
       </HydrationBoundary>

@@ -42,7 +42,7 @@ export default function CartPageContent() {
 	const onSubmit = async (data: CouponInputs) => {
 		const code = data.code?.trim();
 		if (!code) {
-			toast.error(t("coupon.error") || "يرجى إدخال الكوبون");
+			toast.error(t("coupon.error"));
 			return;
 		}
 
@@ -211,7 +211,7 @@ export default function CartPageContent() {
 										placeholder="X X X X"
 										{...register("code", { required: tForm("errors.required") })}
 									/>
-									<DiscountIcon className="absolute top-1/2 -translate-y-1/2 left-4 fill-black-cu text-white" />
+									<DiscountIcon className="absolute top-1/2 -translate-y-1/2 start-4 fill-black-cu text-white" />
 								</div>
 								{errors.code && (
 									<p className="text-sm text-destructive mt-1">{errors.code.message}</p>

@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils";
 import { MessageCircleMoreIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 interface HelpCardProps {
 	className?: string;
@@ -10,7 +11,7 @@ interface HelpCardProps {
 }
 
 /**
- * HelpCard - RSC (Server Component)
+ * HelpCard
  * Call to action for support, used at the bottom of many pages.
  */
 export default function HelpCard({
@@ -18,6 +19,9 @@ export default function HelpCard({
 	withContainer = true,
 	contactPage = false,
 }: HelpCardProps) {
+	const t = useTranslations("helpCard");
+	const tActions = useTranslations("actions");
+
 	return (
 		<div
 			className={cn(
@@ -28,9 +32,9 @@ export default function HelpCard({
 		>
 			<div className="space-y-3">
 				<h3 className="text-xl sm:text-2xl font-extrabold">
-					Need Any Help?
+					{t("title")}
 				</h3>
-				<p className="font-light text-gray">Our support team is ready to assist you anytime.</p>
+				<p className="font-light text-gray">{t("description")}</p>
 			</div>
 			<Button
 				asChild
@@ -44,7 +48,7 @@ export default function HelpCard({
 						size={20}
 						className="fill-white text-black"
 					/>
-					Contact Us
+					{tActions("contactUs")}
 				</Link>
 			</Button>
 		</div>

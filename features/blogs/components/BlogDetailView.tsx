@@ -59,9 +59,9 @@ export default function BlogDetailView({ blog }: { blog: BlogItem }) {
         {/* 4. Article Content (Rich Text) */}
         <div className="relative">
             {/* Aesthetic Side Decoration */}
-            <div className="hidden lg:block absolute -left-24 top-0 space-y-6">
+            <div className="hidden lg:block absolute -inset-s-24 top-0 space-y-6">
                 <div className="flex flex-col gap-4">
-                    <p className="text-[10px] font-bold text-gray-400 uppercase vertical-text transform -rotate-180 mb-4 whitespace-nowrap">شارك المقال</p>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase vertical-text transform -rotate-180 mb-4 whitespace-nowrap">{t("shareLabel")}</p>
                     <button className="size-10 rounded-full bg-primary text-white flex items-center justify-center hover:bg-accent transition-colors shadow-sm font-bold">F</button>
                     <button className="size-10 rounded-full bg-primary text-white flex items-center justify-center hover:bg-accent transition-colors shadow-sm font-bold">X</button>
                     <button className="size-10 rounded-full bg-primary text-white flex items-center justify-center hover:bg-accent transition-colors shadow-sm font-bold">I</button>
@@ -88,10 +88,10 @@ export default function BlogDetailView({ blog }: { blog: BlogItem }) {
             </div>
             <div className="flex gap-4">
                 <button className="px-8 h-12 bg-primary text-white rounded-full flex items-center gap-3 font-bold hover:bg-accent transition-all shadow-md">
-                    Facebook
+                    {t("social.facebook")}
                 </button>
                 <button className="px-8 h-12 bg-primary text-white rounded-full flex items-center gap-3 font-bold hover:bg-accent transition-all shadow-md">
-                    Twitter (X)
+                    {t("social.twitter")}
                 </button>
             </div>
         </footer>

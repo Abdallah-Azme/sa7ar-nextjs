@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: BlogDetailsProps): Promise<Me
     if (!blog) return { title: t("title") };
 
     return {
-      title: `${blog.title} | ${t("title").split("|")[1]?.trim() || "صحار"}`,
+      title: `${blog.title} | ${t("title").split("|")[1]?.trim() || "Sohar"}`,
       description: blog.subtitle || blog.description.substring(0, 160).replace(/<[^>]*>/g, ""),
     };
   } catch (error) {

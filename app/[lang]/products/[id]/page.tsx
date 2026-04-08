@@ -7,6 +7,8 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 
+import { getTranslations } from "next-intl/server";
+
 interface Props {
   params: Promise<{ lang: string; id: string }>;
 }
@@ -17,11 +19,17 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   const data = await fetchProductDetail(id);
+  const tSeo = await getTranslations("seo.products");
 
-  if (!data?.product) return { title: "المنتج غير موجود | سحر" };
+  if (!data?.product) return { title: tSeo("title") };
+
+  // Use the suffix from the SEO title if available (e.g. "| Sohar")
+  const titleSuffix = tSeo("title").includes("|") 
+    ? tSeo("title").split("|")[1].trim()
+    : "Sohar";
 
   return {
-    title: `${data.product.name} | سحر`,
+    title: `${data.product.name} | ${titleSuffix}`,
     description: data.product.description,
     openGraph: {
       images: [data.product.image || data.product.images?.[0]],

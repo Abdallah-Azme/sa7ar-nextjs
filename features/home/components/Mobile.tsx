@@ -44,7 +44,7 @@ export default function Mobile({
 						className="flex gap-2 w-40 sm:w-46 items-center h-14 rounded-[24px]"
 						asChild
 					>
-						<a href={googlePlayLink ?? "#"} aria-label="Download from Google Play">
+						<a href={googlePlayLink ?? "#"} aria-label={tCommon("googlePlay")}>
 							<div className="text-start">
 								<p className="text-[8px]">{tCommon("downloadOn")}</p>
 								<b className="text-sm md:text-xs lg:text-sm">{tCommon("stores.google")}</b>
@@ -53,7 +53,7 @@ export default function Mobile({
 						</a>
 					</Button>
 					<Button asChild className="flex w-40 sm:w-46 gap-2 bg-black hover:bg-black/90 items-center h-14 rounded-[24px]">
-						<a href={appleStoreLink ?? "#"} aria-label="Download from App Store">
+						<a href={appleStoreLink ?? "#"} aria-label={tCommon("appleStore")}>
 							<div className="text-start">
 								<p className="text-[8px]">{tCommon("downloadOn")}</p>
 								<b className="text-sm md:text-xs lg:text-sm">{tCommon("stores.apple")}</b>
@@ -68,7 +68,7 @@ export default function Mobile({
             <div className="relative h-full flex items-center justify-center">
                 <ImageFallback
                     src="/images/mobile.webp"
-                    alt="Mobile App Preview"
+                    alt={t("imageAlt")}
                     width={1040}
                     height={665}
                     className="w-full object-contain"

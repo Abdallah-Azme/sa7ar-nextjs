@@ -11,7 +11,10 @@ import { BadgeCheck, Leaf, Truck } from "lucide-react";
 import { useAboutDataQuery } from "../hooks/useAbout";
 import { useGlobalSettingsQuery } from "@/features/settings/hooks/useSettings";
 
+import { useTranslations } from "next-intl";
+
 export default function AboutPageContent() {
+  const t = useTranslations("aboutPage");
   const { data } = useAboutDataQuery();
   const { data: settings } = useGlobalSettingsQuery();
 
@@ -47,7 +50,7 @@ export default function AboutPageContent() {
         {vision && (
             <AboutSection 
                 side="end"
-                label="رؤيتنا"
+                label={t("sections.vision.label")}
                 title={vision.title || ""}
                 description={vision.description?.replace(/<[^>]*>/g, "") || ""}
                 imageUrl={vision.icon || "/images/placeholder/our-story.webp"}
@@ -57,7 +60,7 @@ export default function AboutPageContent() {
         {mission && (
             <AboutSection 
                 side="start"
-                label="مهمتنا"
+                label={t("sections.mission.label")}
                 title={mission.title || ""}
                 description={mission.description?.replace(/<[^>]*>/g, "") || ""}
                 imageUrl={mission.icon || "/images/placeholder/our-story.webp"}

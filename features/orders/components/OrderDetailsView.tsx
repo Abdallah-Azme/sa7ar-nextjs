@@ -62,12 +62,12 @@ export default function OrderDetailsView({ order, mapSrc }: { order: OrderDetail
 					loading="lazy"
 					referrerPolicy="no-referrer-when-downgrade"
 					className="rounded-[40px] w-full shadow-md object-cover bg-gray-100"
-					title="Delivery Map"
+					title={tOrders("details.mapTitle")}
 				/>
 
                 {/* Floating Order Card */}
 				<div 
-                    className="static sm:absolute sm:bottom-8 sm:right-8 bg-white/95 backdrop-blur-md rounded-[40px] p-8 w-full sm:w-[360px] shadow-2xl border-2 border-primary/10 transition-transform duration-500 group-hover:-translate-y-2"
+                    className="static sm:absolute sm:bottom-8 sm:end-8 bg-white/95 backdrop-blur-md rounded-[40px] p-8 w-full sm:w-[360px] shadow-2xl border-2 border-primary/10 transition-transform duration-500 group-hover:-translate-y-2"
                 >
 					<div className="flex items-center justify-between gap-3 text-gray-700 mb-8 border-b pb-4">
 						<h2 className="font-extrabold text-lg">#{order.id}</h2>
@@ -124,10 +124,10 @@ export default function OrderDetailsView({ order, mapSrc }: { order: OrderDetail
                                         <AlertCircle className="size-10" />
                                     </div>
                                     <DialogTitle className="text-2xl font-extrabold text-primary text-center">
-                                        {tOrders("cancelConfirmTitle")}
+                                        {tOrders("details.cancel.dialog.heading")}
                                     </DialogTitle>
                                     <DialogDescription className="text-sm font-medium text-gray-500 text-center mt-2 leading-relaxed">
-                                        {tOrders("cancelConfirmDescription")}
+                                        {tOrders("details.cancel.dialog.description")}
                                     </DialogDescription>
                                 </DialogHeader>
                                 <div className="flex flex-col gap-3 mt-6">
