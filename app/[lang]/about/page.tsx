@@ -28,6 +28,7 @@ export async function generateMetadata({
 export default async function AboutPage({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
   setRequestLocale(lang);
+  const t = await getTranslations({ locale: lang, namespace: "seo.about" });
 
   const queryClient = makeQueryClient();
   
@@ -44,6 +45,7 @@ export default async function AboutPage({ params }: { params: Promise<{ lang: st
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
+      <h1 className="sr-only">{t("title")}</h1>
       <AboutPageContent />
     </HydrationBoundary>
   );

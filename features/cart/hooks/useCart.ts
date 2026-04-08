@@ -38,11 +38,8 @@ export function useUpdateCartMutation() {
 
   return useMutation({
     mutationFn: postUpdateCart,
-    onSuccess: (res: { message?: string; data?: any }) => {
-      queryClient.setQueryData(cartKeys.all, (old: { data?: any } | undefined) => ({
-        ...old,
-        ...res.data,
-      }));
+    onSuccess: (res: { message?: string }) => {
+      queryClient.invalidateQueries({ queryKey: cartKeys.all });
       toast.success(res?.message || t("updated"));
     },
     onError: (error: unknown) => {
@@ -58,11 +55,8 @@ export function useApplyCouponMutation() {
 
   return useMutation({
     mutationFn: postApplyCoupon,
-    onSuccess: (res: { message?: string; data?: any }) => {
-      queryClient.setQueryData(cartKeys.all, (old: { data?: any } | undefined) => ({
-        ...old,
-        ...res.data,
-      }));
+    onSuccess: (res: { message?: string }) => {
+      queryClient.invalidateQueries({ queryKey: cartKeys.all });
       toast.success(res?.message || t("couponApplied"));
     },
     onError: (error: unknown) => {

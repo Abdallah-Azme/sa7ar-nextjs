@@ -28,7 +28,7 @@ import { useTranslations } from "next-intl";
 export default function ProductCard({ item }: { item: Product }) {
     const tActions = useTranslations("actions");
     const tProducts = useTranslations("products");
-	const { cart } = useCart();
+	const { cart, addToCart, updateCart, addToCartPending, updateCartPending } = useCart();
     // Helper to format labels (e.g. "500ml")
     const formatSizeLabel = (size: string) => size; 
 
@@ -37,7 +37,7 @@ export default function ProductCard({ item }: { item: Product }) {
 	const isMostSold = Boolean(item?.is_most_sold);
 
 	const cartItem = cart?.items?.find(
-		(c) => c?.product?.id === item?.id,
+		(c) => Number(c?.product?.id) === Number(item?.id),
 	);
 
 	return (
@@ -99,7 +99,12 @@ export default function ProductCard({ item }: { item: Product }) {
 			<CardFooter>
 				{cartItem ? (
 					<div className="flex justify-between w-full items-center gap-2 rounded-md border border-primary h-10 px-4 md:h-13 py-2">
-						<button className={buttonClass + " text-accent"} aria-label={tActions("increase")}>
+						<button
+							className={buttonClass + " text-accent"}
+							aria-label={tActions("increase")}
+							disabled={updateCartPending}
+							onClick={() => updateCart({ cartItem, type: "increase" })}
+						>
 							<PlusIcon size={14} />
 						</button>
 						<span className="text-xs font-medium">
@@ -108,6 +113,8 @@ export default function ProductCard({ item }: { item: Product }) {
 						<button 
 							className={buttonClass + " text-gray"} 
 							aria-label={cartItem.quantity === 1 ? tActions("remove") : tActions("decrease")}
+							disabled={updateCartPending}
+							onClick={() => updateCart({ cartItem, type: cartItem.quantity === 1 ? "remove" : "decrease" })}
 						>
 							{cartItem.quantity === 1 ? (
 								<Trash2 className="text-destructive stroke-1" size={14} />
@@ -117,7 +124,11 @@ export default function ProductCard({ item }: { item: Product }) {
 						</button>
 					</div>
 				) : (
-					<Button className="w-full">
+					<Button
+						className="w-full"
+						disabled={addToCartPending}
+						onClick={() => addToCart({ product_id: item.id, quantity: 1, size_id: null })}
+					>
 						<span>{tActions("addToCart")}</span>
 						<ShoppingBasketIcon size={10} />
 					</Button>

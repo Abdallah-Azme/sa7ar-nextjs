@@ -50,6 +50,7 @@ export async function postEditProfile(formData: FormData) {
     route: "/edit-profile",
     method: "POST",
     body: formData,
+    isFormData: true,
     tokenRequire: true,
   });
 }

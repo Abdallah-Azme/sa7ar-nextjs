@@ -3,6 +3,8 @@
 import { createContext, useContext, useMemo } from "react";
 import type { CartItem } from "@/types";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 import { 
     useCartQuery, 
     useAddToCartMutation, 
@@ -54,6 +56,7 @@ const CartContext = createContext<CartContextType | null>(null);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
 	const { isAuthenticated } = useAuth();
+    const tCartErrors = useTranslations("cart.errors");
     
     // React Query Hooks
     const { data: cartData, isLoading, refetch } = useCartQuery(isAuthenticated);
@@ -69,6 +72,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 	};
 
 	const addToCart = async ({ quantity = 1, ...item }: DataSent) => {
+        if (!isAuthenticated) {
+            toast.error(tCartErrors("loginRequired"));
+            return;
+        }
 		addToCartMutation.mutate({ ...item, quantity });
 	};
 

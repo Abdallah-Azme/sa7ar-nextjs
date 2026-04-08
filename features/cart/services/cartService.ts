@@ -13,10 +13,18 @@ export async function fetchCart() {
 }
 
 export async function postAddToCart(payload: { product_id: number; quantity: number; size_id?: number | null }) {
+  const bodyPayload: { product_id: number; quantity: number; size_id?: number } = {
+    product_id: payload.product_id,
+    quantity: payload.quantity,
+  };
+  if (typeof payload.size_id === "number") {
+    bodyPayload.size_id = payload.size_id;
+  }
+
   return apiClient<{ message?: string }>({
     route: "/cart/add",
     method: "POST",
-    body: JSON.stringify(payload),
+    body: JSON.stringify(bodyPayload),
     tokenRequire: true,
   });
 }

@@ -47,7 +47,6 @@ export default function Navbar({ logo }: { logo?: ReactNode }) {
 	const [isScrolled, setIsScrolled] = useState(false);
 	const [isTransitioning, setIsTransitioning] = useState(false);
 	const transitionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-	const isMobile = useIsMobile();
 
 	const { isAuthenticated } = useAuth();
 	const { cartCount } = useCart();
@@ -163,7 +162,9 @@ export default function Navbar({ logo }: { logo?: ReactNode }) {
 
 						{/* Auth section — desktop only shows AccountDropdown or LoginDropdown */}
 						{isAuthenticated ? (
-							!isMobile && <AccountDropdown />
+							<div className="hidden lg:block">
+								<AccountDropdown />
+							</div>
 						) : (
 							<LoginDropdown />
 						)}
@@ -204,7 +205,11 @@ export default function Navbar({ logo }: { logo?: ReactNode }) {
 										</div>
 										<div className="border-t pt-4" />
 										{/* Account dropdown inside mobile sheet (authenticated only) */}
-										{isAuthenticated && isMobile && <AccountDropdown />}
+										{isAuthenticated && (
+											<div className="lg:hidden">
+												<AccountDropdown />
+											</div>
+										)}
 									</div>
 								</SheetContent>
 							</Sheet>
@@ -214,24 +219,4 @@ export default function Navbar({ logo }: { logo?: ReactNode }) {
 			</nav>
 		</>
 	);
-}
-
-/**
- * Inline useIsMobile hook — mirrors React's use-mobile hook
- * Returns true when viewport width < 1024px (lg breakpoint)
- */
-function useIsMobile() {
-	const [isMobile, setIsMobile] = useState(() => {
-		if (typeof window === "undefined") return false;
-		return window.matchMedia("(max-width: 1023px)").matches;
-	});
-
-	useEffect(() => {
-		const mql = window.matchMedia("(max-width: 1023px)");
-		const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
-		mql.addEventListener("change", handler);
-		return () => mql.removeEventListener("change", handler);
-	}, []);
-
-	return isMobile;
 }

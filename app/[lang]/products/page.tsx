@@ -35,6 +35,7 @@ export async function generateMetadata({
 export default async function ProductsPage({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
   setRequestLocale(lang);
+  const t = await getTranslations({ locale: lang, namespace: "seo.products" });
 
   const queryClient = makeQueryClient();
 
@@ -50,6 +51,7 @@ export default async function ProductsPage({ params }: { params: Promise<{ lang:
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
+      <h1 className="sr-only">{t("title")}</h1>
       <ProductsPageContent />
     </HydrationBoundary>
   );

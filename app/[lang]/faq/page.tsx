@@ -31,6 +31,7 @@ export default async function FaqPage({ params }: { params: Promise<{ lang: stri
   const { lang } = await params;
   setRequestLocale(lang);
   const t = await getTranslations("faq");
+  const tSeo = await getTranslations({ locale: lang, namespace: "seo.faq" });
 
   const queryClient = makeQueryClient();
   await queryClient.prefetchQuery({
@@ -40,6 +41,7 @@ export default async function FaqPage({ params }: { params: Promise<{ lang: stri
 
   return (
     <main className="flex flex-col min-h-screen relative overflow-hidden">
+      <h1 className="sr-only">{tSeo("title")}</h1>
       <div className="absolute top-1/4 -z-1 inset-s-20 size-72 bg-accent/5 rounded-full blur-[100px]" />
       <div className="absolute top-[40%] -z-1 inset-e-20 size-72 bg-secondary/5 rounded-full blur-[100px]" />
 

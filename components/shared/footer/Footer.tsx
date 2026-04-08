@@ -95,7 +95,17 @@ export default async function Footer() {
 
 						<div className="gap-y-4 flex flex-col">
 							{link.items.map((item, i) => {
-								const href = item.link ?? "#";
+								const href = item.link?.trim() ?? "";
+                                if (!href) {
+                                    return (
+                                        <span
+                                            key={i}
+                                            className="text-gray/60 font-light md:text-sm lg:text-base wrap-break-word cursor-not-allowed"
+                                        >
+                                            {item.label}
+                                        </span>
+                                    );
+                                }
 								const isExternal = href.startsWith("http") || href.startsWith("mailto:");
 								if (isExternal) {
 									return (
@@ -141,8 +151,9 @@ export default async function Footer() {
 							variant={"secondary"}
 							className="flex gap-2 w-full items-center rounded-[24px]"
 							asChild
+                            disabled={!(setting.google_play_link && setting.google_play_link.trim().length > 0)}
 						>
-							<a href={setting.google_play_link ?? "#"}>
+							<a href={setting.google_play_link || undefined}>
 								<div>
 									<p className="text-[8px]">{tCommon("downloadOn")}</p>
 									<b className="text-sm md:text-xs lg:text-sm">
@@ -155,8 +166,9 @@ export default async function Footer() {
 						<Button
 							asChild
 							className="flex w-full lg:w-46 gap-2 bg-black hover:bg-black/90 items-center rounded-[24px]"
+                            disabled={!(setting.apple_store_link && setting.apple_store_link.trim().length > 0)}
 						>
-							<a href={setting.apple_store_link ?? "#"}>
+							<a href={setting.apple_store_link || undefined}>
 								<div>
 									<p className="text-[8px]">{tCommon("downloadOn")}</p>
 									<b className="text-sm md:text-xs lg:text-sm">

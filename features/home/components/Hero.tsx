@@ -89,6 +89,10 @@ export default function Hero({
 
 	if (!sliders || sliders.length === 0) return null;
 
+    const hasAppleStoreLink = Boolean(appleStoreLink && appleStoreLink.trim().length > 0);
+    const hasGooglePlayLink = Boolean(googlePlayLink && googlePlayLink.trim().length > 0);
+    const hasWhatsappNumber = Boolean(whatsappNumber && whatsappNumber.trim().length > 0);
+
 	return (
 		<section className="grid lg:grid-cols-2 gap-10 container">
 			{/* Label */}
@@ -116,7 +120,7 @@ export default function Hero({
 				{/* Actions */}
 				<Button
 					asChild
-					className="justify-between items-center w-full rounded-[24px]"
+					className="justify-between items-center w-full max-w-[460px] rounded-full"
 				>
 					<Link href="/products">
 						<div className="flex items-center gap-2">
@@ -171,12 +175,13 @@ export default function Hero({
 						))}
 					</CarouselContent>
 					<div className="absolute inset-x-10 items-center flex justify-between bottom-5">
-						<div className="*:size-10 sm:*:size-13 *:rtl:rotate-180 *:rounded-full flex items-center gap-3 *:text-white *:static *:bg-white/35 *:hover:bg-white/30">
+						<div className="flex items-center gap-3">
 							<Button
 								disabled={currentSlide <= 0}
 								data-slot="btn prev"
 								aria-label={tCommon("prevSlide")}
 								onClick={() => api?.scrollPrev()}
+								className="size-10 sm:size-13 rounded-full bg-primary/85 hover:bg-primary text-white rtl:rotate-180 disabled:opacity-40"
 							>
 								<ChevronLeftIcon />
 							</Button>
@@ -185,6 +190,7 @@ export default function Hero({
 								data-slot="btn next"
 								aria-label={tCommon("nextSlide")}
 								onClick={() => api?.scrollNext()}
+								className="size-10 sm:size-13 rounded-full bg-primary/85 hover:bg-primary text-white rtl:rotate-180 disabled:opacity-40"
 							>
 								<ChevronRightIcon />
 							</Button>
@@ -206,29 +212,32 @@ export default function Hero({
 				<div className="self-start *:size-12 transition-transform *:hover:scale-110 flex sm:flex-col gap-3">
 					<Button
 						asChild
+                        disabled={!hasAppleStoreLink}
 						className="rounded-full border bg-background-cu hover:bg-background-cu"
 						size={"icon-lg"}
 					>
-						<a href={appleStoreLink ?? "#"} aria-label={tCommon("appleStore")}>
+						<a href={appleStoreLink || undefined} aria-label={tCommon("appleStore")}>
 							<AppStore className="text-black" aria-hidden="true" />
 						</a>
 					</Button>
 					<Button
 						size={"icon-lg"}
 						asChild
+                        disabled={!hasGooglePlayLink}
 						className="rounded-full border bg-background-cu hover:bg-background-cu"
 					>
-						<a href={googlePlayLink ?? "#"} aria-label={tCommon("googlePlay")}>
+						<a href={googlePlayLink || undefined} aria-label={tCommon("googlePlay")}>
 							<GoogleStore aria-hidden="true" />
 						</a>
 					</Button>
 					<Button
 						size={"icon-lg"}
 						asChild
+                        disabled={!hasWhatsappNumber}
 						className="rounded-full border text-green-500 border-green-500 bg-green-100 hover:bg-green-100"
 					>
 						<a
-							href={whatsappNumber ? `https://wa.me/${whatsappNumber}` : "#"}
+							href={hasWhatsappNumber ? `https://wa.me/${whatsappNumber}` : undefined}
 							aria-label={tCommon("whatsapp")}
 						>
 							<Whatsapp aria-hidden="true" />

@@ -27,6 +27,7 @@ export async function generateMetadata({
 export default async function ContactPage({ params }: { params: Promise<{ lang: string }> }) {
     const { lang } = await params;
     setRequestLocale(lang);
+    const t = await getTranslations({ locale: lang, namespace: "seo.contact" });
 
     const queryClient = makeQueryClient();
     await queryClient.prefetchQuery({
@@ -36,6 +37,7 @@ export default async function ContactPage({ params }: { params: Promise<{ lang: 
 
 	return (
         <HydrationBoundary state={dehydrate(queryClient)}>
+            <h1 className="sr-only">{t("title")}</h1>
             <ContactPageContent />
         </HydrationBoundary>
     );

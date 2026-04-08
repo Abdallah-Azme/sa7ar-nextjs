@@ -17,6 +17,8 @@ export default function Mobile({
 }) {
 	const t = useTranslations("mobile");
 	const tCommon = useTranslations("common");
+    const hasGooglePlayLink = Boolean(googlePlayLink && googlePlayLink.trim().length > 0);
+    const hasAppleStoreLink = Boolean(appleStoreLink && appleStoreLink.trim().length > 0);
 
 	return (
 		<section className="grid lg:grid-cols-2 gap-10 container">
@@ -43,8 +45,9 @@ export default function Mobile({
 						variant={"secondary"}
 						className="flex gap-2 w-40 sm:w-46 items-center h-14 rounded-[24px]"
 						asChild
+                        disabled={!hasGooglePlayLink}
 					>
-						<a href={googlePlayLink ?? "#"}>
+						<a href={googlePlayLink || undefined}>
 							<div className="text-start">
 								<p className="text-[8px]">{tCommon("downloadOn")}</p>
 								<b className="text-sm md:text-xs lg:text-sm">{tCommon("stores.google")}</b>
@@ -52,8 +55,8 @@ export default function Mobile({
 							<GoogleStore className="size-6" aria-hidden="true" />
 						</a>
 					</Button>
-					<Button asChild className="flex w-40 sm:w-46 gap-2 bg-black hover:bg-black/90 items-center h-14 rounded-[24px]">
-						<a href={appleStoreLink ?? "#"}>
+					<Button asChild className="flex w-40 sm:w-46 gap-2 bg-black hover:bg-black/90 items-center h-14 rounded-[24px]" disabled={!hasAppleStoreLink}>
+						<a href={appleStoreLink || undefined}>
 							<div className="text-start">
 								<p className="text-[8px]">{tCommon("downloadOn")}</p>
 								<b className="text-sm md:text-xs lg:text-sm">{tCommon("stores.apple")}</b>

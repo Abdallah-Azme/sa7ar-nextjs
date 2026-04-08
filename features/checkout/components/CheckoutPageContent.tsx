@@ -27,7 +27,7 @@ type AddressItem = {
 };
 
 export default function CheckoutPageContent() {
-	const t = useTranslations("checkout");
+	const t = useTranslations("account.checkout");
 	const { cart, refreshCart } = useCart();
 	const router = useRouter();
     

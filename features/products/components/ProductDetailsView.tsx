@@ -21,6 +21,10 @@ import ProductCard from "@/components/shared/cards/ProductCard";
 import { useCart } from "@/contexts/CartContext";
 import { cn } from "@/lib/utils";
 import type { Product } from "@/types";
+import { useRouter } from "next/navigation";
+import apiClient from "@/lib/apiClient";
+import { toast } from "sonner";
+import { useAuth } from "@/contexts/AuthContext";
 
 export interface ProductSize {
 	id: number;
@@ -51,14 +55,51 @@ export default function ProductDetailsView({ product, relatedProducts }: Product
 	const tProducts = useTranslations("productDetails");
 	const tNav = useTranslations("products");
 	const tActions = useTranslations("actions");
+	const tCart = useTranslations("cart.messages");
+	const tCartErrors = useTranslations("cart.errors");
+	const router = useRouter();
+    const { isAuthenticated } = useAuth();
 
-	const { addToCart, addToCartPending } = useCart();
+	const { addToCart, addToCartPending, refreshCart } = useCart();
 	const [quantity, setQuantity] = useState(1);
     const [selectedSizeId, setSelectedSizeId] = useState<number | null>(product?.size_id || null);
+	const [buyNowPending, setBuyNowPending] = useState(false);
 
     const activeSize = product?.sizes?.find((s: ProductSize) => s.id === selectedSizeId) || product;
 	const unitPrice = activeSize?.offer_price || activeSize?.price || 0;
 	const totalPrice = unitPrice * quantity;
+
+	const handleBuyNow = async () => {
+        if (!isAuthenticated) {
+            toast.error(tCartErrors("loginRequired"));
+            return;
+        }
+
+		setBuyNowPending(true);
+		try {
+            const payload: { product_id: number; quantity: number; size_id?: number } = {
+                product_id: product.id,
+                quantity,
+            };
+            if (typeof activeSize?.id === "number") {
+                payload.size_id = activeSize.id;
+            }
+
+			await apiClient({
+				route: "/cart/add",
+				method: "POST",
+				body: JSON.stringify(payload),
+				tokenRequire: true,
+			});
+			await refreshCart();
+			router.push("/checkout");
+		} catch (error: unknown) {
+			const err = error as { message?: string };
+			toast.error(err?.message || tCart("addError"));
+		} finally {
+			setBuyNowPending(false);
+		}
+	};
 
 	return (
 		<div className="flex flex-col gap-16">
@@ -186,6 +227,8 @@ export default function ProductDetailsView({ product, relatedProducts }: Product
 						<Button
 							type="button"
 							className="rounded-full h-14 flex-1 text-lg gap-2 bg-black hover:bg-black/90"
+							disabled={buyNowPending}
+							onClick={handleBuyNow}
 						>
 							{tActions("buyNow")}
 							<ArrowIcon className="rtl:rotate-180" />
