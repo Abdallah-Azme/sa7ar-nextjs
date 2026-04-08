@@ -200,7 +200,7 @@ export default function AddressForm({ addressId, initialData }: { addressId?: st
 					style={{ border: 0 }}
 					allowFullScreen
 					loading="lazy"
-					title="Address Map"
+					title={t("mapTitle")}
                     className="w-full h-[600px] object-cover bg-gray-50"
 				/>
 

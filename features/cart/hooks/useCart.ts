@@ -21,7 +21,7 @@ export function useAddToCartMutation() {
 
   return useMutation({
     mutationFn: postAddToCart,
-    onSuccess: (res: any) => {
+    onSuccess: (res: { message?: string }) => {
       queryClient.invalidateQueries({ queryKey: cartKeys.all });
       toast.success(res?.message || t("added"));
     },
@@ -38,8 +38,8 @@ export function useUpdateCartMutation() {
 
   return useMutation({
     mutationFn: postUpdateCart,
-    onSuccess: (res: any) => {
-      queryClient.setQueryData(cartKeys.all, (old: any) => ({
+    onSuccess: (res: { message?: string; data?: any }) => {
+      queryClient.setQueryData(cartKeys.all, (old: { data?: any } | undefined) => ({
         ...old,
         ...res.data,
       }));
@@ -58,8 +58,8 @@ export function useApplyCouponMutation() {
 
   return useMutation({
     mutationFn: postApplyCoupon,
-    onSuccess: (res: any) => {
-      queryClient.setQueryData(cartKeys.all, (old: any) => ({
+    onSuccess: (res: { message?: string; data?: any }) => {
+      queryClient.setQueryData(cartKeys.all, (old: { data?: any } | undefined) => ({
         ...old,
         ...res.data,
       }));

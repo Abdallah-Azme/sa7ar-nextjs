@@ -160,10 +160,10 @@
 	"about": {
 		"label": "About Us",
 		"title": {
-			"line1": "Rathath.. pure water",
+			"line1": "Sohar.. pure water",
 			"emphasis": "with trust and quality"
 		},
-		"description": "At Rathath, we work to provide high-quality pure water with easy and fast delivery service, to give you more comfort in your daily life.",
+		"description": "At Sohar, we work to provide high-quality pure water with easy and fast delivery service, to give you more comfort in your daily life.",
 		"features": {
 			"accreditation": {
 				"title": "Accreditation",
@@ -183,12 +183,12 @@
 		"mostSold": "Best Selling Products",
 		"sections": {
 			"bard": "Bard Products",
-			"rathath": "Rathath Products"
+			"rathath": "Sohar Products"
 		},
 		"label": "Our Products",
 		"description": "Browse our full range of water products",
 		"bard": "Bard Products",
-		"rathath": "Rathath Products"
+		"rathath": "Sohar Products"
 	},
 	"productsPage": {
 		"title": "Products List",
@@ -312,7 +312,7 @@
 			"requiredField": "Please fill in this field",
 			"passwordsDoNotMatch": "Passwords do not match",
 			"mustAcceptTerms": "You must agree to the terms and conditions",
-			"invalidMobile": "Please enter a mobile number with at least {count} digits",
+			"invalidMobile": "Please enter a valid mobile number",
 			"tooShort": "Must be at least {count} characters",
 			"tooLong": "Must not exceed {count} characters",
 			"invalidOtp": "Verification code must be 4 digits"
@@ -478,8 +478,8 @@
 			"line2": "with quality and safety"
 		},
 		"paragraphs": {
-			"first": "Rathadh was founded to be the easiest and most reliable water delivery solution. We started from a simple idea: pure water is a right for everyone, and getting it should be free of complexity.",
-			"second": "Rathadh was founded to be the easiest and most reliable water delivery solution. We started from a simple idea: pure water is a right for everyone, and getting it should be free of complexity."
+			"first": "Sohar Water was founded to be the easiest and most reliable water delivery solution in Oman. We started from a simple idea: pure water is a right for everyone, and getting it should be free of complexity.",
+			"second": "We are committed to delivering high-quality drinking water that meets the highest standards of safety and purity, because we believe that our community deserves only the best."
 		},
 		"stats": {
 			"happyCustomers": "Happy customers",
@@ -667,6 +667,7 @@
 			"description": "Pin your location accurately on the map to ensure smooth delivery.",
 			"editTitle": "Edit Delivery Address",
 			"editDescription": "Update delivery location, address details, and contact info.",
+			"mapTitle": "Address Map",
 			"searchPlaceholder": "Search for an area or landmark...",
 			"useCurrentLocation": "Use Current Location",
 			"locating": "Locating...",

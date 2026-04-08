@@ -13,7 +13,7 @@ export async function fetchCart() {
 }
 
 export async function postAddToCart(payload: { product_id: number; quantity: number; size_id?: number | null }) {
-  return apiClient({
+  return apiClient<{ message?: string }>({
     route: "/cart/add",
     method: "POST",
     body: JSON.stringify(payload),
@@ -22,7 +22,7 @@ export async function postAddToCart(payload: { product_id: number; quantity: num
 }
 
 export async function postUpdateCart(payload: { cart_item_id: number; quantity: number }) {
-  return apiClient({
+  return apiClient<{ message?: string; data?: any }>({
     route: "/cart/update",
     method: "POST",
     body: JSON.stringify({ ...payload, _method: "PUT" }),
@@ -31,7 +31,7 @@ export async function postUpdateCart(payload: { cart_item_id: number; quantity: 
 }
 
 export async function postApplyCoupon(code: string) {
-  return apiClient({
+  return apiClient<{ message?: string; data?: any }>({
     route: "/cart/apply-coupon",
     method: "POST",
     body: JSON.stringify({ code }),
