@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import dynamic from "next/dynamic";
 
@@ -11,14 +12,27 @@ import { productKeys, fetchBestSellingAccessories } from "@/features/products/se
 import Hero from "./Hero";
 import Products from "./Products";
 const About = dynamic(() => import("./About"));
-const Partners = dynamic(() => import("./Partners"));
-const Mobile = dynamic(() => import("./Mobile"));
-const RequestPartnership = dynamic(() => import("./RequestPartnership"));
-const FAQ = dynamic(() => import("./FAQ"));
-const BestSellingAccessories = dynamic(() => import("./BestSellingAccessories"));
+const Partners = dynamic(() => import("./Partners"), { ssr: false, loading: () => null });
+const Mobile = dynamic(() => import("./Mobile"), { ssr: false, loading: () => null });
+const RequestPartnership = dynamic(() => import("./RequestPartnership"), { ssr: false, loading: () => null });
+const FAQ = dynamic(() => import("./FAQ"), { ssr: false, loading: () => null });
+const BestSellingAccessories = dynamic(() => import("./BestSellingAccessories"), { ssr: false, loading: () => null });
 
 export default function HomePageContent() {
   const t = useTranslations("products");
+  const [deferBelowFold, setDeferBelowFold] = useState(false);
+
+  useEffect(() => {
+    // Defer non-critical sections to reduce initial main-thread work (TBT)
+    const ric = (window as Window & { requestIdleCallback?: (cb: () => void) => number })
+      .requestIdleCallback;
+    if (ric) {
+      ric(() => setDeferBelowFold(true));
+      return;
+    }
+    const timer = window.setTimeout(() => setDeferBelowFold(true), 900);
+    return () => window.clearTimeout(timer);
+  }, []);
   // useQuery reads from the pre-seeded cache — NO network request on first render
   const { data: homeData }    = useQuery({ queryKey: homeKeys.data(),    queryFn: fetchHomeData });
   const { data: settings }    = useQuery({ queryKey: settingsKeys.global(), queryFn: fetchGlobalSettings });
@@ -46,22 +60,28 @@ export default function HomePageContent() {
       />
 
       {/* 4. Best Selling Accessories Section */}
-      <BestSellingAccessories accessories={accessories ?? []} />
+      {deferBelowFold ? (
+        <>
+          <BestSellingAccessories accessories={accessories ?? []} />
 
-      {/* 5. Partners Showcase */}
-      <Partners />
+          {/* 5. Partners Showcase */}
+          <Partners />
 
-      {/* 6. Mobile App CTA */}
-      <Mobile
-        appleStoreLink={settings?.apple_store_link}
-        googlePlayLink={settings?.google_play_link}
-      />
+          {/* 6. Mobile App CTA */}
+          <Mobile
+            appleStoreLink={settings?.apple_store_link}
+            googlePlayLink={settings?.google_play_link}
+          />
 
-      {/* 7. B2B Partnership CTA */}
-      <RequestPartnership />
+          {/* 7. B2B Partnership CTA */}
+          <RequestPartnership />
 
-      {/* 8. FAQ Section */}
-      <FAQ faqs={faqs ?? []} isSection={true} />
+          {/* 8. FAQ Section */}
+          <FAQ faqs={faqs ?? []} isSection={true} />
+        </>
+      ) : (
+        <div className="container h-24" aria-hidden="true" />
+      )}
     </div>
   );
 }
