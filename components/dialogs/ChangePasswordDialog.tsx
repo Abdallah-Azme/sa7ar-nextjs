@@ -47,7 +47,7 @@ export default function ChangePasswordDialog() {
 	const onSubmit: SubmitHandler<ChangePasswordInputs> = async (values) => {
         setIsPending(true);
         try {
-            const res = await apiClient({
+            const res = await apiClient<{ message: string }>({
                 route: "/change-password",
                 method: "POST",
                 body: JSON.stringify({

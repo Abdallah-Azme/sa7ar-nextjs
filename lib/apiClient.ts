@@ -88,7 +88,7 @@ export async function apiClient<T = unknown>(
   try {
     const rawRes = await ofetch.native(url, {
       headers,
-      ...opts,
+      ...(opts as any),
     });
     
     const text = await rawRes.text();

@@ -46,7 +46,7 @@ export async function postLogout() {
 }
 
 export async function postEditProfile(formData: FormData) {
-  return apiClient<{ data: { old_mobile: string; new_mobile: string } }>({
+  return apiClient<{ message: string; data: { old_mobile: string; new_mobile: string } }>({
     route: "/edit-profile",
     method: "POST",
     body: formData,

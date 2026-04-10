@@ -9,7 +9,6 @@ import GoogleStore from "@/components/icons/GoogleStore";
 import AppStore from "@/components/icons/AppStore";
 import CrownIcon from "@/components/icons/CrownIcon";
 import DeviceIcon from "@/components/icons/DeviceIcon";
-import UserRoundIcon from "@/components/icons/SocialIcons"; // Wait, I need to check UserRoundIcon
 import ListLinesIcon from "@/components/icons/ListLinesIcon";
 import BagIcon from "@/components/icons/BagIcon";
 import TargetIcon from "@/components/icons/TargetIcon";

@@ -110,6 +110,7 @@ export function useUpdateProfileMutation() {
 
 export function useDeleteAccountMutation() {
   const queryClient = useQueryClient();
+  const router = useRouter();
   const { logout: contextLogout } = useAuth();
   const t = useTranslations("auth");
 

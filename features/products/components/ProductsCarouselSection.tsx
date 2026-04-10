@@ -27,8 +27,8 @@ interface ProductsCarouselSectionProps {
 	label: string;
 	title: string;
 	filters: ProductFilterOption[];
-	selectedFilter: string;
-	onFilterChange: (value: string) => void;
+	selectedFilter?: string;
+	onFilterChange?: (value: string) => void;
 	products: Product[];
 	isLoading?: boolean;
 	isFiltersLoading?: boolean;
@@ -45,8 +45,8 @@ export default function ProductsCarouselSection({
 	label,
 	title,
 	filters,
-	selectedFilter,
-	onFilterChange,
+	selectedFilter = "all",
+	onFilterChange = () => {},
 	products,
 	isLoading = false,
 	isFiltersLoading = false,
