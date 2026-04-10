@@ -1,27 +1,23 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
-import { UserRoundIcon, CloudDownloadIcon, MailIcon, Trash2Icon } from "lucide-react";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import { UserRoundIcon, CloudDownloadIcon, MailIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
-import ImageFallback from "@/components/shared/ImageFallback";
+import { toast } from "sonner";
+
 import AppInput from "@/components/forms/AppInput";
 import AppMobileInput from "@/components/forms/AppMobileInput";
+import AppDialog from "@/components/dialogs/AppDialog";
+import ChangePasswordDialog from "@/components/dialogs/ChangePasswordDialog";
 import VerifyOtpDialog from "@/components/dialogs/VerifyOtpDialog";
 import { Button } from "@/components/ui/button";
-import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogHeader,
-	DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 import { useProfile, useUpdateProfileMutation, useDeleteAccountMutation } from "@/features/auth/hooks/useAuth";
 import type { Profile } from "@/types";
 import { cn } from "@/lib/utils";
 
-interface ProfileInputs {
+interface Inputs {
 	name: string;
 	email: string;
 	mobile: string;
@@ -32,17 +28,20 @@ export default function ProfileForm() {
     const user = userRaw as Profile | undefined;
 
 	const [imageFile, setImageFile] = useState<File | null>(null);
-	
+	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 	const [showVerifyMobileDialog, setShowVerifyMobileDialog] = useState(false);
-	const [mobileVerificationData, setMobileVerificationData] = useState<{ oldMobile: string; newMobile: string } | null>(null);
+	const [mobileVerificationData, setMobileVerificationData] = useState<{
+		oldMobile: string;
+		newMobile: string;
+	} | null>(null);
 
-    const updateProfile = useUpdateProfileMutation();
-    const deleteAccount = useDeleteAccountMutation();
+    const updateProfileMutation = useUpdateProfileMutation();
+    const deleteAccountMutation = useDeleteAccountMutation();
 
-	const t = useTranslations("account.profile");
-	const tDelete = useTranslations("account.deleteAccount");
+	const tAccount = useTranslations("account");
 	const tForm = useTranslations("form");
-	const { register, handleSubmit, reset } = useForm<ProfileInputs>({
+
+	const { handleSubmit, register, reset } = useForm<Inputs>({
 		defaultValues: {
 			name: user?.name || "",
 			email: user?.email || "",
@@ -51,13 +50,11 @@ export default function ProfileForm() {
 	});
 
 	useEffect(() => {
-		if (user) {
-            reset({
-                name: user.name || "",
-                email: user.email || "",
-                mobile: user.mobile || "",
-            });
-        }
+		reset({
+			name: user?.name || "",
+			email: user?.email || "",
+			mobile: user?.mobile || "",
+		});
 	}, [reset, user]);
 
 	const imagePreview = useMemo(() => {
@@ -65,15 +62,22 @@ export default function ProfileForm() {
 		return URL.createObjectURL(imageFile);
 	}, [imageFile]);
 
-	const onSubmit = async (data: ProfileInputs) => {
-        const formData = new FormData();
+	useEffect(() => {
+		return () => {
+			if (imagePreview) URL.revokeObjectURL(imagePreview);
+		};
+	}, [imagePreview]);
+
+	const onSubmit: SubmitHandler<Inputs> = async (data) => {
+		const formData = new FormData();
         formData.append("name", data.name);
         formData.append("email", data.email);
         formData.append("mobile", data.mobile.trim());
         if (imageFile) formData.append("image", imageFile);
 
         try {
-            const res = await updateProfile.mutateAsync(formData);
+            const res = await updateProfileMutation.mutateAsync(formData);
+            toast.success(res.message);
             
             const oldMobile = res.data?.old_mobile;
             const newMobile = res.data?.new_mobile;
@@ -82,130 +86,175 @@ export default function ProfileForm() {
                 setMobileVerificationData({ oldMobile, newMobile });
                 setShowVerifyMobileDialog(true);
             }
-        } catch {
-            // Error handled by hook
+        } catch (err: any) {
+            toast.error(err.message || tForm("errors.errorOccurred"));
         }
 	};
 
-	const onDeleteAccount = async () => {
-        deleteAccount.mutate();
+	const onConfirmDeleteAccount = async () => {
+		try {
+			await deleteAccountMutation.mutateAsync();
+			setDeleteDialogOpen(false);
+		} catch {
+			return;
+		}
 	};
 
-	const displayImage = imagePreview || user?.image || "";
-	const avatarClass = "size-20 sm:size-24 shrink-0 rounded-full border shadow-sm object-cover";
+	const userImage = user?.image ?? "";
+	const displayImage = imagePreview || userImage;
+	const avatarClass = "size-19 shrink-0 rounded-full border";
 
 	return (
 		<>
-			<div className="space-y-6">
-                {/* 1. Avatar Section */}
-				<div className="flex flex-col sm:flex-row gap-6 items-center justify-between bg-white rounded-3xl p-8 border border-black/5 shadow-sm">
-					<div className="flex items-center gap-6">
+			<div className="space-y-5">
+				<div className="flex flex-col sm:flex-row gap-3 items-center justify-between bg-white rounded-2xl px-10 py-3.5 border border-black/5 shadow-sm">
+					{/* Avatar */}
+					<div className="flex items-center gap-3">
 						{displayImage ? (
-							<ImageFallback
+							<img
 								src={displayImage}
-								alt={t("avatar.alt")}
-								width={96}
-								height={96}
+								alt="img"
+								width={75}
+								height={75}
+								loading="lazy"
+								onError={(e) => {
+									e.currentTarget.src = "/images/logo.svg";
+								}}
 								className={avatarClass}
 							/>
 						) : (
-							<label htmlFor="avatar-upload" className={cn(avatarClass, "bg-gray-50 flex items-center justify-center text-accent cursor-pointer hover:bg-gray-100 transition-colors")}>
-								<CloudDownloadIcon size={32} />
+							<label
+								htmlFor="avatar-upload"
+								className={cn(
+									avatarClass,
+									"bg-background-cu flex items-center justify-center text-accent cursor-pointer",
+								)}
+							>
+								<CloudDownloadIcon size={26} />
 							</label>
 						)}
-						<div className="space-y-2">
-							<h3 className="font-extrabold text-sm text-primary">
-								<label htmlFor="avatar-upload" className="text-accent cursor-pointer hover:underline">
-									{t("avatar.clickToUpload")}
+						<div className="space-y-3">
+							<h3 className="font-extrabold text-xs">
+								<label
+									htmlFor="avatar-upload"
+									className="text-accent cursor-pointer hover:underline underline-offset-4"
+								>
+									{tForm("labels.uploadClick")}
 								</label>{" "}
-								{t("avatar.title")}
+								{tForm("labels.uploadAvatar")}
 							</h3>
-							<p className="text-gray-500 text-xs font-medium">{t("avatar.hint")}</p>
+							<p className="text-gray text-xs">{tForm("labels.avatarHint")}</p>
 						</div>
 						<input
 							type="file"
 							id="avatar-upload"
 							className="hidden"
 							accept="image/*"
-							onChange={(e) => setImageFile(e.target.files?.[0] ?? null)}
+							onChange={(e) => {
+								const file = e.target.files?.[0] ?? null;
+								setImageFile(file);
+							}}
 						/>
 					</div>
 
+					{/* Actions */}
 					<div className="flex items-center gap-3">
-						{displayImage && (
-                            <button
-                                type="button"
-                                onClick={() => setImageFile(null)}
-                                title={t("avatar.remove")}
-                                className="bg-destructive/10 text-destructive flex items-center justify-center size-12 rounded-full hover:bg-destructive/20 transition-colors"
-                            >
-                                <Trash2Icon size={18} />
-                            </button>
-                        )}
+						<label
+							htmlFor="avatar-upload"
+							className={cn(
+								avatarClass,
+								"bg-background-cu flex items-center text-gray justify-center size-12 cursor-pointer",
+							)}
+						>
+							<CloudDownloadIcon size={16} />
+							<span className="sr-only">
+								{tForm("labels.uploadNewAvatar")}
+							</span>
+						</label>
 					</div>
 				</div>
 
-                {/* 2. Details Form */}
-				<div className="bg-white p-8 sm:p-12 rounded-3xl border border-black/5 shadow-sm">
-					<form className="grid sm:grid-cols-2 xl:grid-cols-3 gap-8" onSubmit={handleSubmit(onSubmit)}>
+				<div className="bg-white p-10 rounded-2xl border border-black/5 shadow-sm">
+					<form
+						className="grid sm:grid-cols-2 xl:grid-cols-3 gap-5"
+						onSubmit={handleSubmit(onSubmit)}
+					>
 						<div className="space-y-3">
-							<label className="text-sm font-bold text-gray-700">{t("fields.name")}</label>
+							<Label htmlFor="name" className="font-bold text-gray-700">{tForm("labels.fullName")}</Label>
 							<AppInput
-								placeholder="e.g. Abdullah"
-								Icon={<UserRoundIcon className="text-gray-400 size-5" />}
-								{...register("name", { required: tForm("errors.required") })}
+								id="name"
+								placeholder={tForm("placeholders.fullName")}
+								Icon={
+									<UserRoundIcon className="text-secondary size-6 stroke-1" />
+								}
+								{...register("name")}
 							/>
 						</div>
 
 						<div className="space-y-3">
-							<label className="text-sm font-bold text-gray-700">{t("fields.email")}</label>
+							<Label htmlFor="email" className="font-bold text-gray-700">{tForm("labels.email")}</Label>
 							<AppInput
-								placeholder="e.g. email@domain.com"
-								Icon={<MailIcon className="text-gray-400 size-5" />}
-								{...register("email", { 
-                                    required: tForm("errors.required"),
-                                    pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: tForm("errors.invalidEmail") }
-                                })}
+								id="email"
+								placeholder={tForm("placeholders.email")}
+								Icon={<MailIcon className="text-secondary size-6 *:stroke-1 text-gray-400" />}
+								{...register("email")}
 							/>
 						</div>
 
-						<div className="space-y-3">
-							<AppMobileInput {...register("mobile", { required: tForm("errors.required") })} />
-						</div>
+						<AppMobileInput {...register("mobile")} />
 
 						<Button
-							disabled={updateProfile.isPending}
-							className="col-span-full h-14 rounded-full mt-4 bg-primary hover:bg-accent text-white font-bold shadow-md transition-all sm:w-fit px-12"
+							disabled={updateProfileMutation.isPending}
+							className="col-span-full rounded-full mt-7 bg-black-cu hover:bg-black-cu/80 cursor-pointer h-12 font-bold text-white shadow-md transition-all sm:w-fit px-12"
 						>
-							{updateProfile.isPending ? tForm("labels.savingChanges") : tForm("labels.saveChanges")}
+							{updateProfileMutation.isPending ? tForm("labels.savingChanges") : tForm("labels.saveChanges")}
 						</Button>
 					</form>
+					<div className="flex flex-wrap gap-3 mt-6 pt-6 border-t border-gray-100">
+						<ChangePasswordDialog />
 
-                    {/* Dangerous Actions */}
-					<div className="flex flex-wrap gap-4 mt-12 pt-8 border-t border-gray-100">
-						<Dialog>
-                            <DialogTrigger asChild>
-                                <Button type="button" variant="destructive" className="rounded-full font-bold px-8">
-                                    {tDelete("trigger")}
-                                </Button>
-                            </DialogTrigger>
-                            <DialogContent className="sm:max-w-md rounded-3xl p-8">
-                                <DialogHeader>
-                                    <DialogTitle className="text-start">{tDelete("dialog.heading")}</DialogTitle>
-                                    <DialogDescription className="text-start mt-2 leading-relaxed">
-                                        {tDelete("dialog.description")}
-                                    </DialogDescription>
-                                </DialogHeader>
-                                <div className="grid grid-cols-2 gap-4 mt-6">
-                                    <Button variant="outline" className="h-12 rounded-full font-bold shadow-none">
-                                        {tDelete("dialog.cancel")}
-                                    </Button>
-                                    <Button variant="destructive" className="h-12 rounded-full font-bold shadow-none" onClick={onDeleteAccount} disabled={deleteAccount.isPending}>
-                                        {deleteAccount.isPending ? tDelete("dialog.deleting") : tDelete("dialog.confirm")}
-                                    </Button>
-                                </div>
-                            </DialogContent>
-                        </Dialog>
+						<AppDialog
+							open={deleteDialogOpen}
+							onOpenChange={setDeleteDialogOpen}
+							heading={tAccount("deleteAccount.dialog.heading")}
+							className="sm:max-w-md"
+							trigger={
+								<Button
+									type="button"
+									variant="destructive"
+									className="rounded-full w-fit font-bold px-8 shadow-sm"
+								>
+									{tAccount("deleteAccount.trigger")}
+								</Button>
+							}
+						>
+							<div className="space-y-5">
+								<p className="text-xs text-gray font-medium">
+									{tAccount("deleteAccount.dialog.description")}
+								</p>
+								<div className="grid grid-cols-2 gap-3">
+									<Button
+										type="button"
+										variant="ghost"
+                                        className="rounded-full font-bold h-12"
+										onClick={() => setDeleteDialogOpen(false)}
+									>
+										{tAccount("deleteAccount.dialog.cancel")}
+									</Button>
+									<Button
+										type="button"
+										variant="destructive"
+                                        className="rounded-full font-bold h-12 shadow-sm"
+										onClick={onConfirmDeleteAccount}
+										disabled={deleteAccountMutation.isPending}
+									>
+										{deleteAccountMutation.isPending
+											? tAccount("deleteAccount.dialog.deleting")
+											: tAccount("deleteAccount.dialog.confirm")}
+									</Button>
+								</div>
+							</div>
+						</AppDialog>
 					</div>
 				</div>
 			</div>
@@ -214,8 +263,15 @@ export default function ProfileForm() {
 				open={showVerifyMobileDialog}
 				onOpenChange={setShowVerifyMobileDialog}
 				mobile={mobileVerificationData?.oldMobile ?? ""}
-				title={t("verifyMobile.title")}
-				description={t("verifyMobile.description")}
+				title={tAccount("changeMobile.dialog.title")}
+				description={tAccount("changeMobile.dialog.description")}
+                verifyRoute="/verify-mobile"
+                verifyTokenRequire
+                verifyPayloadBuilder={(values) => ({
+                    old_mobile: mobileVerificationData?.oldMobile ?? "",
+                    new_mobile: mobileVerificationData?.newMobile ?? "",
+                    otp: values.code,
+                })}
 			/>
 		</>
 	);

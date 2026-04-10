@@ -7,6 +7,7 @@ import {
 	MenuIcon,
 	ArchiveIcon,
 	ShoppingBagIcon,
+	FlameIcon,
 	BookTextIcon,
 	MessageCircleQuestionMarkIcon,
 	NewspaperIcon,
@@ -22,7 +23,6 @@ import AccountDropdown from "@/components/auth/AccountDropdown";
 import LoginDropdown from "@/components/auth/LoginDropdown";
 import AuthActionWrapper from "@/components/shared/AuthActionWrapper";
 import ScrollToTop from "@/components/shared/ScrollToTop";
-import LanguageSwitcher from "./LanguageSwitcher";
 import { useTranslations } from "next-intl";
 
 /**
@@ -31,6 +31,7 @@ import { useTranslations } from "next-intl";
 const navLinks = [
 	{ path: "/", key: "home", Icon: ArchiveIcon },
 	{ path: "/products", key: "products", Icon: ShoppingBagIcon },
+	{ path: "/best-selling-products", key: "bestSellingProducts", Icon: FlameIcon },
 	{ path: "/about", key: "about", Icon: BookTextIcon },
 	{ path: "/faq", key: "faq", Icon: MessageCircleQuestionMarkIcon },
 	{ path: "/blogs", key: "blog", Icon: NewspaperIcon },
@@ -136,26 +137,24 @@ export default function Navbar({ logo }: { logo?: ReactNode }) {
 					</ul>
 
 					{/* Right-side actions */}
-					<div className="flex gap-3 items-center">
-						<LanguageSwitcher />
-
+					<div className="flex gap-4 items-center">
 						{/* Cart button — guarded by AuthActionWrapper for guests */}
 						<AuthActionWrapper>
 							<Button
 								size={"icon-lg"}
 								asChild
-								className="rounded-full relative size-12 flex place-content-center bg-accent hover:bg-accent/90 text-accent-foreground"
+								className="rounded-full relative size-14 flex place-content-center bg-[#4FA1B0] hover:bg-[#438D9A] transition-colors border-none shadow-none"
 							>
 								<Link href="/cart" aria-label={tCommon("cart")}>
 									{cartCount > 0 && (
 										<span
-											className="absolute size-5 border border-white top-0 -inset-e-2 flex justify-center items-center bg-[#FF0084] text-[8px] text-white rounded-full"
+											className="absolute size-5 border-2 border-white top-0 -inline-end-1 flex justify-center items-center bg-[#FF0084] text-[10px] font-bold text-white rounded-full z-10"
 											suppressHydrationWarning
 										>
 											{cartCount}
 										</span>
 									)}
-									<CartIcon />
+									<CartIcon className="size-6 text-white" />
 								</Link>
 							</Button>
 						</AuthActionWrapper>

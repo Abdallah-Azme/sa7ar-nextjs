@@ -1,4 +1,3 @@
-import { getGlobalSettings } from "@/features/settings/queries";
 import SearchDialog from "@/components/shared/SearchDialog";
 import { ReactNode } from "react";
 import { getTranslations } from "next-intl/server";
@@ -19,13 +18,12 @@ export default async function Header({
 	children?: ReactNode;
 	showSearch?: boolean;
 }) {
-    const t = await getTranslations("header");
-	const setting = await getGlobalSettings();
-	const content = text ?? setting?.app_title ?? t("notice");
+	const t = await getTranslations("header");
+	const content = text ?? t("notice");
 
 	return (
 		<header className="relative">
-			<p className="w-full min-h-13 text-xs/13 text-center bg-accent text-white">
+			<p className="w-full min-h-13 text-xs/13 text-center bg-primary text-white">
 				{content}
 			</p>
 			{children}

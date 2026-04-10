@@ -41,8 +41,8 @@ export default function AppInput({
 
 			{Icon && (
 				<div className="flex items-center px-4 shrink-0 transition-opacity">
+					<span className="text-black/10 me-4">|</span>
 					{Icon}
-					<span className="text-black/10 ms-4">|</span>
 				</div>
 			)}
 		</div>

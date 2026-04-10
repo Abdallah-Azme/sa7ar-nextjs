@@ -21,7 +21,7 @@ import ProductCard from "@/components/shared/cards/ProductCard";
 import { useCart } from "@/contexts/CartContext";
 import { cn } from "@/lib/utils";
 import type { Product } from "@/types";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/routing";
 import apiClient from "@/lib/apiClient";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
@@ -122,8 +122,8 @@ export default function ProductDetailsView({ product, relatedProducts }: Product
 								</CarouselItem>
 							))}
 						</CarouselContent>
-						<CarouselNext className="end-4" />
-						<CarouselPrevious className="start-4" />
+						<CarouselNext className="inset-e-4" />
+						<CarouselPrevious className="inset-s-4" />
 					</Carousel>
 				</div>
 

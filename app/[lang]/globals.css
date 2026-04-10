@@ -119,21 +119,17 @@
 		@apply border-border outline-ring/50;
 	}
 	body {
-		@apply bg-background text-foreground;
+		@apply bg-background text-foreground overflow-x-hidden;
 	}
 
-    :root[lang="ar"] body {
-        font-family: var(--font-cairo), system-ui, sans-serif;
-    }
-
-    :root[lang="en"] body {
-        font-family: var(--font-inter), system-ui, sans-serif;
+    :root body {
+        font-family: var(--font-cairo), var(--font-inter), system-ui, sans-serif;
     }
 }
 
 @theme {
 	/* Colors */
-	--color-gray: oklch(40% 0.00006 271.152);
+	--color-gray: oklch(55.897% 0.00006 271.152);
 	--color-gray-light: oklch(75.083% 0.00009 271.152);
 	--color-black-cu: oklch(24.419% 0.00638 0.344);
 	--color-background-cu: oklch(97.315% 0.00011 271.152);
@@ -141,9 +137,29 @@
 
 @utility container {
 	margin-inline: auto;
-	padding: 0 0.5rem;
+	padding-inline: 1rem;
+	width: 100%;
+	max-width: 100%;
 
 	@media (width >= 120rem) {
 		max-width: 107.5rem;
 	}
+}
+
+@utility light {
+	background: radial-gradient(
+		50% 50% at 50% 50%,
+		rgba(2, 126, 228, 0.2) 0%,
+		rgba(2, 126, 228, 0) 100%
+	);
+}
+
+/* Hide visible horizontal scrollbar in pagination rows on Windows browsers. */
+[data-slot="pagination"] {
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+}
+
+[data-slot="pagination"]::-webkit-scrollbar {
+	display: none;
 }

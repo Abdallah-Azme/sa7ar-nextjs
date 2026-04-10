@@ -5,6 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
  * Resolves CORS issues for client-side fetching by forwarding requests from server.
  */
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "https://saharapi.subcodeco.com/api";
+const SUPPORTED_LOCALES = new Set(["ar", "en"]);
 
 function getAuthorizationHeader(req: NextRequest) {
   const explicitAuth = req.headers.get("Authorization");
@@ -12,6 +13,32 @@ function getAuthorizationHeader(req: NextRequest) {
 
   const tokenFromCookie = req.cookies.get("token")?.value;
   return tokenFromCookie ? `Bearer ${tokenFromCookie}` : "";
+}
+
+function getLocaleFromReferer(referer: string | null) {
+  if (!referer) return null;
+  try {
+    const parsed = new URL(referer);
+    const firstPathSegment = parsed.pathname.split("/").filter(Boolean)[0];
+    return firstPathSegment && SUPPORTED_LOCALES.has(firstPathSegment)
+      ? firstPathSegment
+      : null;
+  } catch {
+    return null;
+  }
+}
+
+function getRequestLocale(req: NextRequest) {
+  const localeFromQuery = req.nextUrl.searchParams.get("locale");
+  if (localeFromQuery && SUPPORTED_LOCALES.has(localeFromQuery)) return localeFromQuery;
+
+  const localeFromCookie = req.cookies.get("NEXT_LOCALE")?.value ?? req.cookies.get("locale")?.value;
+  if (localeFromCookie && SUPPORTED_LOCALES.has(localeFromCookie)) return localeFromCookie;
+
+  const localeFromReferer = getLocaleFromReferer(req.headers.get("referer"));
+  if (localeFromReferer) return localeFromReferer;
+
+  return "ar";
 }
 
 export async function GET(req: NextRequest) {
@@ -23,13 +50,14 @@ export async function GET(req: NextRequest) {
   }
 
   const url = `${API_BASE}${route}`;
+  const locale = getRequestLocale(req);
 
   try {
     const res = await fetch(url, {
       headers: {
         "Accept": "application/json",
         "Authorization": getAuthorizationHeader(req),
-        "Accept-Language": "ar",
+        "Accept-Language": locale,
       },
     });
 
@@ -47,12 +75,13 @@ export async function POST(req: NextRequest) {
   if (!route) return NextResponse.json({ message: "Route missing" }, { status: 400 });
 
   try {
+    const locale = getRequestLocale(req);
     const contentType = req.headers.get("content-type") ?? "";
     const isMultipart = contentType.includes("multipart/form-data");
 
     const baseHeaders: Record<string, string> = {
       "Authorization": getAuthorizationHeader(req),
-      "Accept-Language": "ar",
+      "Accept-Language": locale,
       "Accept": "application/json",
     };
 

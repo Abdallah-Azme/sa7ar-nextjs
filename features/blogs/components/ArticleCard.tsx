@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { ArrowLeftIcon, SparklesIcon } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import ImageFallback from "@/components/shared/ImageFallback";
 
 type ArticleCardVariant = "horizontal" | "vertical";
@@ -81,8 +81,8 @@ export default function ArticleCard({
 	}
 
 	return (
-		<article className={cn("group flex h-full flex-col bg-white border border-black/5 rounded-4xl overflow-hidden hover:shadow-lg transition-all", className)}>
-			<div className="relative aspect-[4/3] overflow-hidden">
+			<article className={cn("group flex h-full flex-col bg-white border border-black/5 rounded-4xl overflow-hidden hover:shadow-lg transition-all", className)}>
+			<div className="relative aspect-4/3 overflow-hidden">
 				<ImageFallback
 					src={image}
 					alt={title}
@@ -90,7 +90,7 @@ export default function ArticleCard({
 					height={300}
 					className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
 				/>
-                <div className="absolute top-4 start-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full inline-flex items-center gap-1.5 text-[10px] font-bold text-accent shadow-sm">
+                <div className="absolute top-4 inset-s-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full inline-flex items-center gap-1.5 text-[10px] font-bold text-accent shadow-sm">
 					<SparklesIcon size={10} className="text-accent" />
 					<span>{meta}</span>
 				</div>

@@ -1,7 +1,10 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { makeQueryClient } from "@/lib/queryClient";
-import { fetchBestSellingAccessories, productKeys } from "@/features/products/services/productService";
-import ProductsGrid from "@/features/products/components/ProductsGrid";
+import {
+  fetchBestSellingAccessoriesPaginated,
+  productKeys,
+} from "@/features/products/services/productService";
+import PaginatedProductsPageContent from "@/features/products/components/PaginatedProductsPageContent";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { generateSeoMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
@@ -22,23 +25,29 @@ export async function generateMetadata({
   });
 }
 
-export default async function BestSellingAccessoriesPage({ params }: { params: Promise<{ lang: string }> }) {
+export default async function BestSellingAccessoriesPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ lang: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
   const { lang } = await params;
+  const searchValues = await searchParams;
+  const pageValue = Number(searchValues.page);
+  const page = Number.isFinite(pageValue) && pageValue > 0 ? Math.floor(pageValue) : 1;
+
   setRequestLocale(lang);
-  const t = await getTranslations("bestSellingAccessories");
 
   const queryClient = makeQueryClient();
-  await queryClient.prefetchQuery({ 
-    queryKey: productKeys.accessories(), 
-    queryFn: fetchBestSellingAccessories 
+  await queryClient.prefetchQuery({
+    queryKey: productKeys.accessoriesPaged(page),
+    queryFn: () => fetchBestSellingAccessoriesPaginated(page),
   });
 
   return (
-    <div className="container py-10 space-y-8">
-      <h1 className="text-3xl font-bold">{t("title")}</h1>
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <ProductsGrid queryKey={["products", "accessories"]} source="accessories" />
-      </HydrationBoundary>
-    </div>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <PaginatedProductsPageContent source="accessories" titleKey="bestSellingAccessories.title" />
+    </HydrationBoundary>
   );
 }

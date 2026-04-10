@@ -9,11 +9,19 @@ export const homeKeys = {
 
 export async function fetchHomeData(): Promise<HomeResponse | null> {
   try {
-    const res = await apiClient<{ data: HomeResponse }>({
+    const res = await apiClient<{
+      data: HomeResponse & { home_sliders?: HomeResponse["sliders"] };
+    }>({
       route: "/home",
-      next: { revalidate: 3600 },
     });
-    return res.data ?? null;
+    const data = res.data;
+    if (!data) return null;
+
+    return {
+      ...data,
+      // Backend can send either sliders or home_sliders depending on API version.
+      sliders: data.sliders ?? data.home_sliders ?? [],
+    };
   } catch (e) {
     console.error("[homeService] fetchHomeData:", e);
     return null;
@@ -24,7 +32,6 @@ export async function fetchFaqs() {
   try {
     const res = await apiClient<{ data: { id: number; question: string; answer: string }[] }>({
       route: "/faqs",
-      next: { revalidate: 3600 },
     });
     return res.data ?? [];
   } catch {

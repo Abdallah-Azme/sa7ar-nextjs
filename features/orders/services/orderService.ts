@@ -9,11 +9,11 @@ export const orderKeys = {
 };
 
 export async function fetchOrderHistory() {
-  const res = await apiClient<{ data: Order[] }>({
-    route: "/orders",
+  const res = await apiClient<{ data: { orders: Order[] } }>({
+    route: "/orders/my-orders",
     tokenRequire: true,
   });
-  return res.data;
+  return res.data.orders;
 }
 
 export async function fetchOrderDetail(id: string) {

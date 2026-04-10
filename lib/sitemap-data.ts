@@ -24,11 +24,11 @@ async function fetchJson<T>(route: string): Promise<T | null> {
   try {
     const res = await fetch(`${API_BASE}${route}`, {
       headers: { Accept: "application/json" },
-      next: { revalidate: 3600 },
     });
     if (!res.ok) return null;
     return (await res.json()) as T;
-  } catch {
+  } catch (error: any) {
+    console.error(`[fetchJson] Failed to fetch ${route}:`, error.message);
     return null;
   }
 }

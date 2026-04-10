@@ -30,6 +30,8 @@ interface VerifyOtpDialogProps {
 	verifyRoute?: string;
 	/** Whether the verify route requires an auth token */
 	verifyTokenRequire?: boolean;
+	/** Custom payload builder for the verify API request */
+	verifyPayloadBuilder?: (data: { code: string }) => any;
 	title?: string;
 	description?: string;
 }
@@ -41,6 +43,7 @@ export default function VerifyOtpDialog({
 	onOtpVerified,
 	verifyRoute = "/verify-otp",
 	verifyTokenRequire = false,
+	verifyPayloadBuilder,
 	title,
 	description,
 }: VerifyOtpDialogProps) {
@@ -70,14 +73,18 @@ export default function VerifyOtpDialog({
 	}, [open, resendCooldown]);
 
 	const onSubmit = async (values: { code: string }) => {
-		if (!mobile.trim()) return;
+		if (!mobile.trim() && !verifyPayloadBuilder) return;
 
 		setIsLoading(true);
 		try {
+            const body = verifyPayloadBuilder 
+                ? verifyPayloadBuilder(values)
+                : { mobile, code: values.code };
+
 			const res = await apiClient<{ message?: string; data: DataSent }>({
 				route: verifyRoute,
 				method: "POST",
-				body: JSON.stringify({ mobile, code: values.code }),
+				body: JSON.stringify(body),
 				tokenRequire: verifyTokenRequire,
 			});
 			toast.success(res.message || t("success"));

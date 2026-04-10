@@ -2,6 +2,7 @@
 	"nav": {
 		"home": "Home",
 		"products": "Products",
+		"bestSellingProducts": "Best Selling",
 		"about": "About Us",
 		"faq": "FAQ",
 		"blog": "Blog",
@@ -162,10 +163,10 @@
 	"about": {
 		"label": "About Us",
 		"title": {
-			"line1": "Sohar.. pure water",
+			"line1": "Rathath.. pure water",
 			"emphasis": "with trust and quality"
 		},
-		"description": "At Sohar, we work to provide high-quality pure water with easy and fast delivery service, to give you more comfort in your daily life.",
+		"description": "At Rathath, we work to provide high-quality pure water with easy and fast delivery service, to give you more comfort in your daily life.",
 		"features": {
 			"accreditation": {
 				"title": "Accreditation",
@@ -190,7 +191,15 @@
 		"label": "Our Products",
 		"description": "Browse our full range of water products",
 		"bard": "Bard Products",
-		"rathath": "Sohar Products"
+		"rathath": "Rathath Products",
+		"filters": {
+			"all": "All",
+			"200ml": "200 ml",
+			"330ml": "330 ml",
+			"500ml": "500 ml",
+			"1l": "1 L",
+			"2l": "2 L"
+		}
 	},
 	"productsPage": {
 		"title": "Products List",
@@ -209,14 +218,6 @@
 		"banner": {
 			"title": "Exclusive Discounts!",
 			"description": "On subscriptions and quick orders ✨"
-		},
-		"filters": {
-			"all": "All",
-			"200ml": "200 ml",
-			"330ml": "330 ml",
-			"500ml": "500 ml",
-			"1l": "1 L",
-			"2l": "2 L"
 		}
 	},
 	"partners": {
@@ -324,12 +325,13 @@
 			"creatingAccount": "Creating account...",
 			"savingChanges": "Saving changes...",
 			"submitting": "Submitting...",
-			"uploadAvatar": "Upload profile picture",
-			"avatarHint": "Max size: 1MB. Supported formats: JPG, GIF, or PNG.",
-			"uploadNewAvatar": "Upload new image",
-			"deleteAvatar": "Delete image",
-			"fullName": "First and Last Name",
-			"email": "Email Address",
+			"uploadClick": "Click here",
+			"uploadAvatar": "to upload your profile image",
+			"avatarHint": "Maximum size: 1 MB. Supported formats: JPG, GIF, or PNG.",
+			"uploadNewAvatar": "Upload new avatar",
+			"deleteAvatar": "Delete avatar",
+			"fullName": "First and last name",
+			"email": "Email",
 			"password": "Password",
 			"confirmPassword": "Confirm Password",
 			"otpCode": "Verification Code",
@@ -337,8 +339,8 @@
 			"mobile": "Mobile Number"
 		},
 		"placeholders": {
-			"fullName": "Enter first and last name here ...",
-			"email": "Enter email address here ...",
+			"fullName": "Enter your first and last name here...",
+			"email": "Enter your email here...",
 			"password": "Enter password here ...",
 			"confirmPassword": "Re-enter password here ...",
 			"otpCode": "Enter verification code here ..."
@@ -576,7 +578,8 @@
 			"fourth": {
 				"title": "Tip Four - 04!",
 				"description": "If your schedule is busy, use phone reminders or a marked bottle to track intake, because small consistent habits are the easiest way to maintain hydration balance."
-			}
+			},
+			"notFound": "Article not found"
 		}
 	},
 	"privacyPage": {
@@ -602,6 +605,9 @@
 			"cart": "Shopping Cart",
 			"addresses": "Saved Addresses",
 			"support": "Help & Support"
+		},
+		"points": {
+			"label": "Points"
 		},
 		"profile": {
 			"title": "Profile",
@@ -747,6 +753,7 @@
 			"noAddressesFound": "No addresses found"
 		},
 		"addressesList": {
+			"addressLabel": "Address",
 			"loading": "Loading...",
 			"title": "My Addresses",
 			"addNew": "Add New Address",
@@ -836,7 +843,7 @@
 		"downloadApp": "Download the App"
 	},
 	"points": {
-		"label": "Point"
+		"label": "{count} {count, plural, one {point} other {points}}"
 	},
 	"productDetails": {
 		"title": "Natural Mineral Water",
@@ -963,6 +970,10 @@
 		"title": "Our Brands",
 		"description": "Explore our curated selection of premium water brands, each meeting the highest standards of purity.",
 		"viewCollection": "View Collection"
+	},
+	"brandProductsPage": {
+		"bard": "Bard Products",
+		"rathath": "Sohar Products"
 	},
 	"seo": {
 		"logo": "Site Icon",

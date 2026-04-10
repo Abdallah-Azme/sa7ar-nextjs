@@ -36,8 +36,13 @@ export async function fetchBlogs(page = 1) {
 }
 
 export async function fetchBlogBySlug(slug: string) {
-  const res = await apiClient<{ data: BlogItem }>({
+  const res = await apiClient<{ data: BlogItem | { blog: BlogItem } }>({
     route: `/blogs/${slug}`,
   });
-  return (res as unknown as { data: BlogItem }).data;
+  
+  const data = res.data;
+  if (!data) return null;
+  
+  return "blog" in data ? data.blog : data;
 }
+

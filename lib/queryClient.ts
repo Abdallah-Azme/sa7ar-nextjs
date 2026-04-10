@@ -1,4 +1,5 @@
-import { QueryClient } from "@tanstack/react-query";
+import { QueryClient, QueryCache, MutationCache } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 /**
  * Always create a NEW QueryClient per server request.
@@ -6,6 +7,20 @@ import { QueryClient } from "@tanstack/react-query";
  */
 export function makeQueryClient(): QueryClient {
   return new QueryClient({
+    queryCache: new QueryCache({
+      onError: (error: any) => {
+        if (typeof window !== "undefined") {
+          toast.error(error?.message || "Something went wrong with the query");
+        }
+      },
+    }),
+    mutationCache: new MutationCache({
+      onError: (error: any) => {
+        if (typeof window !== "undefined") {
+          toast.error(error?.message || "Something went wrong with the mutation");
+        }
+      },
+    }),
     defaultOptions: {
       queries: {
         staleTime: 60 * 1000,

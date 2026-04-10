@@ -40,10 +40,10 @@ export default async function FaqPage({ params }: { params: Promise<{ lang: stri
   });
 
   return (
-    <main className="flex flex-col min-h-screen relative overflow-hidden">
+    <main className="space-y-20 relative overflow-hidden pb-10">
       <h1 className="sr-only">{tSeo("title")}</h1>
-      <div className="absolute top-1/4 -z-1 inset-s-20 size-72 bg-accent/5 rounded-full blur-[100px]" />
-      <div className="absolute top-[40%] -z-1 inset-e-20 size-72 bg-secondary/5 rounded-full blur-[100px]" />
+      <div className="light absolute top-1/4 -z-1 start-20 size-72" />
+      <div className="light absolute top-[40%] -z-1 end-20 size-72" />
 
       <Banner
         title={t("label")}
@@ -51,17 +51,13 @@ export default async function FaqPage({ params }: { params: Promise<{ lang: stri
         bannerUrl="/images/placeholder/hero.webp"
       />
 
-      <div className="py-20">
-        <HydrationBoundary state={dehydrate(queryClient)}>
-          <FAQ isSection={false} />
-        </HydrationBoundary>
-      </div>
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <FAQ isSection={false} />
+      </HydrationBoundary>
 
-      <div className="container pb-20">
-        <ContactUsSection />
-      </div>
-
-      <HelpCard />
+      <ContactUsSection />
+      
+      <HelpCard withContainer />
     </main>
   );
 }

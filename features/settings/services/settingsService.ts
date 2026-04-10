@@ -30,7 +30,6 @@ export async function fetchGlobalSettings() {
   try {
     const res = await apiClient<{ data: SettingResponse }>({
       route: "/settings",
-      next: { revalidate: 3600 },
     });
     return (res as unknown as { data: SettingResponse }).data ?? null;
   } catch (error) {

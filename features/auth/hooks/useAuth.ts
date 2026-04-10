@@ -2,7 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { authKeys, postLogin, postRegister, postLogout, fetchProfile, postEditProfile, postDeleteAccount, type LoginPayload, type RegisterPayload } from "../services/authService";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/routing";
 import { loginAction, logoutAction } from "@/features/auth/actions";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
@@ -85,7 +85,7 @@ export function useLogoutMutation() {
       queryClient.removeQueries({ queryKey: authKeys.all });
       contextLogout();
       toast.success(t("logoutSuccess"));
-      router.push("/auth/login");
+      router.push("/");
       router.refresh();
     }
   });
@@ -119,6 +119,8 @@ export function useDeleteAccountMutation() {
       queryClient.removeQueries({ queryKey: authKeys.all });
       contextLogout();
       toast.success(t("messages.accountDeleted"));
+      router.push("/");
+      router.refresh();
     },
     onError: (error: unknown) => {
         const err = error as { message?: string };

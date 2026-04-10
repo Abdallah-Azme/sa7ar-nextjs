@@ -12,8 +12,9 @@ export interface HomeResponse {
 		type: string;
 		seo: Seo;
 	}[];
+	home_sliders?: HomeResponse["sliders"];
 	my_subscription: unknown | null;
-	my_points: number;
+	my_points: number | null;
 	most_sold_products: Product[];
 	near_point_of_sales: {
 		id: number;

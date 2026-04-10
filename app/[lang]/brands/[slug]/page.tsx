@@ -1,7 +1,10 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { makeQueryClient } from "@/lib/queryClient";
-import { fetchBrandProducts, productKeys } from "@/features/products/services/productService";
-import ProductsGrid from "@/features/products/components/ProductsGrid";
+import {
+  fetchBrandProductsPaginated,
+  productKeys,
+} from "@/features/products/services/productService";
+import PaginatedProductsPageContent from "@/features/products/components/PaginatedProductsPageContent";
 import { generateSeoMetadata } from "@/lib/seo";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -16,6 +19,7 @@ const BRAND_COPY: Record<BrandSlug, { title: string; seoKey: "bard" | "rathath" 
 
 interface Props {
   params: Promise<{ lang: string; slug: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -41,8 +45,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   });
 }
 
-export default async function BrandDetailsPage({ params }: Props) {
+export default async function BrandDetailsPage({ params, searchParams }: Props) {
   const { lang, slug } = await params;
+  const searchValues = await searchParams;
+  const pageValue = Number(searchValues.page);
+  const page = Number.isFinite(pageValue) && pageValue > 0 ? Math.floor(pageValue) : 1;
   setRequestLocale(lang);
 
   const brand = slug as BrandSlug;
@@ -50,21 +57,19 @@ export default async function BrandDetailsPage({ params }: Props) {
     notFound();
   }
 
-  const t = await getTranslations("brandPage");
   const queryClient = makeQueryClient();
   await queryClient.prefetchQuery({
-    queryKey: productKeys.brand(brand),
-    queryFn: () => fetchBrandProducts(brand),
+    queryKey: productKeys.brandPaged(brand, page),
+    queryFn: () => fetchBrandProductsPaginated(brand, page),
   });
 
   return (
-    <div className="container py-10 space-y-8">
-      <h1 className="text-3xl font-bold">
-        {t("title")} - {BRAND_COPY[brand].title}
-      </h1>
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <ProductsGrid queryKey={["products", "brand", brand]} source="brand" brand={brand} />
-      </HydrationBoundary>
-    </div>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <PaginatedProductsPageContent
+        source="brand"
+        brand={brand}
+        titleKey={`brandProductsPage.${brand}`}
+      />
+    </HydrationBoundary>
   );
 }

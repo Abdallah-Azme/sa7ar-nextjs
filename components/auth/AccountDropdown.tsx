@@ -1,6 +1,6 @@
 "use client";
 
-import { UserRoundIcon } from "lucide-react";
+import { Globe, UserRoundIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
@@ -16,9 +16,10 @@ import {
 	DialogDescription,
 } from "@/components/ui/dialog";
 import { useAuth } from "@/contexts/AuthContext";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import { useState } from "react";
 import ImageFallback from "@/components/shared/ImageFallback";
+import LanguageSwitcher from "@/components/shared/header/LanguageSwitcher";
 
 import { useTranslations } from "next-intl";
 
@@ -36,6 +37,7 @@ export default function AccountDropdown({
 	const accountLinks = [
 		{ to: "/account/details", name: t("links.profile") },
 		{ to: "/account/orders", name: t("links.orders") },
+		{ to: "/cart", name: t("links.cart") },
 		{ to: "/account/addresses", name: t("links.addresses") },
 	];
 
@@ -60,42 +62,37 @@ export default function AccountDropdown({
 		<>
 			<DropdownMenu open={_open} onOpenChange={_onOpenChange}>
 				<DropdownMenuTrigger asChild>
-					<div className="rounded-full h-12 px-3 cursor-pointer flex bg-accent/10! gap-3 items-center text-nowrap min-w-40">
-						<Button
-							size="icon-lg"
-							variant="link"
-							className="rounded-full flex place-content-center"
+					<div className="rounded-full h-14 px-4 cursor-pointer flex bg-[#F1F7F9] hover:bg-[#E9F2F5] transition-colors gap-3 items-center text-nowrap min-w-44 border border-transparent">
+						<div
+							className="rounded-full size-10 flex items-center justify-center bg-gray-200 overflow-hidden"
 							aria-label="User Account Menu"
-							asChild
 						>
-							<span>
-								{user?.image ? (
-									<ImageFallback
-										src={user.image}
-										alt={user?.name || tCommon("fallbackImageAlt")}
-										width={40}
-										height={40}
-										className="rounded-full"
-									/>
-								) : (
-									<UserRoundIcon />
-								)}
-							</span>
-						</Button>
-						<div>
-							<h2 className="text-secondary font-bold line-clamp-1 text-xs">
+							{user?.image ? (
+								<ImageFallback
+									src={user.image}
+									alt={user?.name || tCommon("fallbackImageAlt")}
+									width={40}
+									height={40}
+									className="rounded-full object-cover"
+								/>
+							) : (
+								<UserRoundIcon className="text-gray-500 size-6" />
+							)}
+						</div>
+						<div className="flex flex-col justify-center">
+							<h2 className="text-[#005573] font-bold line-clamp-1 text-sm leading-tight">
 								{user?.name}
 							</h2>
-							<span className="text-gray text-[10px]">
-								{(user?.points ?? 0).toFixed(0)} {tPoints("label")}
+							<span className="text-[#005573]/70 text-xs font-medium">
+								{tPoints("label", { count: user?.points ?? 0 })}
 							</span>
 						</div>
 					</div>
 				</DropdownMenuTrigger>
-				<DropdownMenuContent>
+				<DropdownMenuContent align="end" className="w-64 p-2 rounded-2xl shadow-xl border-gray-100">
 					{accountLinks.map((link) => (
-						<DropdownMenuItem asChild key={link.to}>
-							<Link href={link.to} className="w-full">
+						<DropdownMenuItem asChild key={link.to} className="rounded-xl py-3 px-4 focus:bg-[#F1F7F9] focus:text-[#005573] cursor-pointer">
+							<Link href={link.to} className="w-full font-medium">
 								{link.name}
 							</Link>
 						</DropdownMenuItem>
@@ -105,10 +102,25 @@ export default function AccountDropdown({
 							event.preventDefault();
 							handleOpenLogoutDialog();
 						}}
-						variant="destructive"
+						className="rounded-xl py-3 px-4 text-red-500 focus:text-red-500 focus:bg-red-50 font-medium cursor-pointer"
 					>
 						{t("logoutDialog.trigger")}
 					</DropdownMenuItem>
+					
+					<div className="h-px bg-gray-100 my-2 mx-2" />
+
+					<div className="px-4 py-2 flex items-center justify-between gap-3">
+						<span className="flex items-center gap-2 text-sm font-medium text-gray-700">
+							<Globe className="h-4 w-4 text-gray-400" />
+							{tCommon("language")}
+						</span>
+						<LanguageSwitcher
+							onLanguageChange={() => {
+								_onOpenChange(false);
+								onOpenChange?.(false);
+							}}
+						/>
+					</div>
 				</DropdownMenuContent>
 			</DropdownMenu>
 

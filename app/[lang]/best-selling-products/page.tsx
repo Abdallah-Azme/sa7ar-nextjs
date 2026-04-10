@@ -1,7 +1,7 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { makeQueryClient } from "@/lib/queryClient";
-import { fetchBestSellingProducts, productKeys } from "@/features/products/services/productService";
-import ProductsGrid from "@/features/products/components/ProductsGrid";
+import { fetchMostSoldProducts, productKeys } from "@/features/products/services/productService";
+import MostSoldProductsPageContent from "@/features/products/components/MostSoldProductsPageContent";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { generateSeoMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
@@ -22,23 +22,29 @@ export async function generateMetadata({
   });
 }
 
-export default async function BestSellingProductsPage({ params }: { params: Promise<{ lang: string }> }) {
+export default async function BestSellingProductsPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ lang: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
   const { lang } = await params;
+  const searchValues = await searchParams;
+  const pageValue = Number(searchValues.page);
+  const page = Number.isFinite(pageValue) && pageValue > 0 ? Math.floor(pageValue) : 1;
+
   setRequestLocale(lang);
-  const t = await getTranslations("bestSelling");
 
   const queryClient = makeQueryClient();
-  await queryClient.prefetchQuery({ 
-    queryKey: productKeys.bestSelling(), 
-    queryFn: fetchBestSellingProducts 
+  await queryClient.prefetchQuery({
+    queryKey: productKeys.mostSold(page),
+    queryFn: () => fetchMostSoldProducts(page),
   });
 
   return (
-    <div className="container py-10 space-y-8">
-      <h1 className="text-3xl font-bold">{t("title")}</h1>
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <ProductsGrid queryKey={["products", "best-selling"]} source="best-selling" />
-      </HydrationBoundary>
-    </div>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <MostSoldProductsPageContent />
+    </HydrationBoundary>
   );
 }

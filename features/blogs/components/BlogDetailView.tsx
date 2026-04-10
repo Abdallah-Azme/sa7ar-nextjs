@@ -1,7 +1,7 @@
 "use client";
 
 import ImageFallback from "@/components/shared/ImageFallback";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import { CalendarIcon, Share2Icon } from "lucide-react";
 import type { BlogItem } from "../services/blogService";
 import { useTranslations, useLocale } from "next-intl";

@@ -46,7 +46,7 @@ import { useTranslations } from "next-intl";
  * Uses the /search?keyword=... API endpoint.
  */
 export default function SearchDialog() {
-    const t = useTranslations("common");
+    const tProductsPage = useTranslations("productsPage");
 	const [open, setOpen] = useState(false);
 	const [keyword, setKeyword] = useState("");
 	const [products, setProducts] = useState<SearchProduct[]>([]);
@@ -103,7 +103,7 @@ export default function SearchDialog() {
 					<AppInput
 						bgWhite
 						readOnly
-						placeholder={t("searchPlaceholder")}
+						placeholder={tProductsPage("searchPlaceholder")}
 						Icon={<SearchIcon />}
 					/>
 				</div>
@@ -126,50 +126,54 @@ export default function SearchDialog() {
 					}
 				}}
 			>
-				<DialogContent className="sm:max-w-lg p-6 rounded-3xl">
-					<DialogHeader>
-						<DialogTitle>{t("searchTitle")}</DialogTitle>
+				<DialogContent className="sm:max-w-xl p-6 rounded-[2.5rem]">
+					<DialogHeader className="mb-4">
+						<DialogTitle className="text-xl font-bold text-primary">
+							{tProductsPage("searchDialog.title")}
+						</DialogTitle>
 					</DialogHeader>
-					<div className="space-y-4">
+					<div className="space-y-6">
 						<AppInput
 							autoFocus
-							placeholder={t("searchPlaceholder")}
+							placeholder={tProductsPage("searchPlaceholder")}
 							value={keyword}
 							onValueChange={handleSearch}
 							Icon={<SearchIcon />}
 						/>
 
-						<div className="max-h-95 overflow-y-auto pe-1">
+						<div className="max-h-[30rem] overflow-y-auto pe-1 scrollbar-thin scrollbar-thumb-gray-200">
 							{keyword.trim().length === 0 ? (
-								<p className="py-4 text-center text-xs text-gray">
-									{t("startTyping")}
+								<p className="py-8 text-center text-sm text-gray">
+									{tProductsPage("searchDialog.startTyping")}
 								</p>
 							) : showLoading ? (
-								<p className="py-4 text-center text-xs text-gray">{t("searching")}</p>
+								<p className="py-8 text-center text-sm text-gray">{tProductsPage("searchDialog.loading")}</p>
 							) : products.length === 0 ? (
-								<p className="py-4 text-center text-xs text-gray">
-									{t("noResults")}
+								<p className="py-8 text-center text-sm text-gray">
+									{tProductsPage("searchDialog.noResults")}
 								</p>
 							) : (
-								<div className="space-y-2">
-									<p className="px-1 text-xs font-bold text-primary">
-										{t("searchResults")}
+								<div className="space-y-3">
+									<p className="px-1 text-sm font-bold text-primary mb-2">
+										{tProductsPage("searchDialog.results")}
 									</p>
 									{products.map((product) => (
 										<Link
 											key={product.id}
 											href={`/products/${product.seo?.slug || product.id}`}
 											onClick={() => setOpen(false)}
-											className="flex items-center justify-between gap-3 rounded-2xl border border-black/5 bg-background-cu p-3 transition-colors hover:bg-background-cu/70"
+											className="flex items-center justify-between gap-4 rounded-3xl border border-black/5 bg-background-cu p-4 transition-all hover:bg-accent/5"
 										>
-											<div className="flex min-w-0 items-center gap-3">
-												<ImageFallback
-													src={product.image}
-													alt={product.name}
-													className="size-12 rounded-xl object-cover"
-												/>
+											<div className="flex min-w-0 items-center gap-4">
+												<div className="relative size-16 shrink-0 overflow-hidden rounded-2xl bg-white shadow-sm border border-black/5">
+													<ImageFallback
+														src={product.image}
+														alt={product.name}
+														className="object-contain p-1"
+													/>
+												</div>
 												<div className="min-w-0 space-y-1">
-													<p className="truncate text-sm font-bold text-primary">
+													<p className="truncate text-base font-bold text-primary">
 														{product.name}
 													</p>
 													<p className="text-xs text-gray">

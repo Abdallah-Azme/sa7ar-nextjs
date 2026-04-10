@@ -1,6 +1,9 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { makeQueryClient } from "@/lib/queryClient";
-import { productKeys, fetchProductDetail } from "@/features/products/services/productService";
+import {
+  productKeys,
+  fetchProductDetail,
+} from "@/features/products/services/productService";
 import ProductDetailsView from "@/features/products/components/ProductDetailsView";
 import HelpCard from "@/components/shared/cards/HelpCard";
 import { notFound } from "next/navigation";
@@ -36,7 +39,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return generateSeoMetadata({
     title: data.product.seo?.meta_title || data.product.name,
-    description: data.product.seo?.meta_description || data.product.description || "",
+    description:
+      data.product.seo?.meta_description || data.product.description || "",
     lang,
     path: `/products/${slug}`,
     image: data.product.image || data.product.images?.[0],
@@ -57,6 +61,7 @@ export default async function ProductPage({ params }: Props) {
       queryKey: productKeys.detail(slug),
       queryFn: () => fetchProductDetail(slug),
     });
+    console.log({ data });
   } catch {
     notFound();
   }

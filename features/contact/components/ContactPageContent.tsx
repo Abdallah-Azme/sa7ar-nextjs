@@ -57,23 +57,25 @@ export default function ContactPageContent() {
 	const staticMapSrc = `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14545.968600746979!2d56.63467405!3d24.2944321!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e8c3139366650b3%3A0xc48c4805c878937!2sSohar%20Industrial%20City!5e0!3m2!1s${locale}!2som!4v1712210000000!5m2!1s${locale}!2som`;
 
 	return (
-		<main className="flex flex-col min-h-screen">
+		<main className="space-y-20">
 			<Banner
 				title={t("banner.title")}
 				desc={t("banner.description")}
 				bannerUrl="/images/contact-hero.webp"
 			/>
 
-			<section className="bg-accent/5 py-24">
+			<section className="bg-accent/10 py-25 mb-20">
 				<div className="container">
 					<div className="text-center space-y-4 mb-16">
-						<h2 className="text-3xl sm:text-5xl font-extrabold text-primary">{t("form.title")}</h2>
-						<p className="text-gray-600 max-w-2xl mx-auto">
+						<h2 className="text-2xl sm:text-4xl font-extrabold text-primary">
+							{t("form.title")}
+						</h2>
+						<p className="text-black text-sm font-medium sm:text-base">
 							{t("form.description")}
 						</p>
 					</div>
 
-					<div className="grid md:grid-cols-[1.2fr_0.8fr] gap-6">
+					<div className="grid md:grid-cols-[1.2fr_0.8fr] gap-6 mt-10">
 						<Card className="rounded-4xl p-6 gap-y-8 shadow-none border-none">
 							<form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
 								<div className="space-y-4">

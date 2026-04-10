@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
 import { getServerAuth } from "@/features/auth/queries";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CartProvider } from "@/contexts/CartContext";
@@ -9,6 +8,7 @@ import Header from "@/components/shared/header/Header";
 import Navbar from "@/components/shared/header/Navbar";
 import Footer from "@/components/shared/footer/Footer";
 import Logo from "@/components/shared/Logo";
+import "./globals.css";
 
 // next-intl
 import { NextIntlClientProvider } from "next-intl";
@@ -32,6 +32,7 @@ const cairo = Cairo({
 });
 
 
+import { Toaster } from "@/components/ui/sonner";
 import { generateSeoMetadata } from "@/lib/seo";
 
 export async function generateMetadata({
@@ -71,12 +72,8 @@ export default async function RootLayout({
   const dir = lang === "ar" ? "rtl" : "ltr";
 
   return (
-    <html
-      lang={lang}
-      dir={dir}
-      className={`${lang === "ar" ? cairo.variable : inter.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col font-sans">
+    <html lang={lang} dir={dir} className={lang === "ar" ? cairo.variable : inter.variable}>
+      <body className="min-h-full flex flex-col font-sans antialiased">
         <NextIntlClientProvider 
           messages={messages} 
           locale={lang}
@@ -84,11 +81,9 @@ export default async function RootLayout({
         >
           <DirectionProviderWrapper dir={dir}>
             <QueryProvider>
-              {/* State Providers */}
               <AuthProvider initialUser={initialUser}>
                 <CartProvider>
                   
-                  {/* Global UI Structure */}
                   <Header />
                   <Navbar logo={<Logo />} />
 
@@ -97,7 +92,7 @@ export default async function RootLayout({
                   </main>
 
                   <Footer />
-                  
+                  <Toaster position="top-center" expand />
                 </CartProvider>
               </AuthProvider>
             </QueryProvider>

@@ -1,27 +1,24 @@
 "use client";
 
-import {  } from "react";
-import Link from "next/link";
-import { EditIcon, Trash2Icon, PlusIcon } from "lucide-react";
+import { Link } from "@/i18n/routing";
+import { EditIcon, Trash2Icon, PlusIcon, CheckIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import LocationPinIcon from "@/components/icons/LocationPinIcon";
 import EmptyCard from "@/components/shared/EmptyCard";
 import type { Address } from "../types";
+import { useTranslations } from "next-intl";
 
 interface AddressListViewProps {
 	addresses: Address[];
 }
-
-import { useTranslations } from "next-intl";
 
 /**
  * AddressListView - Client Component
  * Interactive list of delivery addresses with actions for setting default, editing, or deleting.
  */
 export default function AddressListView({ addresses }: AddressListViewProps) {
-	const t = useTranslations("addressesList");
-
+	const t = useTranslations("account.addressesList");
 
 	return (
 		<div className="space-y-10">
@@ -40,81 +37,68 @@ export default function AddressListView({ addresses }: AddressListViewProps) {
 				{addresses.length === 0 ? (
 					<div className="bg-white border rounded-4xl p-16 shadow-inner text-center">
 						<EmptyCard
-							title={t("noAddressesTitle")}
-							description={t("noAddressesDesc")}
+							title={t("emptyTitle")}
+							description={t("emptyDescription")}
 						/>
 					</div>
 				) : (
 					addresses.map((address) => {
                         const isDefault = address.is_default === 1;
+                        
+                        const title = address.address_label || address.detailed_address || address.location || "-";
+                        const details = address.detailed_address || address.location || "-";
+
                         return (
                             <div 
                                 key={address.id}
-                                className={cn(
-                                    "p-6 rounded-4xl border transition-all relative overflow-hidden group",
-                                    isDefault ? "bg-accent/5 border-accent ring-1 ring-accent" : "bg-white hover:bg-gray-50/50"
-                                )}
+                                className="bg-[#EEF2FF] p-5 rounded-xl space-y-5"
                             >
-                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-                                    {/* Info */}
-                                    <div className="flex items-start gap-4">
-                                        <div className={cn(
-                                            "size-12 rounded-2xl flex items-center justify-center shrink-0 transition-colors",
-                                            isDefault ? "bg-accent text-white" : "bg-accent/10 text-accent"
-                                        )}>
-                                            <LocationPinIcon size={20} />
-                                        </div>
-                                        <div className="text-start space-y-1">
-                                            <div className="flex items-center gap-2">
-                                                <h3 className="font-extrabold text-primary text-lg">
-                                                    {address.address_label || t("homeAddress")}
-                                                </h3>
-                                                {isDefault && (
-                                                    <span className="px-2 py-0.5 bg-accent text-white text-[10px] font-bold rounded uppercase tracking-wider">
-                                                        {t("defaultLabel")}
-                                                    </span>
-                                                )}
-                                            </div>
-                                            <p className="text-sm text-gray leading-relaxed">
-                                                {address.address_label ? address.location : address.detailed_address || address.location}
-                                            </p>
-                                            {address.notes && (
-                                                <p className="text-xs text-gray/70 italic italic pt-1 flex items-center gap-1">
-                                                    <span className="font-bold shrink-0">{t("note")}</span> {address.notes}
-                                                </p>
-                                            )}
-                                        </div>
-                                    </div>
-
-                                    {/* Actions */}
-                                    <div className="flex items-center gap-3 self-end sm:self-center">
+                                {/* Header Row */}
+                                <div className="flex items-center justify-between gap-2">
+                                    <span className="text-xs font-light text-gray">
+                                        {t("addressLabel")}
+                                    </span>
+                                    <div className="flex items-center gap-3">
                                         {!isDefault && (
-                                            <Button 
-                                                variant="outline" 
-                                                size="sm" 
-                                                className="rounded-full h-9 px-4 text-xs font-bold border-accent/20 text-accent hover:bg-accent/5"
+                                            <button
+                                                type="button"
+                                                className="flex items-center hover:opacity-80 gap-1 text-accent font-light text-xs cursor-pointer"
                                             >
                                                 {t("setDefault")}
-                                            </Button>
+                                            </button>
                                         )}
-                                        <Button variant="ghost" size="icon" className="rounded-full size-10 hover:bg-primary/5" asChild>
-                                            <Link href={`/account/addresses/${address.id}`}>
-                                                <EditIcon size={16} />
-                                            </Link>
-                                        </Button>
-                                        <Button variant="ghost" size="icon" className="rounded-full size-10 text-destructive hover:bg-destructive/5 hover:text-destructive">
-                                            <Trash2Icon size={16} />
-                                        </Button>
+                                        <Link
+                                            href={`/account/addresses/${address.id}`}
+                                            className="flex items-center hover:opacity-80 gap-1 text-black font-light text-xs cursor-pointer"
+                                        >
+                                            {t("edit")}
+                                            <EditIcon className="size-3.5" />
+                                        </Link>
+                                        <button
+                                            type="button"
+                                            className="flex items-center hover:opacity-80 gap-1 text-destructive font-light text-xs cursor-pointer"
+                                        >
+                                            {t("delete")}
+                                            <Trash2Icon className="size-3.5" />
+                                        </button>
                                     </div>
                                 </div>
-                                
-                                {isDefault && (
-                                    <div className="absolute top-0 end-0 w-16 h-16 pointer-events-none">
-                                        <div className="absolute transform rotate-45 bg-accent text-white text-[8px] font-bold py-1 px-10 end-[-30px] top-[10px] shadow-sm">
-                                            {t("active")}
+
+                                {/* Body Row */}
+                                <div className="flex items-center justify-between gap-2">
+                                    <div className="flex items-center gap-2.5 text-[#432DD7]">
+                                        <LocationPinIcon />
+                                        <div>
+                                            <h3 className="text-sm font-bold">{title}</h3>
+                                            <p className="text-gray text-xs font-light">{details}</p>
                                         </div>
                                     </div>
-                                )}
+                                    {isDefault && (
+                                        <div className="size-5 shrink-0 text-white bg-accent flex items-center justify-center rounded-full">
+                                            <CheckIcon size={14} />
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         );
                     })

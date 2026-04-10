@@ -38,11 +38,11 @@ export default function AboutPageContent() {
         bannerUrl={aboutUs?.first_image || "/images/about-hero.webp"} 
       />
 
-      <div className="container py-20 space-y-32">
+      <main className="container space-y-24 py-24">
         <OurStory 
           title={aboutUs?.title}
           descriptionHtml={aboutUs?.description}
-          imageUrl={aboutUs?.second_image || aboutUs?.first_image}
+          imageUrl={aboutUs?.first_image}
           numberOfWorkers={aboutUs?.number_of_workers}
           numberOfProducts={aboutUs?.number_of_products}
         />
@@ -67,7 +67,7 @@ export default function AboutPageContent() {
             />
         )}
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid md:grid-cols-3 xl:grid-cols-4 gap-6">
             {features.map((feature, idx) => (
                 <AboutCard 
                     key={idx}
@@ -78,20 +78,17 @@ export default function AboutPageContent() {
                 />
             ))}
         </div>
-      </div>
 
-      <div className="container py-10">
         <Mobile
           appleStoreLink={settings?.apple_store_link}
           googlePlayLink={settings?.google_play_link}
         />
-      </div>
+      </main>
 
-      <div className="container py-10">
+      <div className="space-y-24 mt-12 pb-24">
         <ContactUsSection />
+        <HelpCard />
       </div>
-
-      <HelpCard className="py-20 bg-gray-50/50" />
     </>
   );
 }

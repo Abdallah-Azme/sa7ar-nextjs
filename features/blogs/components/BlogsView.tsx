@@ -7,7 +7,7 @@ import WaterDrop from "@/components/icons/WaterDrop";
 import AppPagination from "@/components/shared/AppPagination";
 import HelpCard from "@/components/shared/cards/HelpCard";
 import { SparklesIcon, MailIcon, Loader2, ArrowLeftIcon } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import apiClient from "@/lib/apiClient";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";

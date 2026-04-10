@@ -9,7 +9,7 @@ import EmptyCard from "@/components/shared/EmptyCard";
 import AppPagination from "@/components/shared/AppPagination";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import apiClient from "@/lib/apiClient";
 import { useCart } from "@/contexts/CartContext";

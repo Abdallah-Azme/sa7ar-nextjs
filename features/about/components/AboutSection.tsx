@@ -23,9 +23,9 @@ export default function AboutSection({
 	side = "start",
 }: AboutSectionProps) {
 	return (
-		<section className="grid lg:grid-cols-2 gap-16 items-center">
+		<section className="grid lg:grid-cols-2 gap-10 items-center">
 			<div className={cn(
-                "rounded-[60px] overflow-hidden shadow-xl aspect-video lg:aspect-square flex items-center justify-center bg-gray-50",
+                "rounded-[40px] overflow-hidden flex items-center justify-center bg-gray-50",
                 side === "start" ? "lg:order-first" : "lg:order-last"
             )}>
                 <ImageFallback
@@ -33,19 +33,19 @@ export default function AboutSection({
                     alt={imageAlt || title}
                     width={955}
                     height={720}
-                    className="w-full h-full object-cover p-10 hover:scale-105 transition-transform duration-700"
+                    className="w-full h-full object-cover"
                 />
             </div>
 
 			<div
 				className={cn(
-					"flex flex-col gap-6 text-start max-w-xl",
+					"flex flex-col gap-6 text-start max-w-148",
 					side === "start" ? "lg:order-last lg:ms-auto" : "lg:order-first lg:me-auto",
 				)}
 			>
-				<span className="font-extrabold text-accent bg-accent/5 px-4 py-1.5 rounded-full w-fit text-sm uppercase tracking-widest">{label}</span>
-				<h2 className="text-3xl lg:text-5xl font-extrabold text-primary leading-tight">{title}</h2>
-				<p className="text-gray-600 font-light text-xl/10 leading-relaxed">{description}</p>
+				<span className="font-bold text-gray">{label}</span>
+				<h2 className="text-3xl lg:text-5xl font-bold">{title}</h2>
+				<p className="text-gray font-light text-xl/10">{description}</p>
 			</div>
 		</section>
 	);

@@ -65,21 +65,19 @@ export default async function Footer() {
 					</b>
 
 					<div className="flex flex-wrap items-center gap-2">
-				{socialMediaLinks.map(
-					(item) =>
-						item.url && (
-							<a
-								key={item.id}
-								href={item.url}
-								target="_blank"
-								rel="noopener noreferrer"
-								aria-label="Social Link"
-								className="flex text-white *:size-5 hover:scale-110 transition-transform duration-300 items-center justify-center size-10 rounded-full bg-accent"
-							>
-								<item.Icon />
-							</a>
-						),
-				)}
+						{socialMediaLinks.map((item) =>
+							item.url && (
+								<a
+									key={item.id}
+									href={item.url}
+									target="_blank"
+									rel="noopener noreferrer"
+									className="flex text-white *:size-5 hover:scale-110 transition-transform duration-300 items-center justify-center size-10 rounded-full bg-accent"
+								>
+									<item.Icon />
+								</a>
+							),
+						)}
 					</div>
 				</div>
 
@@ -142,7 +140,7 @@ export default async function Footer() {
 						<p className="bg-primary h-1 w-10 rounded-xl mt-2" />
 					</div>
 
-					<p className="text-gray-500 text-sm text-end font-bold md:text-start md:text-xs lg:text-sm">
+					<p className="text-gray-500 text-sm text-right font-bold md:text-left md:text-xs lg:text-sm">
 						{tFooter("storeLine")}
 					</p>
 
@@ -151,9 +149,12 @@ export default async function Footer() {
 							variant={"secondary"}
 							className="flex gap-2 w-full items-center rounded-[24px]"
 							asChild
-                            disabled={!(setting.google_play_link && setting.google_play_link.trim().length > 0)}
 						>
-							<a href={setting.google_play_link || undefined}>
+							<a
+								href={setting.google_play_link ?? "#"}
+								target="_blank"
+								rel="noopener noreferrer"
+							>
 								<div>
 									<p className="text-[8px]">{tCommon("downloadOn")}</p>
 									<b className="text-sm md:text-xs lg:text-sm">
@@ -166,9 +167,12 @@ export default async function Footer() {
 						<Button
 							asChild
 							className="flex w-full lg:w-46 gap-2 bg-black hover:bg-black/90 items-center rounded-[24px]"
-                            disabled={!(setting.apple_store_link && setting.apple_store_link.trim().length > 0)}
 						>
-							<a href={setting.apple_store_link || undefined}>
+							<a
+								href={setting.apple_store_link ?? "#"}
+								target="_blank"
+								rel="noopener noreferrer"
+							>
 								<div>
 									<p className="text-[8px]">{tCommon("downloadOn")}</p>
 									<b className="text-sm md:text-xs lg:text-sm">
@@ -183,7 +187,7 @@ export default async function Footer() {
 			</div>
 
 			{/* Copyright bar */}
-			<div className="my-12 flex flex-col gap-4 text-center font-bold text-sm text-gray md:flex-row md:items-center md:justify-between md:text-start md:text-xs lg:text-sm">
+			<div className="my-12 flex flex-col gap-4 text-center font-bold text-sm text-gray md:flex-row md:items-center md:justify-between md:text-left md:text-xs lg:text-sm">
 				<span>
 					{tFooter("copyright", { year })}
 				</span>

@@ -3,7 +3,7 @@ import { makeQueryClient } from "@/lib/queryClient";
 import { fetchInstitutionTypes, partnershipKeys } from "@/features/partnerships/services/partnershipService";
 import PartnershipForm from "@/features/partnerships/components/PartnershipForm";
 import { ArrowRightIcon, BuildingIcon } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { generateSeoMetadata } from "@/lib/seo";

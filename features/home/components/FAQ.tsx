@@ -26,6 +26,7 @@ type ApiFaqItem = {
 };
 
 import { useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
 
 /**
  * FAQ - Client Component
@@ -39,6 +40,7 @@ export default function FAQ({
     isSection?: boolean 
 }) {
     const t = useTranslations("faq");
+    const locale = useLocale();
     const { data: queryFaqs } = useFaqsQuery();
     const faqs = initialFaqs || queryFaqs || [];
 	const [itemSelected, setItemSelected] = useState<string>("");
@@ -101,7 +103,11 @@ export default function FAQ({
 										size={13}
 										className={cn(
 											"transition-transform duration-300",
-											itemSelected === String(faq.id) && "-rotate-90",
+											itemSelected === String(faq.id)
+												? "-rotate-90"
+												: locale === "ar"
+													? "rotate-0"
+													: "rotate-180",
 										)}
 									/>
 								</div>

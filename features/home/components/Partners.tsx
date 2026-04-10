@@ -24,7 +24,7 @@ export default function Partners() {
 					<Card
 						key={index}
 						style={{ background: item.color, borderColor: item.color }}
-						className="w-full rounded-[80px] border flex items-center justify-center p-8"
+						className="w-full rounded-[80px] border flex items-center justify-center"
 					>
 						<ImageFallback
 							src={`/images/placeholder/${item.image}`}

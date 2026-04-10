@@ -73,14 +73,14 @@ export default function About({
 					Icon={<BookTextIcon size={15} />}
 				/>
 
-				<h2 className="text-xl sm:text-2xl lg:text-5xl font-medium">
+				<h2 className="text-xl sm:text-2xl lg:text-5xl font-bold text-primary">
 					{t("title.line1")}
-					<b className="text-secondary block mt-3 font-extrabold">
+					<b className="text-secondary block mt-3 font-black">
 						{t("title.emphasis")}
 					</b>
 				</h2>
 
-				<p className="text-black font-light text-base/10 text-justify">
+				<p className="text-gray-600 font-medium text-base sm:text-lg leading-relaxed">
 					{t("description")}
 				</p>
 			</div>

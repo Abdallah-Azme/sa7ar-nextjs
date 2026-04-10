@@ -47,7 +47,7 @@ export default function BestSellingAccessories({
 				</div>
 
 				<div className="flex justify-center">
-					{accessories.length > 6 && <ShowMore to={showMoreTo} />}
+					<ShowMore to={showMoreTo} />
 				</div>
 			</div>
 		</section>

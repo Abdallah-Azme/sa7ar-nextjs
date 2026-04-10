@@ -40,43 +40,41 @@ export default function Mobile({
 				</p>
 
 				{/* Actions */}
-				<div className="flex sm:flex-row flex-col justify-start items-center gap-2">
+				<div className="flex sm:flex-row flex-col justify-center items-center gap-2">
 					<Button
 						variant={"secondary"}
 						className="flex gap-2 w-40 sm:w-46 items-center h-14 rounded-[24px]"
 						asChild
                         disabled={!hasGooglePlayLink}
 					>
-						<a href={googlePlayLink || undefined}>
+						<a href={googlePlayLink || undefined} target="_blank" rel="noopener noreferrer">
 							<div className="text-start">
 								<p className="text-[8px]">{tCommon("downloadOn")}</p>
 								<b className="text-sm md:text-xs lg:text-sm">{tCommon("stores.google")}</b>
 							</div>
-							<GoogleStore className="size-6" aria-hidden="true" />
+							<GoogleStore size={24} aria-hidden="true" />
 						</a>
 					</Button>
 					<Button asChild className="flex w-40 sm:w-46 gap-2 bg-black hover:bg-black/90 items-center h-14 rounded-[24px]" disabled={!hasAppleStoreLink}>
-						<a href={appleStoreLink || undefined}>
+						<a href={appleStoreLink || undefined} target="_blank" rel="noopener noreferrer">
 							<div className="text-start">
 								<p className="text-[8px]">{tCommon("downloadOn")}</p>
 								<b className="text-sm md:text-xs lg:text-sm">{tCommon("stores.apple")}</b>
 							</div>
-							<AppStore className="text-white size-6" aria-hidden="true" />
+							<AppStore className="text-white" size={24} aria-hidden="true" />
 						</a>
 					</Button>
 				</div>
 			</div>
 
 			{/* Image */}
-            <div className="relative h-full flex items-center justify-center">
-                <ImageFallback
-                    src="/images/logo-titled.svg"
-                    alt={t("imageAlt")}
-                    width={1040}
-                    height={665}
-                    className="w-full object-contain"
-                />
-            </div>
+            <ImageFallback
+                src="/images/mobile.webp"
+                alt={t("imageAlt")}
+                width={1040}
+                height={665}
+                className="w-full object-contain"
+            />
 		</section>
 	);
 }

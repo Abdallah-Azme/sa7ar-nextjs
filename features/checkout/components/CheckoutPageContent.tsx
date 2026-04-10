@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { Link, useRouter } from "@/i18n/routing";
+import { useSearchParams } from "next/navigation";
 import { CheckIcon, PlusIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
@@ -28,8 +28,29 @@ type AddressItem = {
 
 export default function CheckoutPageContent() {
 	const t = useTranslations("account.checkout");
-	const { cart, refreshCart } = useCart();
+	const { cart, refreshCart, isLoading: isLoadingCart } = useCart();
 	const router = useRouter();
+    const searchParams = useSearchParams();
+
+    // Check for payment success (landing back from gateway)
+    useEffect(() => {
+        const sessionId = searchParams.get("session_id");
+        const status = searchParams.get("status");
+
+        if (sessionId || status === "success") {
+             toast.success(t("success"));
+             refreshCart();
+             router.push("/");
+        }
+    }, [searchParams, router, t, refreshCart]);
+
+     // Redirect to home if accessed with empty cart (unless loading)
+     useEffect(() => {
+        if (!isLoadingCart && cart && cart.items.length === 0 && !searchParams.get("session_id")) {
+           // Optionally redirect home if they land here with empty cart
+           // but let's keep it for now unless specific success param is present
+        }
+    }, [cart, isLoadingCart, searchParams]);
     
     const { data: addressesRaw, isLoading: isLoadingAddresses } = useAddressesQuery();
     const addresses = useMemo(() => (addressesRaw?.data || []) as AddressItem[], [addressesRaw]);
@@ -91,7 +112,7 @@ export default function CheckoutPageContent() {
 				window.location.assign(checkoutUrl.toString());
 				return;
 			}
-			router.push("/account/orders");
+			router.push("/");
 		} catch {
 			toast.error(t("error"));
 		} finally {

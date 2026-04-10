@@ -18,19 +18,8 @@ export default async function AccountDetailsPage({ params }: { params: Promise<{
     });
 
 	return (
-		<div className="space-y-6">
-			<header className="flex flex-col gap-2 mb-8">
-				<h1 className="text-2xl sm:text-3xl font-extrabold text-primary">
-					{t("pageTitle")}
-				</h1>
-				<p className="text-gray-500 font-medium">
-					{t("pageDescription")}
-				</p>
-			</header>
-
-			<HydrationBoundary state={dehydrate(queryClient)}>
-				<ProfileForm />
-			</HydrationBoundary>
-		</div>
+		<HydrationBoundary state={dehydrate(queryClient)}>
+			<ProfileForm />
+		</HydrationBoundary>
 	);
 }

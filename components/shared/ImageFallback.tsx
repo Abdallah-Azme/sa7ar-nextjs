@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface ImageFallbackProps {
 	src?: string | null;
@@ -48,6 +48,10 @@ export default function ImageFallback({
 	sizes,
 }: ImageFallbackProps) {
 	const [imgSrc, setImgSrc] = useState<string>(normalizeImageSrc(src));
+
+	useEffect(() => {
+		setImgSrc(normalizeImageSrc(src));
+	}, [src]);
 
 	const handleError = () => setImgSrc(FALLBACK_SRC);
 

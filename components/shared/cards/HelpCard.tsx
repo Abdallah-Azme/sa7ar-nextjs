@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { MessageCircleMoreIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 
 interface HelpCardProps {

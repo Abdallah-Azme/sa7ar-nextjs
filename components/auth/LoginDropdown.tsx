@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense, useState, useEffect } from "react";
-import { UserRoundIcon } from "lucide-react";
+import { Globe, UserRoundIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 import {
@@ -13,6 +13,7 @@ import {
 import AuthDialog from "@/components/dialogs/AuthDialog";
 import { useSearchParams } from "next/navigation";
 import { usePathname, useRouter } from "@/i18n/routing";
+import LanguageSwitcher from "@/components/shared/header/LanguageSwitcher";
 
 /**
  * Inner component that uses useSearchParams — must be wrapped in <Suspense>.
@@ -52,6 +53,7 @@ export default function LoginDropdown({
 	onOpenChange?: (open: boolean) => void;
 }) {
 	const tAuth = useTranslations("auth");
+	const tCommon = useTranslations("common");
 	const [authMode, setAuthMode] = useState<"login" | "signup">("login");
 	const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
 
@@ -78,7 +80,7 @@ export default function LoginDropdown({
 						<UserRoundIcon />
 					</Button>
 				</DropdownMenuTrigger>
-				<DropdownMenuContent>
+				<DropdownMenuContent className="w-auto min-w-52 overflow-visible">
 					<DropdownMenuItem asChild>
 						<button
 							onClick={() => handleOpen("login")}
@@ -96,6 +98,18 @@ export default function LoginDropdown({
 						>
 							{tAuth("signup")}
 						</button>
+					</DropdownMenuItem>
+					<DropdownMenuItem
+						asChild
+						className="focus:bg-transparent focus:text-foreground data-highlighted:bg-transparent data-highlighted:text-foreground"
+					>
+						<div className="flex w-full items-center justify-between gap-3 text-foreground! **:text-foreground!">
+							<span className="flex items-center gap-2">
+								<Globe className="h-4 w-4" />
+								{tCommon("language")}
+							</span>
+							<LanguageSwitcher onLanguageChange={() => onOpenChange?.(false)} />
+						</div>
 					</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>

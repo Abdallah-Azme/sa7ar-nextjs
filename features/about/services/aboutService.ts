@@ -9,7 +9,6 @@ export const aboutKeys = {
 export async function fetchAboutPageData() {
   const res = await apiClient<{ data: AboutPageData }>({
     route: "/about-us",
-    next: { revalidate: 3600 },
   });
   return res.data;
 }
