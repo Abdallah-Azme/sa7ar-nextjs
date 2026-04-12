@@ -1,6 +1,7 @@
 import type { Product } from "@/types";
+import { getPublicApiBaseUrl } from "@/lib/apiBase";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "https://saharapi.subcodeco.com/api";
+const API_BASE = getPublicApiBaseUrl();
 
 export const PAGE_ROUTES = [
   "",

@@ -1,4 +1,5 @@
 import { ofetch, type FetchOptions } from "ofetch";
+import { getPublicApiBaseUrl } from "@/lib/apiBase";
 
 /**
  * Isomorphic ofetch client for sa7ar-next.
@@ -41,19 +42,26 @@ async function getServerLocale() {
   return "ar";
 }
 
+/** Client → /api/proxy/cart/add?locale=ar (readable path; no ?route=%2F… encoding). */
+function buildClientProxyUrl(route: string, locale: string): string {
+  const q = route.indexOf("?");
+  const pathOnly = q >= 0 ? route.slice(0, q) : route;
+  const pathPart = pathOnly.replace(/^\/+/, "");
+  const extraQuery = q >= 0 ? route.slice(q + 1) : "";
+  const params = new URLSearchParams(extraQuery);
+  params.set("locale", locale);
+  return `/api/proxy/${pathPart}?${params.toString()}`;
+}
+
 export async function apiClient<T = unknown>(
   { route, tokenRequire = false, isFormData = false, ...opts }: AppRequestOptions
 ): Promise<T> {
   const isServer = typeof window === "undefined";
   const locale = isServer ? await getServerLocale() : getClientLocale();
 
-  const baseURL = isServer
-    ? (process.env.NEXT_PUBLIC_API_URL ?? "https://saharapi.subcodeco.com/api")
-    : "/api/proxy";
+  const baseURL = isServer ? getPublicApiBaseUrl() : "/api/proxy";
 
-  const url = isServer
-    ? `${baseURL}${route}`
-    : `${baseURL}?route=${encodeURIComponent(route)}&locale=${encodeURIComponent(locale)}`;
+  const url = isServer ? `${baseURL}${route}` : buildClientProxyUrl(route, locale);
 
   // Build headers
   const headers: Record<string, string> = {

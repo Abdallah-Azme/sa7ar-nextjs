@@ -1,9 +1,65 @@
 "use client";
 
-import { CircleDotIcon, DropletsIcon } from "lucide-react";
-import { useMemo } from "react";
+import { CircleDotIcon, DropletsIcon, Plus } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import ImageFallback from "@/components/shared/ImageFallback";
+import { htmlToPlainText } from "@/lib/utils";
 import { useTranslations } from "next-intl";
+
+function parseStatValue(raw: string | undefined, fallback: string): { n: number; suffix: string } {
+	const s = (raw ?? fallback).trim();
+	const m = s.match(/^(\d+)\s*(.*)$/);
+	if (!m) return { n: 1, suffix: "" };
+	const n = Math.max(0, Number.parseInt(m[1], 10));
+	return { n: Number.isFinite(n) ? n : 1, suffix: m[2] ?? "" };
+}
+
+function useCountUp(end: number, durationMs = 1600) {
+	const [value, setValue] = useState(() => (end <= 1 ? end : 1));
+
+	useEffect(() => {
+		if (end <= 1) {
+			setValue(end);
+			return;
+		}
+		setValue(1);
+		let startTime: number | null = null;
+		let raf = 0;
+
+		const tick = (now: number) => {
+			if (startTime === null) startTime = now;
+			const t = Math.min((now - startTime) / durationMs, 1);
+			const eased = 1 - (1 - t) ** 3;
+			const next = Math.round(1 + (end - 1) * eased);
+			setValue(next);
+			if (t < 1) raf = requestAnimationFrame(tick);
+		};
+
+		raf = requestAnimationFrame(tick);
+		return () => cancelAnimationFrame(raf);
+	}, [end, durationMs]);
+
+	return value;
+}
+
+function AnimatedStat({ raw, fallback }: { raw?: string; fallback: string }) {
+	const { n, suffix } = useMemo(() => parseStatValue(raw, fallback), [raw, fallback]);
+	const display = useCountUp(n);
+	const extraSuffix = suffix.replace(/^\+\s*/, "").trim();
+
+	return (
+		<p className="text-5xl font-medium flex flex-wrap items-center gap-0.5">
+			<span className="tabular-nums">{display}</span>
+			<Plus
+				className="size-[0.5em] min-w-[0.5em] shrink-0"
+				strokeWidth={3}
+				strokeLinecap="round"
+				aria-hidden
+			/>
+			{extraSuffix ? <span>{extraSuffix}</span> : null}
+		</p>
+	);
+}
 
 interface OurStoryProps {
 	title?: string;
@@ -31,7 +87,7 @@ export default function OurStory({
         if (!descriptionHtml) return [];
         return descriptionHtml
             .split(/<\/p>/)
-            .map(p => p.replace(/<[^>]*>/g, "").trim())
+            .map((p) => htmlToPlainText(p).trim())
             .filter(Boolean);
     }, [descriptionHtml]);
 
@@ -85,13 +141,13 @@ export default function OurStory({
 
 				<div className="flex items-center gap-7 pt-6">
 					<div>
-						<p className="text-5xl font-medium">{numberOfWorkers || "350+"}</p>
+						<AnimatedStat raw={numberOfWorkers} fallback="350+" />
 						<p className="text-gray text-sm font-light">
 							{t("stats.happyCustomers")}
 						</p>
 					</div>
 					<div>
-						<p className="text-5xl font-medium">{numberOfProducts || "120+"}</p>
+						<AnimatedStat raw={numberOfProducts} fallback="120+" />
 						<p className="text-gray text-sm font-light">
 							{t("stats.partners")}
 						</p>

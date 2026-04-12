@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { getServerAuth } from "@/features/auth/queries";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { AuthDialogProvider } from "@/contexts/AuthDialogContext";
 import { CartProvider } from "@/contexts/CartContext";
 import { routing } from "@/i18n/config";
 import Header from "@/components/shared/header/Header";
@@ -82,6 +83,7 @@ export default async function RootLayout({
           <DirectionProviderWrapper dir={dir}>
             <QueryProvider>
               <AuthProvider initialUser={initialUser}>
+                <AuthDialogProvider>
                 <CartProvider>
                   
                   <Header />
@@ -94,6 +96,7 @@ export default async function RootLayout({
                   <Footer />
                   <Toaster position="top-center" expand />
                 </CartProvider>
+                </AuthDialogProvider>
               </AuthProvider>
             </QueryProvider>
           </DirectionProviderWrapper>

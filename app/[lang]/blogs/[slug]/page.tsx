@@ -13,6 +13,7 @@ interface BlogDetailsProps {
 }
 
 import { generateSeoMetadata } from "@/lib/seo";
+import { htmlToPlainText } from "@/lib/utils";
 
 /**
  * Generate Dynamic SEO Metadata for individual blog posts.
@@ -27,7 +28,7 @@ export async function generateMetadata({ params }: BlogDetailsProps): Promise<Me
 
     return generateSeoMetadata({
       title: `${blog.title} | ${t("title").split("|")[1]?.trim() || "Sohar"}`,
-      description: blog.subtitle || blog.description.substring(0, 160).replace(/<[^>]*>/g, ""),
+      description: blog.subtitle || htmlToPlainText(blog.description).substring(0, 160),
       lang,
       path: `/blogs/${slug}`,
     });

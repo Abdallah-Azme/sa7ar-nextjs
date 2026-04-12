@@ -45,7 +45,7 @@ export default function Partners() {
 
 				<h2 className="text-xl sm:text-2xl lg:text-5xl font-medium">
 					{t("title.line1")}
-					<b className="text-secondary block mt-3 font-extrabold">
+					<b className="text-secondary block mt-3 font-extrabold text-xl sm:text-2xl lg:text-7xl ">
 						{t("title.emphasis")}
 					</b>
 				</h2>

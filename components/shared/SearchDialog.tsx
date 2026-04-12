@@ -38,7 +38,12 @@ function formatSizeLabel(size: string): string {
 	return size.replace(/-/g, " ");
 }
 
-import { useTranslations } from "next-intl";
+function productDetailPath(product: SearchProduct): string {
+	const slug = product.seo?.slug?.trim();
+	return slug ? `/products/${slug}` : `/products/${product.id}`;
+}
+
+import { useLocale, useTranslations } from "next-intl";
 
 /**
  * SearchDialog - Client Component
@@ -46,6 +51,7 @@ import { useTranslations } from "next-intl";
  * Uses the /search?keyword=... API endpoint.
  */
 export default function SearchDialog() {
+	const locale = useLocale();
     const tProductsPage = useTranslations("productsPage");
 	const [open, setOpen] = useState(false);
 	const [keyword, setKeyword] = useState("");
@@ -63,9 +69,11 @@ export default function SearchDialog() {
 		}
 		setIsSearching(true);
 		try {
-			const res = await fetch(
-				`/api/proxy?route=${encodeURIComponent(`/search?keyword=${encodeURIComponent(trimmed)}`)}`
-			);
+			const params = new URLSearchParams({
+				keyword: trimmed,
+				locale,
+			});
+			const res = await fetch(`/api/proxy/search?${params.toString()}`);
 			if (res.ok) {
 				const data: { data: SearchResponse } = await res.json();
 				setProducts(data.data?.products ?? []);
@@ -138,8 +146,7 @@ export default function SearchDialog() {
 							placeholder={tProductsPage("searchPlaceholder")}
 							value={keyword}
 							onValueChange={handleSearch}
-							Icon={<SearchIcon />}
-						/>
+ 						/>
 
 						<div className="max-h-[30rem] overflow-y-auto pe-1 scrollbar-thin scrollbar-thumb-gray-200">
 							{keyword.trim().length === 0 ? (
@@ -160,7 +167,7 @@ export default function SearchDialog() {
 									{products.map((product) => (
 										<Link
 											key={product.id}
-											href={`/products/${product.seo?.slug || product.id}`}
+											href={productDetailPath(product)}
 											onClick={() => setOpen(false)}
 											className="flex items-center justify-between gap-4 rounded-3xl border border-black/5 bg-background-cu p-4 transition-all hover:bg-accent/5"
 										>

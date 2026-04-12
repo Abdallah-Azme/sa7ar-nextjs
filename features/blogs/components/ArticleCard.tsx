@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn, htmlToPlainText } from "@/lib/utils";
 import { ArrowLeftIcon, SparklesIcon } from "lucide-react";
 import { Link } from "@/i18n/routing";
 import ImageFallback from "@/components/shared/ImageFallback";
@@ -32,7 +32,7 @@ export default function ArticleCard({
 }: ArticleCardProps) {
     
     // Clean description helper for consistent display
-    const cleanDesc = description.replace(/<[^>]*>/g, "");
+    const cleanDesc = htmlToPlainText(description);
 
 	if (variant === "horizontal") {
 		return (

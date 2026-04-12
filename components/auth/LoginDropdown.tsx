@@ -1,6 +1,5 @@
 "use client";
 
-import { Suspense, useState, useEffect } from "react";
 import { Globe, UserRoundIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
@@ -10,36 +9,8 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import AuthDialog from "@/components/dialogs/AuthDialog";
-import { useSearchParams } from "next/navigation";
-import { usePathname, useRouter } from "@/i18n/routing";
+import { useAuthDialog } from "@/contexts/AuthDialogContext";
 import LanguageSwitcher from "@/components/shared/header/LanguageSwitcher";
-
-/**
- * Inner component that uses useSearchParams — must be wrapped in <Suspense>.
- * Next.js App Router requires all components using useSearchParams to be
- * inside a Suspense boundary, otherwise it throws during static rendering.
- */
-function AuthRequiredWatcher({
-	onOpen,
-}: {
-	onOpen: (mode: "login" | "signup") => void;
-}) {
-	const searchParams = useSearchParams();
-	const router = useRouter();
-	const pathname = usePathname();
-
-	useEffect(() => {
-		if (searchParams.get("auth_required") === "1") {
-			setTimeout(() => {
-				onOpen("login");
-				router.replace(pathname, { scroll: false });
-			}, 0);
-		}
-	}, [searchParams, pathname, router, onOpen]);
-
-	return null;
-}
 
 /**
  * LoginDropdown - Client Component
@@ -54,21 +25,14 @@ export default function LoginDropdown({
 }) {
 	const tAuth = useTranslations("auth");
 	const tCommon = useTranslations("common");
-	const [authMode, setAuthMode] = useState<"login" | "signup">("login");
-	const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
+	const { openAuth } = useAuthDialog();
 
 	const handleOpen = (mode: "login" | "signup") => {
-		setAuthMode(mode);
-		setIsAuthDialogOpen(true);
+		openAuth(mode);
 	};
 
 	return (
 		<>
-			{/* Suspense boundary required for useSearchParams */}
-			<Suspense fallback={null}>
-				<AuthRequiredWatcher onOpen={handleOpen} />
-			</Suspense>
-
 			<DropdownMenu open={open} onOpenChange={onOpenChange}>
 				<DropdownMenuTrigger asChild>
 					<Button
@@ -113,12 +77,6 @@ export default function LoginDropdown({
 					</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>
-
-			<AuthDialog
-				open={isAuthDialogOpen}
-				onOpenChange={setIsAuthDialogOpen}
-				mode={authMode}
-			/>
 		</>
 	);
 }

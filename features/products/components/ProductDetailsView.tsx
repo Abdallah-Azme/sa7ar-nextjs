@@ -25,6 +25,7 @@ import { useRouter } from "@/i18n/routing";
 import apiClient from "@/lib/apiClient";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
+import { useAuthDialog } from "@/contexts/AuthDialogContext";
 
 export interface ProductSize {
 	id: number;
@@ -59,6 +60,7 @@ export default function ProductDetailsView({ product, relatedProducts }: Product
 	const tCartErrors = useTranslations("cart.errors");
 	const router = useRouter();
     const { isAuthenticated } = useAuth();
+	const { openAuth } = useAuthDialog();
 
 	const { addToCart, addToCartPending, refreshCart } = useCart();
 	const [quantity, setQuantity] = useState(1);
@@ -72,6 +74,7 @@ export default function ProductDetailsView({ product, relatedProducts }: Product
 	const handleBuyNow = async () => {
         if (!isAuthenticated) {
             toast.error(tCartErrors("loginRequired"));
+			openAuth("login");
             return;
         }
 
@@ -190,24 +193,34 @@ export default function ProductDetailsView({ product, relatedProducts }: Product
 							<CartIcon className="inline me-2" />
 							{tProducts("quantityLabel")}
 						</label>
-						<div className="flex items-center justify-between rounded-full py-2 px-5 bg-background-cu gap-3">
+						<div className="flex items-center justify-between rounded-full py-2.5 px-4 sm:px-5 bg-background-cu gap-3">
 							<Button
-								size="icon"
-								className="rounded-full size-10"
+								type="button"
+								variant="default"
+								size="icon-lg"
+								className={cn(
+									"h-10 w-12 min-w-12 shrink-0 rounded-full border-0 p-0",
+									"bg-primary text-primary-foreground hover:bg-primary/90",
+								)}
 								onClick={() => setQuantity(q => q + 1)}
 							>
-								<PlusIcon size={16} />
+								<PlusIcon size={16} className="stroke-[2.5px]" />
 							</Button>
-							<span className="font-bold text-lg">
+							<span className="font-bold text-lg text-primary tabular-nums">
 								{String(quantity).padStart(2, "0")}
 							</span>
 							<Button
-								size="icon"
+								type="button"
 								variant="outline"
-								className="rounded-full size-10"
+								size="icon-lg"
+								className={cn(
+									"h-10 w-12 min-w-12 shrink-0 rounded-full border-0 p-0 shadow-sm",
+									"bg-white text-foreground hover:bg-white hover:text-foreground",
+									"[&_svg]:text-foreground",
+								)}
 								onClick={() => setQuantity(q => Math.max(1, q - 1))}
 							>
-								<MinusIcon size={16} />
+								<MinusIcon size={16} className="stroke-[2.5px]" />
 							</Button>
 						</div>
 					</div>

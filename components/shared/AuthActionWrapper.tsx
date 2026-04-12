@@ -3,6 +3,7 @@
 import { cloneElement, isValidElement } from "react";
 import type { MouseEvent, MouseEventHandler, ReactElement } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useAuthDialog } from "@/contexts/AuthDialogContext";
 import { toast } from "sonner";
 
 type AuthClickableChildProps = {
@@ -21,6 +22,7 @@ export default function AuthActionWrapper({
 }: AuthActionWrapperProps) {
 	const t = useTranslations("auth.errors");
 	const { isAuthenticated } = useAuth();
+	const { openAuth } = useAuthDialog();
 
 	if (isAuthenticated || !isValidElement(children)) {
 		return children;
@@ -30,6 +32,7 @@ export default function AuthActionWrapper({
 		event.preventDefault();
 		event.stopPropagation();
 		toast.error(t("unauthenticated"));
+		openAuth("login");
 	};
 
 	return cloneElement(children as ReactElement<AuthClickableChildProps>, {

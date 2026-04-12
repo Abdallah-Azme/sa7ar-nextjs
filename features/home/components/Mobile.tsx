@@ -30,7 +30,7 @@ export default function Mobile({
 				{/* Titles */}
 				<h2 className="text-xl sm:text-2xl lg:text-5xl font-medium">
 					<span>{t("title.line1")}</span>
-					<b className="text-secondary block font-extrabold mt-4">
+					<b className="text-secondary block font-extrabold mt-4 lg:text-7xl">
 						{t("title.emphasis")}
 					</b>
 				</h2>

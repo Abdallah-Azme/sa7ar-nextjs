@@ -14,3 +14,10 @@ export const routing = defineRouting({
   // Don't prefix the default language
   localePrefix: 'as-needed'
 });
+
+/** Locales that use right-to-left layout (Embla `direction`, CSS `dir`, etc.) */
+export const RTL_LOCALES = ['ar'] as const;
+
+export function isRtlLocale(locale: string): boolean {
+  return (RTL_LOCALES as readonly string[]).includes(locale);
+}

@@ -23,7 +23,7 @@ export default function AboutSection({
 	side = "start",
 }: AboutSectionProps) {
 	return (
-		<section className="grid lg:grid-cols-2 gap-10 items-center">
+		<section className="grid lg:grid-cols-2 gap-10">
 			<div className={cn(
                 "rounded-[40px] overflow-hidden flex items-center justify-center bg-gray-50",
                 side === "start" ? "lg:order-first" : "lg:order-last"

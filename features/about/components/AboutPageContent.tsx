@@ -12,6 +12,22 @@ import { useAboutDataQuery } from "../hooks/useAbout";
 import { useGlobalSettingsQuery } from "@/features/settings/hooks/useSettings";
 
 import { useTranslations } from "next-intl";
+import { htmlToPlainText } from "@/lib/utils";
+
+/** API sometimes returns vision/mission as nested arrays e.g. [[{ title, ... }]] */
+function unwrapAboutSection<T extends { title?: string; description?: string; icon?: string | null }>(
+  value: unknown
+): T | null {
+  if (value == null) return null;
+  let v: unknown = value;
+  while (Array.isArray(v) && v.length > 0) {
+    v = v[0];
+  }
+  if (v && typeof v === "object" && !Array.isArray(v)) {
+    return v as T;
+  }
+  return null;
+}
 
 export default function AboutPageContent() {
   const t = useTranslations("aboutPage");
@@ -20,8 +36,8 @@ export default function AboutPageContent() {
 
   const aboutUs = data?.about_us;
   const features = data?.about_us_values_cards || [];
-  const vision = data?.our_vision;
-  const mission = data?.our_sms;
+  const vision = unwrapAboutSection(data?.our_vision);
+  const mission = unwrapAboutSection(data?.our_sms);
 
   const defaultIcons = [
     <BadgeCheck key="1" className="size-8 text-secondary" />,
@@ -34,7 +50,10 @@ export default function AboutPageContent() {
     <>
       <Banner 
         title={aboutUs?.title || "Crafting Pure Refreshment"} 
-        desc={aboutUs?.description?.replace(/<[^>]*>/g, "").substring(0, 160) || "Learn more about our commitment to excellence and quality."} 
+        desc={
+          (aboutUs?.description && htmlToPlainText(aboutUs.description).substring(0, 160)) ||
+          "Learn more about our commitment to excellence and quality."
+        } 
         bannerUrl={aboutUs?.first_image || "/images/about-hero.webp"} 
       />
 
@@ -52,7 +71,7 @@ export default function AboutPageContent() {
                 side="end"
                 label={t("sections.vision.label")}
                 title={vision.title || ""}
-                description={vision.description?.replace(/<[^>]*>/g, "") || ""}
+                description={vision.description ? htmlToPlainText(vision.description) : ""}
                 imageUrl={vision.icon || "/images/placeholder/our-story.webp"}
             />
         )}
@@ -62,7 +81,7 @@ export default function AboutPageContent() {
                 side="start"
                 label={t("sections.mission.label")}
                 title={mission.title || ""}
-                description={mission.description?.replace(/<[^>]*>/g, "") || ""}
+                description={mission.description ? htmlToPlainText(mission.description) : ""}
                 imageUrl={mission.icon || "/images/placeholder/our-story.webp"}
             />
         )}
@@ -73,7 +92,7 @@ export default function AboutPageContent() {
                     key={idx}
                     index={idx}
                     title={feature.title}
-                    description={feature.description?.replace(/<[^>]*>/g, "")}
+                    description={feature.description ? htmlToPlainText(feature.description) : ""}
                     icon={feature.icon || defaultIcons[idx % 4]}
                 />
             ))}

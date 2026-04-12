@@ -45,7 +45,6 @@ export default function HomePageContent() {
   const { refreshCart } = useCart();
   const searchParams = useSearchParams();
   const [deferBelowFold, setDeferBelowFold] = useState(false);
-
   // Check for payment success params
   useEffect(() => {
     if (searchParams.get("status") === "success" || searchParams.get("session_id")) {
@@ -73,6 +72,8 @@ export default function HomePageContent() {
     queryKey: homeKeys.data(),
     queryFn: fetchHomeData,
   });
+  console.log({ homeData });
+
   const { data: settings } = useQuery({
     queryKey: settingsKeys.global(),
     queryFn: fetchGlobalSettings,
@@ -86,8 +87,7 @@ export default function HomePageContent() {
     queryFn: fetchBestSellingAccessories,
   });
 
-  console.log({ homeData: homeData?.sliders });
-  return (
+   return (
     <div className="flex flex-col gap-20 pb-20">
       {/* 1. Hero Section */}
       <Hero

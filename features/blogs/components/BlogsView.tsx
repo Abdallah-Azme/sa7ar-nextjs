@@ -11,6 +11,7 @@ import { Link } from "@/i18n/routing";
 import apiClient from "@/lib/apiClient";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
+import { htmlToPlainText } from "@/lib/utils";
 
 type BlogItem = {
 	id: number;
@@ -153,7 +154,7 @@ export default function BlogsView({ blogs, totalPages }: BlogsViewProps) {
 										{featuredArticle.title}
 									</h2>
 									<p className="max-w-2xl text-sm leading-7 text-white/90 sm:text-base line-clamp-2">
-										{featuredArticle.description.replace(/<[^>]*>/g, "")}
+										{htmlToPlainText(featuredArticle.description)}
 									</p>
 								</div>
 							</article>

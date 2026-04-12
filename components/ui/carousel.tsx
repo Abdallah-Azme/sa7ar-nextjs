@@ -8,6 +8,8 @@ import useEmblaCarousel, {
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
+import { useLocale } from "next-intl"
+import { isRtlLocale } from "@/i18n/config"
 
 type CarouselApi = UseEmblaCarouselType[1]
 type UseCarouselParameters = Parameters<typeof useEmblaCarousel>
@@ -51,10 +53,15 @@ function Carousel({
   children,
   ...props
 }: React.ComponentProps<"div"> & CarouselProps) {
+  const locale = useLocale()
+  const emblaDirection =
+    opts?.direction ?? (isRtlLocale(locale) ? "rtl" : "ltr")
+
   const [carouselRef, api] = useEmblaCarousel(
     {
       ...opts,
       axis: orientation === "horizontal" ? "x" : "y",
+      direction: emblaDirection,
     },
     plugins
   )
@@ -79,13 +86,21 @@ function Carousel({
     (event: React.KeyboardEvent<HTMLDivElement>) => {
       if (event.key === "ArrowLeft") {
         event.preventDefault()
-        scrollPrev()
+        if (orientation === "horizontal" && emblaDirection === "rtl") {
+          scrollNext()
+        } else {
+          scrollPrev()
+        }
       } else if (event.key === "ArrowRight") {
         event.preventDefault()
-        scrollNext()
+        if (orientation === "horizontal" && emblaDirection === "rtl") {
+          scrollPrev()
+        } else {
+          scrollNext()
+        }
       }
     },
-    [scrollPrev, scrollNext]
+    [scrollPrev, scrollNext, orientation, emblaDirection]
   )
 
   React.useEffect(() => {
