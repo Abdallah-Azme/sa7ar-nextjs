@@ -76,12 +76,13 @@ const buildProductsListShowMoreRoute = (
 	section: "bard" | "rathath",
 	sizeIds: number[],
 ) => {
-	const params = new URLSearchParams({ section });
+	const params = new URLSearchParams();
 	if (sizeIds.length > 0) {
 		params.set("size_id", sizeIds.join(","));
 	}
 
-	return `/products-list?${params.toString()}`;
+	const queryString = params.toString();
+	return `/brands/${section}${queryString ? `?${queryString}` : ""}`;
 };
 
 const buildFilterOptions = (

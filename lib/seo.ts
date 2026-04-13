@@ -8,9 +8,10 @@ interface SeoProps {
   path?: string; // Relative path without language prefix (e.g. '/about')
   image?: string;
   noIndex?: boolean;
+  keywords?: string;
 }
 
-export function generateSeoMetadata({ title, description, lang, path = '', image, noIndex = false }: SeoProps): Metadata {
+export function generateSeoMetadata({ title, description, lang, path = '', image, noIndex = false, keywords }: SeoProps): Metadata {
   let baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://watersohar.om';
   if (!baseUrl.startsWith('http')) baseUrl = `https://${baseUrl}`;
   
@@ -40,6 +41,7 @@ export function generateSeoMetadata({ title, description, lang, path = '', image
   return {
     title,
     description,
+    keywords,
     metadataBase: new URL(baseUrl),
     alternates: {
       canonical: absoluteCanonical,

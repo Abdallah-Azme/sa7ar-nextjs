@@ -14,6 +14,13 @@ import {
 	CircleStarIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ChevronDownIcon } from "lucide-react";
 import CartIcon from "@/components/icons/CartIcon";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -23,15 +30,14 @@ import AccountDropdown from "@/components/auth/AccountDropdown";
 import LoginDropdown from "@/components/auth/LoginDropdown";
 import AuthActionWrapper from "@/components/shared/AuthActionWrapper";
 import ScrollToTop from "@/components/shared/ScrollToTop";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 
 /**
  * Nav links — mirrors React's navLinks array exactly (same paths, same icons)
  */
 const navLinks = [
 	{ path: "/", key: "home", Icon: ArchiveIcon },
-	{ path: "/products", key: "products", Icon: ShoppingBagIcon },
-	{ path: "/best-selling-products", key: "bestSellingProducts", Icon: FlameIcon },
+	{ path: "/products", key: "products", Icon: ShoppingBagIcon, hasDropdown: true },
 	{ path: "/about", key: "about", Icon: BookTextIcon },
 	{ path: "/faq", key: "faq", Icon: MessageCircleQuestionMarkIcon },
 	{ path: "/blogs", key: "blog", Icon: NewspaperIcon },
@@ -44,6 +50,8 @@ const navLinks = [
 export default function Navbar({ logo }: { logo?: ReactNode }) {
 	const t = useTranslations("nav");
 	const tCommon = useTranslations("common");
+	const tProducts = useTranslations("products");
+	const locale = useLocale();
 	const [isSheetOpen, setIsSheetOpen] = useState(false);
 	const [isScrolled, setIsScrolled] = useState(false);
 	const [isTransitioning, setIsTransitioning] = useState(false);
@@ -119,19 +127,65 @@ export default function Navbar({ logo }: { logo?: ReactNode }) {
 					{/* Desktop nav links */}
 					<ul className="hidden lg:flex transition-all duration-1000 items-center gap-2 text-nowrap">
 						{navLinks.map((item) => (
-							<li key={item.path}>
-								<Link
-									href={item.path}
-									className={cn(
-										"flex items-center gap-2 py-2 px-3 rounded-full text-xs 2xl:text-sm font-medium transition-colors",
-										isActive(item.path)
-											? "bg-primary text-white font-bold"
-											: "text-gray hover:bg-primary/10",
-									)}
-								>
-									<item.Icon size={18} />
-									<span>{t(item.key)}</span>
-								</Link>
+							<li key={item.key}>
+								{"hasDropdown" in item && item.hasDropdown ? (
+									<DropdownMenu>
+										<DropdownMenuTrigger asChild>
+											<button
+												className={cn(
+													"flex items-center gap-2 py-2 px-3 rounded-full text-xs 2xl:text-sm font-medium transition-colors outline-none",
+													isActive(item.path) || pathname.startsWith("/best-selling") || pathname.startsWith("/brands")
+														? "bg-primary text-white font-bold"
+														: "text-gray hover:bg-primary/10",
+												)}
+											>
+												<item.Icon size={18} />
+												<span>{t(item.key)}</span>
+												<ChevronDownIcon size={14} className="opacity-50" />
+											</button>
+										</DropdownMenuTrigger>
+										<DropdownMenuContent align="start" className="w-[200px]">
+											<DropdownMenuItem asChild>
+												<Link href="/products" className="w-full cursor-pointer">
+													{t("products")} ({tCommon("all")})
+												</Link>
+											</DropdownMenuItem>
+											<DropdownMenuItem asChild>
+												<Link href="/best-selling-products" className="w-full cursor-pointer">
+													{t("bestSellingProducts")}
+												</Link>
+											</DropdownMenuItem>
+											<DropdownMenuItem asChild>
+												<Link href="/brands/bard" className="w-full cursor-pointer">
+													{tProducts("sections.bard")}
+												</Link>
+											</DropdownMenuItem>
+											<DropdownMenuItem asChild>
+												<Link href="/brands/rathath" className="w-full cursor-pointer">
+													{tProducts("sections.rathath")}
+												</Link>
+											</DropdownMenuItem>
+											<DropdownMenuItem asChild>
+												<Link href="/best-selling-accessories" className="w-full cursor-pointer">
+													{locale === "ar" ? "إكسسوارات الأكثر مبيعًا" : "Best Selling Accessories"}
+												</Link>
+											</DropdownMenuItem>
+										</DropdownMenuContent>
+									</DropdownMenu>
+								) : (
+									<Link
+										href={item.path}
+										className={cn(
+											"flex items-center gap-2 py-2 px-3 rounded-full text-xs 2xl:text-sm font-medium transition-colors",
+											isActive(item.path)
+												? "bg-primary text-white font-bold"
+												: "text-gray hover:bg-primary/10",
+										)}
+									>
+										<item.Icon size={18} />
+										<span>{t(item.key)}</span>
+									</Link>
+								)}
 							</li>
 						))}
 					</ul>
@@ -185,22 +239,88 @@ export default function Navbar({ logo }: { logo?: ReactNode }) {
 									<div className="flex flex-col gap-6 p-2 mt-10">
 										<div className="text-sm font-bold text-gray">{tCommon("menu")}</div>
 										<div className="flex flex-col gap-2">
-											{navLinks.map((item) => (
-												<Link
-													key={item.path}
-													href={item.path}
-													onClick={() => setIsSheetOpen(false)}
-													className={cn(
-														"flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-colors",
-														isActive(item.path)
-															? "bg-primary text-white font-bold"
-															: "text-gray hover:bg-primary/10",
-													)}
-												>
-													<item.Icon size={18} />
-													<span>{t(item.key)}</span>
-												</Link>
-											))}
+											{navLinks.map((item) => {
+												if ("hasDropdown" in item && item.hasDropdown) {
+													return (
+														<div key={item.key} className="flex flex-col gap-2">
+															<Link
+																href="/products"
+																onClick={() => setIsSheetOpen(false)}
+																className={cn(
+																	"flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-colors",
+																	isActive("/products")
+																		? "bg-primary text-white font-bold"
+																		: "text-gray hover:bg-primary/10",
+																)}
+															>
+																<item.Icon size={18} />
+																<span>{t(item.key)} ({tCommon("all")})</span>
+															</Link>
+															<Link
+																href="/best-selling-products"
+																onClick={() => setIsSheetOpen(false)}
+																className={cn(
+																	"flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-colors ms-4",
+																	isActive("/best-selling-products") ? "bg-primary text-white font-bold" : "text-gray hover:bg-primary/10"
+																)}
+															>
+																<FlameIcon size={18} />
+																<span>{t("bestSellingProducts")}</span>
+															</Link>
+															<Link
+																href="/brands/bard"
+																onClick={() => setIsSheetOpen(false)}
+																className={cn(
+																	"flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-colors ms-4",
+																	isActive("/brands/bard") ? "bg-primary text-white font-bold" : "text-gray hover:bg-primary/10"
+																)}
+															>
+																<ShoppingBagIcon size={18} />
+																<span>{tProducts("sections.bard")}</span>
+															</Link>
+															<Link
+																href="/brands/rathath"
+																onClick={() => setIsSheetOpen(false)}
+																className={cn(
+																	"flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-colors ms-4",
+																	isActive("/brands/rathath") ? "bg-primary text-white font-bold" : "text-gray hover:bg-primary/10"
+																)}
+															>
+																<ShoppingBagIcon size={18} />
+																<span>{tProducts("sections.rathath")}</span>
+															</Link>
+															<Link
+																href="/best-selling-accessories"
+																onClick={() => setIsSheetOpen(false)}
+																className={cn(
+																	"flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-colors ms-4",
+																	isActive("/best-selling-accessories") ? "bg-primary text-white font-bold" : "text-gray hover:bg-primary/10"
+																)}
+															>
+																<ShoppingBagIcon size={18} />
+																<span>{locale === "ar" ? "إكسسوارات الأكثر مبيعًا" : "Best Selling Accessories"}</span>
+															</Link>
+														</div>
+													);
+												}
+
+												return (
+													<Link
+														key={item.key}
+														href={item.path}
+														onClick={() => setIsSheetOpen(false)}
+														className={cn(
+															"flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-colors",
+															isActive(item.path)
+																? "bg-primary text-white font-bold"
+																: "text-gray hover:bg-primary/10",
+														)}
+													>
+														<item.Icon size={18} />
+														<span>{t(item.key)}</span>
+													</Link>
+												);
+											})}
 										</div>
 										<div className="border-t pt-4" />
 										{/* Account dropdown inside mobile sheet (authenticated only) */}

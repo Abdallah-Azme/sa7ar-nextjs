@@ -32,6 +32,14 @@ function getClientLocale() {
 
 async function getServerLocale() {
   try {
+    const { getLocale } = await import("next-intl/server");
+    const intlLocale = await getLocale();
+    if (intlLocale && SUPPORTED_LOCALES.has(intlLocale)) return intlLocale;
+  } catch {
+    // getLocale throws outside of Next.js server context, gracefully fallback
+  }
+
+  try {
     const { cookies } = await import("next/headers");
     const store = await cookies();
     const locale = store.get("NEXT_LOCALE")?.value ?? store.get("locale")?.value;

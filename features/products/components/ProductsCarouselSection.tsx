@@ -56,7 +56,6 @@ export default function ProductsCarouselSection({
 }: ProductsCarouselSectionProps) {
 	const [api, setApi] = useState<CarouselApi>();
 	const isMobile = useIsMobile();
-	const visibleItems = isMobile ? 3 : 6;
 	const filterCounts = useMemo(() => {
 		const counts: Record<string, number> = {};
 		products.forEach((product) => {
@@ -73,7 +72,6 @@ export default function ProductsCarouselSection({
 			(product) => (product.size || "").trim().toLowerCase() === selectedFilter,
 		);
 	}, [products, selectedFilter]);
-	const canShowMore = filteredProducts.length > visibleItems;
 
 	useEffect(() => {
 		if (!api || filteredProducts.length <= 1) return;
@@ -121,7 +119,7 @@ export default function ProductsCarouselSection({
 									)}
 								</Button>
 							))}
-					{showMoreTo && canShowMore && <ShowMore to={showMoreTo} />}
+					{showMoreTo && <ShowMore to={showMoreTo} />}
 				</div>
 			</div>
 

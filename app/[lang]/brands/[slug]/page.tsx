@@ -14,7 +14,7 @@ type BrandSlug = "bard" | "rathath";
 
 const BRAND_COPY: Record<BrandSlug, { title: string; seoKey: "bard" | "rathath" }> = {
   bard: { title: "Bard", seoKey: "bard" },
-  rathath: { title: "Sohar", seoKey: "rathath" },
+  rathath: { title: "Rathath", seoKey: "rathath" },
 };
 
 interface Props {

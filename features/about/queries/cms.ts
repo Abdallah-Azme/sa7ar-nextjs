@@ -1,7 +1,17 @@
 import apiClient from "@/lib/apiClient";
 
 export interface CmsPage {
+	id: number;
+	key: string;
+	name: string;
 	description: string;
+	image: string | null;
+	seo: {
+		slug: string;
+		meta_title: string;
+		meta_description: string;
+		meta_keywords: string;
+	} | null;
 }
 
 /**

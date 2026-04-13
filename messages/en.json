@@ -186,7 +186,7 @@
 		"mostSold": "Best Selling Products",
 		"sections": {
 			"bard": "Bard Products",
-			"rathath": "Sohar Products"
+			"rathath": "Rathath Products"
 		},
 		"label": "Our Products",
 		"description": "Browse our full range of water products",
@@ -973,7 +973,7 @@
 	},
 	"brandProductsPage": {
 		"bard": "Bard Products",
-		"rathath": "Sohar Products"
+		"rathath": "Rathath Products"
 	},
 	"seo": {
 		"logo": "Site Icon",
