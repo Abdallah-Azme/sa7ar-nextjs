@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
   experimental: {
     // mcpServer: true,
   },
+  output: 'standalone',
 
   images: {
     // All external image hosts used by the API
@@ -52,7 +53,7 @@ const nextConfig: NextConfig = {
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
-  
+
   // ⚡ Performance Optimization: Browser Caching
   async headers() {
     return [
