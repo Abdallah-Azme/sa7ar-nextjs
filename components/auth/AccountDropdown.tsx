@@ -16,7 +16,7 @@ import {
 	DialogDescription,
 } from "@/components/ui/dialog";
 import { useAuth } from "@/contexts/AuthContext";
-import { usePathname, useRouter } from "@/i18n/routing";
+import { Link, usePathname, useRouter } from "@/i18n/routing";
 import { useState } from "react";
 import ImageFallback from "@/components/shared/ImageFallback";
 
