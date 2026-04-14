@@ -36,6 +36,8 @@ export default function PaginatedProductsPageContent({
   const brandQuery = useBrandProductsPaginated(brand ?? "bard", page, source === "brand");
   const activeQuery = source === "accessories" ? accessoriesQuery : brandQuery;
 
+
+  console.log({ activeQuery });
   const products = activeQuery.data?.products ?? [];
   const totalPages = activeQuery.data?.pagination?.total_pages ?? 1;
 

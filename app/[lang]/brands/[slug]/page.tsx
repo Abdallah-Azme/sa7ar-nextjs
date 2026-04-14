@@ -30,6 +30,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const seoSettings = await fetchSeoSettings();
   const seoPage = seoSettings?.pages?.brand_product;
 
+
+
   if (!brand) {
     return generateSeoMetadata({
       title: seoPage?.meta_title || t("title"),

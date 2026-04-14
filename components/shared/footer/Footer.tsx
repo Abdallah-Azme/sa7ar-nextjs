@@ -56,9 +56,10 @@ export default async function Footer() {
 				<div className="space-y-3 min-w-0 md:col-span-3">
 					<Logo />
 
-					<p className="font-light text-xl text-gray md:text-lg lg:text-xl wrap-break-word">
-						{setting.footer_text}
-					</p>
+					<div 
+						className="font-light text-xl text-gray md:text-lg lg:text-xl wrap-break-word"
+						dangerouslySetInnerHTML={{ __html: setting.footer_text }}
+					/>
 
 					<b className="block font-extrabold text-lg md:text-base lg:text-lg">
 						{tFooter("followUs")}

@@ -19,7 +19,12 @@ const FALLBACK_SRC = "/images/logo.svg";
 
 function normalizeImageSrc(src?: string | null): string {
 	if (!src || src.trim() === "") return FALLBACK_SRC;
-	const value = src.trim();
+	let value = src.trim();
+
+	// Fix API URLs with double slashes in paths like https://domain.com//storage/...
+	// This prevents 400 Bad Request from Next.js image optimizer on Vercel
+	value = value.replace(/([^:])\/{2,}/g, '$1/');
+
 	// Keep remote, data URI, and root-absolute paths untouched
 	if (
 		value.startsWith("http://") ||

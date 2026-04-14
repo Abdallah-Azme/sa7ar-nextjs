@@ -8,6 +8,6 @@ export function cn(...inputs: ClassValue[]) {
 
 /** Strip HTML tags and decode entities (e.g. &quot; → ") for plain-text display. */
 export function htmlToPlainText(html: string): string {
-  const stripped = html.replace(/<[^>]*>/g, "")
+  const stripped = html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim()
   return decode(stripped)
 }
