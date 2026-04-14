@@ -169,6 +169,7 @@ export default function Hero({
                     src={slider.image}
                     alt={slider.title}
                     priority={index === 0}
+                    fetchPriority={index === 0 ? "high" : "auto"}
                     width={1200}
                     height={800}
                     sizes="(max-width: 768px) 100vw, 50vw"

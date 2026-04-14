@@ -11,6 +11,7 @@ interface ImageFallbackProps {
 	className?: string;
 	fill?: boolean;
 	priority?: boolean;
+	fetchPriority?: "high" | "low" | "auto";
 	sizes?: string;
 }
 
@@ -45,6 +46,7 @@ export default function ImageFallback({
 	className,
 	fill = false,
 	priority = false,
+	fetchPriority,
 	sizes,
 }: ImageFallbackProps) {
 	const [imgSrc, setImgSrc] = useState<string>(normalizeImageSrc(src));
@@ -66,6 +68,7 @@ export default function ImageFallback({
 				className={className}
 				onError={handleError}
 				priority={priority}
+				fetchPriority={fetchPriority}
 				unoptimized={imgSrc.endsWith(".svg") || imgSrc.endsWith(".gif")}
 			/>
 		);
@@ -81,6 +84,7 @@ export default function ImageFallback({
 			className={className}
 			onError={handleError}
 			priority={priority}
+			fetchPriority={fetchPriority}
 			unoptimized={imgSrc.endsWith(".svg") || imgSrc.endsWith(".gif")}
 		/>
 	);

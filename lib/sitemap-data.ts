@@ -20,6 +20,18 @@ export const PAGE_ROUTES = [
 ] as const;
 
 type ApiResponse<T> = { data?: T };
+type SlugItem = { id: number; slug: string; locale?: "ar" | "en" };
+type SlugsGrouped = {
+  products?: SlugItem[];
+  pages?: SlugItem[];
+  brands?: SlugItem[];
+  blogs?: SlugItem[];
+};
+type SlugsApiResponse = {
+  data?: {
+    grouped?: SlugsGrouped;
+  };
+};
 
 async function fetchJson<T>(route: string): Promise<T | null> {
   try {
@@ -32,6 +44,16 @@ async function fetchJson<T>(route: string): Promise<T | null> {
     console.error(`[fetchJson] Failed to fetch ${route}:`, error.message);
     return null;
   }
+}
+
+function sanitizeSlug(raw: string | undefined): string | null {
+  const value = raw?.trim();
+  if (!value) return null;
+  return encodeURIComponent(value);
+}
+
+function uniquePaths(paths: string[]): string[] {
+  return Array.from(new Set(paths));
 }
 
 function collectProductPathsFromList(products: Product[] | undefined): string[] {
@@ -64,7 +86,39 @@ export async function getDynamicProductPaths(): Promise<string[]> {
     ...collectProductPathsFromList(rathath?.data),
   ];
 
-  return Array.from(new Set(all));
+  return uniquePaths(all);
+}
+
+async function getGroupedSlugs(): Promise<SlugsGrouped> {
+  const response = await fetchJson<SlugsApiResponse>("/slugs");
+  return response?.data?.grouped ?? {};
+}
+
+export async function getDynamicProductSlugPaths(): Promise<string[]> {
+  const grouped = await getGroupedSlugs();
+  const productPaths = (grouped.products ?? [])
+    .map((item) => sanitizeSlug(item.slug))
+    .filter((slug): slug is string => Boolean(slug))
+    .map((slug) => `/products/${slug}`);
+
+  return uniquePaths(productPaths);
+}
+
+export async function getDynamicPageLikePaths(locale: "ar" | "en"): Promise<string[]> {
+  const grouped = await getGroupedSlugs();
+
+  const brandPaths = (grouped.brands ?? [])
+    .map((item) => sanitizeSlug(item.slug))
+    .filter((slug): slug is string => Boolean(slug))
+    .map((slug) => `/brands/${slug}`);
+
+  const blogPaths = (grouped.blogs ?? [])
+    .filter((item) => !item.locale || item.locale === locale)
+    .map((item) => sanitizeSlug(item.slug))
+    .filter((slug): slug is string => Boolean(slug))
+    .map((slug) => `/blogs/${slug}`);
+
+  return uniquePaths([...brandPaths, ...blogPaths]);
 }
 
 export function withLocalePath(route: string, locale: "ar" | "en"): string {

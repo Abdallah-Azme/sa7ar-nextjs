@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
-import { getDynamicProductPaths, withLocalePath } from "@/lib/sitemap-data";
+import { getDynamicProductSlugPaths, withLocalePath } from "@/lib/sitemap-data";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://watersohar.om";
 
 export async function GET() {
-  const productPaths = await getDynamicProductPaths();
+  const productPaths = await getDynamicProductSlugPaths();
   const urls = productPaths.map((route) => `${BASE_URL}${withLocalePath(route, "ar")}`);
   const body = urls.map((url) => `<url><loc>${url}</loc></url>`).join("");
   const xml = `<?xml version="1.0" encoding="UTF-8"?>

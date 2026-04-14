@@ -16,6 +16,7 @@ import { getMessages, setRequestLocale } from "next-intl/server";
 import DirectionProviderWrapper from "@/components/providers/DirectionProviderWrapper";
 
 import { Cairo } from "next/font/google";
+import DeferredToaster from "@/components/providers/DeferredToaster";
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ lang: locale }));
@@ -32,7 +33,6 @@ const cairo = Cairo({
 });
 
 
-import { Toaster } from "@/components/ui/sonner";
 import { QueryProvider } from "@/providers/QueryProvider";
 
 export const metadata: Metadata = {};
@@ -74,7 +74,7 @@ export default async function RootLayout({
                   </main>
 
                   <Footer />
-                  <Toaster position="top-center" expand />
+                  <DeferredToaster />
                 </CartProvider>
                 </AuthDialogProvider>
               </AuthProvider>

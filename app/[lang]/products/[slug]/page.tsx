@@ -61,8 +61,7 @@ export default async function ProductPage({ params }: Props) {
       queryKey: productKeys.detail(slug),
       queryFn: () => fetchProductDetail(slug),
     });
-    console.log({ data });
-  } catch {
+   } catch {
     notFound();
   }
 

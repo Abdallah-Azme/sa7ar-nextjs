@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
-import { toast } from "sonner";
 import { useCart } from "@/contexts/CartContext";
 
 import { useQuery } from "@tanstack/react-query";
@@ -48,7 +47,9 @@ export default function HomePageContent() {
   // Check for payment success params
   useEffect(() => {
     if (searchParams.get("status") === "success" || searchParams.get("session_id")) {
-      toast.success(tCheckout("success"));
+      import("sonner").then(({ toast }) => {
+        toast.success(tCheckout("success"));
+      });
       refreshCart();
       // Clean up URL to avoid repeated toasts on refresh
       window.history.replaceState({}, "", window.location.pathname);
@@ -72,8 +73,7 @@ export default function HomePageContent() {
     queryKey: homeKeys.data(),
     queryFn: fetchHomeData,
   });
-  console.log({ homeData });
-
+ 
   const { data: settings } = useQuery({
     queryKey: settingsKeys.global(),
     queryFn: fetchGlobalSettings,
