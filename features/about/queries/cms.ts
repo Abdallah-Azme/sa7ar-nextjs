@@ -14,6 +14,35 @@ export interface CmsPage {
 	} | null;
 }
 
+interface CmsSeoMetadataInput {
+	title: string;
+	description: string;
+	keywords?: string;
+	path: string;
+	image?: string;
+}
+
+function cleanValue(value?: string | null): string | undefined {
+	const normalized = value?.trim();
+	return normalized ? normalized : undefined;
+}
+
+export function getCmsSeoMetadataInput(
+	page: CmsPage | null,
+	fallbacks: { title: string; description: string; path: string },
+): CmsSeoMetadataInput {
+	const seoSlug = cleanValue(page?.seo?.slug);
+	const normalizedPath = seoSlug ? `/${seoSlug.replace(/^\/+/, "")}` : fallbacks.path;
+
+	return {
+		title: cleanValue(page?.seo?.meta_title) ?? cleanValue(page?.name) ?? fallbacks.title,
+		description: cleanValue(page?.seo?.meta_description) ?? fallbacks.description,
+		keywords: cleanValue(page?.seo?.meta_keywords),
+		path: normalizedPath,
+		image: cleanValue(page?.image),
+	};
+}
+
 /**
  * Fetch CMS Page Content (Privacy, Terms, etc.)
  * Server-side cached query with 24-hour revalidation for static-like content.

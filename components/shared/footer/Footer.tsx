@@ -71,7 +71,7 @@ export default async function Footer() {
 									key={item.id}
 									href={item.url}
 									target="_blank"
-									rel="noopener noreferrer"
+									rel={`noopener noreferrer${item.rel === "nofollow" ? " nofollow" : ""}`}
 									aria-label={`${item.name} ${tFooter("followUs")}`}
 									title={`${item.name} ${tFooter("followUs")}`}
 									className="flex text-white *:size-5 hover:scale-110 transition-transform duration-300 items-center justify-center size-10 rounded-full bg-accent"

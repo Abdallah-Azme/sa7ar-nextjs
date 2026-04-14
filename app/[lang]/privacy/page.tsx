@@ -8,7 +8,7 @@ import { setRequestLocale } from "next-intl/server";
 import { getTranslations } from "next-intl/server";
 import { generateSeoMetadata } from "@/lib/seo";
 
-import { getCmsPage } from "@/features/about/queries/cms";
+import { getCmsPage, getCmsSeoMetadataInput } from "@/features/about/queries/cms";
 
 const PRIVACY_PAGE_ID = 3;
 
@@ -20,13 +20,19 @@ export async function generateMetadata({
   const { lang } = await params;
   const t = await getTranslations({ locale: lang, namespace: "seo.privacy" });
   const pageData = await getCmsPage(PRIVACY_PAGE_ID);
+  const seo = getCmsSeoMetadataInput(pageData, {
+    title: t("title"),
+    description: t("description"),
+    path: "/privacy",
+  });
 
   return generateSeoMetadata({
-    title: pageData?.seo?.meta_title || pageData?.name || t("title"),
-    description: pageData?.seo?.meta_description || t("description"),
-    keywords: pageData?.seo?.meta_keywords,
+    title: seo.title,
+    description: seo.description,
+    keywords: seo.keywords,
     lang,
-    path: "/privacy",
+    path: seo.path,
+    image: seo.image,
   });
 }
 

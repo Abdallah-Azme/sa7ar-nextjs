@@ -65,6 +65,8 @@ export default async function ProductPage({ params }: Props) {
     notFound();
   }
 
+  console.log({ data });
+
   if (!data?.product) {
     notFound();
   }

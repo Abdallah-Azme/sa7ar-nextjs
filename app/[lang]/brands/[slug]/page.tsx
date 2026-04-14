@@ -9,6 +9,7 @@ import { generateSeoMetadata } from "@/lib/seo";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { fetchSeoSettings } from "@/features/settings/services/settingsService";
 
 type BrandSlug = "bard" | "rathath";
 
@@ -26,20 +27,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { lang, slug } = await params;
   const brand = BRAND_COPY[slug as BrandSlug];
   const t = await getTranslations({ locale: lang, namespace: "seo.brands" });
+  const seoSettings = await fetchSeoSettings();
+  const seoPage = seoSettings?.pages?.brand_product;
 
   if (!brand) {
     return generateSeoMetadata({
-      title: t("title"),
-      description: t("description"),
+      title: seoPage?.meta_title || t("title"),
+      description: seoPage?.meta_description || t("description"),
       lang,
       path: `/brands/${slug}`,
       noIndex: true,
     });
   }
 
+  const fallbackTitle = `${brand.title} | ${t("title")}`;
+
   return generateSeoMetadata({
-    title: `${brand.title} | ${t("title")}`,
-    description: t("description"),
+    title: seoPage?.meta_title || fallbackTitle,
+    description: seoPage?.meta_description || t("description"),
     lang,
     path: `/brands/${slug}`,
   });

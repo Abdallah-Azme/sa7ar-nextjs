@@ -7,7 +7,7 @@ import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { generateSeoMetadata } from "@/lib/seo";
 
-import { getCmsPage } from "@/features/about/queries/cms";
+import { getCmsPage, getCmsSeoMetadataInput } from "@/features/about/queries/cms";
 import { getTranslations } from "next-intl/server";
 
 export async function generateMetadata({
@@ -18,13 +18,19 @@ export async function generateMetadata({
   const { lang } = await params;
   const t = await getTranslations({ locale: lang, namespace: "seo.about" });
   const pageData = await getCmsPage(1); // About Us page ID is 1
+  const seo = getCmsSeoMetadataInput(pageData, {
+    title: t("title"),
+    description: t("description"),
+    path: "/about",
+  });
 
   return generateSeoMetadata({
-    title: pageData?.seo?.meta_title || pageData?.name || t("title"),
-    description: pageData?.seo?.meta_description || t("description"),
-    keywords: pageData?.seo?.meta_keywords,
+    title: seo.title,
+    description: seo.description,
+    keywords: seo.keywords,
     lang,
-    path: "/about",
+    path: seo.path,
+    image: seo.image,
   });
 }
 

@@ -5,6 +5,7 @@ import MostSoldProductsPageContent from "@/features/products/components/MostSold
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { generateSeoMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
+import { fetchSeoSettings } from "@/features/settings/services/settingsService";
 
 export async function generateMetadata({
   params,
@@ -13,10 +14,12 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { lang } = await params;
   const t = await getTranslations({ locale: lang, namespace: "seo.bestSelling" });
+  const seoSettings = await fetchSeoSettings();
+  const seoPage = seoSettings?.pages?.products;
 
   return generateSeoMetadata({
-    title: t("title"),
-    description: t("description"),
+    title: seoPage?.meta_title || t("title"),
+    description: seoPage?.meta_description || t("description"),
     lang,
     path: "/best-selling-products",
   });

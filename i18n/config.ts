@@ -13,8 +13,15 @@ export const routing = defineRouting({
   
   // Don't prefix the default language
   localePrefix: 'as-needed',
-  // Prevent locale cookie writes that force no-store on HTML responses.
-  localeCookie: false
+
+  // Enable locale cookie so the user's choice persists between requests.
+  // Without this, navigating to "/" would re-detect locale from Accept-Language
+  // and potentially redirect back to /en even when the user chose Arabic.
+  localeCookie: true,
+
+  // Disable browser-based locale detection so the URL (and cookie) are
+  // the sole source of truth. Prevents Accept-Language from overriding.
+  localeDetection: false,
 });
 
 /** Locales that use right-to-left layout (Embla `direction`, CSS `dir`, etc.) */

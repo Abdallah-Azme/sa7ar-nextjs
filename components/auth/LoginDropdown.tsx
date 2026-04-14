@@ -1,8 +1,8 @@
 "use client";
 
-import { Globe, UserRoundIcon } from "lucide-react";
+import { UserRoundIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -10,7 +10,7 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuthDialog } from "@/contexts/AuthDialogContext";
-import LanguageSwitcher from "@/components/shared/header/LanguageSwitcher";
+import { usePathname, useRouter } from "@/i18n/routing";
 
 /**
  * LoginDropdown - Client Component
@@ -25,7 +25,17 @@ export default function LoginDropdown({
 }) {
 	const tAuth = useTranslations("auth");
 	const tCommon = useTranslations("common");
+	const locale = useLocale();
+	const pathname = usePathname();
+	const router = useRouter();
 	const { openAuth } = useAuthDialog();
+
+	const switchLocale = (nextLocale: string) => {
+		if (nextLocale !== locale) {
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			router.replace(pathname as any, { locale: nextLocale });
+		}
+	};
 
 	const handleOpen = (mode: "login" | "signup") => {
 		openAuth(mode);
@@ -63,18 +73,34 @@ export default function LoginDropdown({
 							{tAuth("signup")}
 						</button>
 					</DropdownMenuItem>
-					<DropdownMenuItem
-						asChild
-						className="focus:bg-transparent focus:text-foreground data-highlighted:bg-transparent data-highlighted:text-foreground"
-					>
-						<div className="flex w-full items-center justify-between gap-3 text-foreground! **:text-foreground!">
-							<span className="flex items-center gap-2">
-								<Globe className="h-4 w-4" />
-								{tCommon("language")}
-							</span>
-							<LanguageSwitcher onLanguageChange={() => onOpenChange?.(false)} />
+					<div className="h-px bg-gray-100 my-2 mx-2" />
+					<div className="px-2 pb-1">
+						<div className="text-xs text-gray-500 mb-1">{tCommon("language")}</div>
+						<div className="grid grid-cols-2 gap-2">
+							<button
+								type="button"
+								onClick={() => switchLocale("en")}
+								className={`rounded-md px-3 py-2 text-sm text-center border ${
+									locale === "en"
+										? "bg-primary text-white border-primary"
+										: "bg-white text-gray-700 border-gray-200"
+								}`}
+							>
+								English
+							</button>
+							<button
+								type="button"
+								onClick={() => switchLocale("ar")}
+								className={`rounded-md px-3 py-2 text-sm text-center border ${
+									locale === "ar"
+										? "bg-primary text-white border-primary"
+										: "bg-white text-gray-700 border-gray-200"
+								}`}
+							>
+								العربية
+							</button>
 						</div>
-					</DropdownMenuItem>
+					</div>
 				</DropdownMenuContent>
 			</DropdownMenu>
 		</>

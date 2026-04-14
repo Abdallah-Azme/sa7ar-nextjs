@@ -38,6 +38,7 @@ export interface ProductDetail extends Product {
     sizes: ProductSize[];
     description: string;
     images: string[];
+    images_alts?: string[];
     size_id: number;
 }
 
@@ -116,7 +117,7 @@ export default function ProductDetailsView({ product, relatedProducts }: Product
 									<div className="h-96 flex items-center justify-center">
 										<ImageFallback
 											src={image}
-											alt={product?.name}
+											alt={product?.images_alts?.[index] || product?.name}
 											width={400}
 											height={400}
 											className="object-contain"
