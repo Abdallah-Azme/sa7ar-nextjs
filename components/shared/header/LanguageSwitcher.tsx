@@ -2,7 +2,7 @@
 
 import { Globe } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { usePathname, useRouter } from "@/i18n/routing";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   Select,
   SelectContent,
@@ -20,10 +20,27 @@ export default function LanguageSwitcher({ onLanguageChange }: LanguageSwitcherP
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   const switchLanguage = (nextLocale: string) => {
     if (!pathname) return;
-    router.replace(pathname, { locale: nextLocale as "ar" | "en" });
+
+    const cleanPath =
+      pathname === "/"
+        ? "/"
+        : pathname.replace(/^\/(ar|en)(?=\/|$)/, "") || "/";
+
+    const localizedPath =
+      nextLocale === "en"
+        ? cleanPath === "/"
+          ? "/en"
+          : `/en${cleanPath}`
+        : cleanPath;
+
+    const query = searchParams.toString();
+    const nextUrl = query ? `${localizedPath}?${query}` : localizedPath;
+
+    router.replace(nextUrl);
     onLanguageChange?.(nextLocale);
   };
 

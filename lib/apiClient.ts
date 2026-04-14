@@ -102,8 +102,17 @@ export async function apiClient<T = unknown>(
   // ofetch merges headers cleanly and handles JSON by default
   // and throws on non-2xx responses
   try {
+    const method = (opts.method ?? "GET").toString().toUpperCase();
+    const isSafeCacheableGet = isServer && !tokenRequire && method === "GET";
+
     const rawRes = await ofetch.native(url, {
       headers,
+      ...(isSafeCacheableGet
+        ? {
+            cache: (opts as any).cache ?? "force-cache",
+            next: (opts as any).next ?? { revalidate: 300 },
+          }
+        : {}),
       ...(opts as any),
     });
     

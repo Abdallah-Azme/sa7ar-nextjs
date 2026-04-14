@@ -3,12 +3,14 @@ import { makeQueryClient } from "@/lib/queryClient";
 import { orderKeys, fetchOrderHistory } from "@/features/orders/services/orderService";
 import OrdersPageContent from "@/features/orders/components/OrdersPageContent";
 import type { Metadata } from "next";
+import { generateAlternateMetadata } from "@/lib/seo";
 
 import { setRequestLocale } from "next-intl/server";
 
 export const metadata: Metadata = {
   title: "Order History | Sohar Water",
   description: "View and track your previous water orders and delivery status.",
+  ...generateAlternateMetadata("/account/orders"),
 };
 
 export default async function OrdersPage({ params }: { params: Promise<{ lang: string }> }) {

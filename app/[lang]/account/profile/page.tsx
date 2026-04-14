@@ -1,4 +1,7 @@
 import { redirect } from "next/navigation";
+import { generateAlternateMetadata } from "@/lib/seo";
+
+export const metadata = generateAlternateMetadata("/account/profile");
 
 /**
  * Redirect: /account/profile → /account/details

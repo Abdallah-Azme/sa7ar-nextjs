@@ -63,6 +63,8 @@ export async function GET(req: NextRequest, ctx: RouteCtx) {
 
   try {
     const res = await fetch(url, {
+      cache: "force-cache",
+      next: { revalidate: 300 },
       headers: {
         Accept: "application/json",
         Authorization: getAuthorizationHeader(req),
@@ -71,7 +73,12 @@ export async function GET(req: NextRequest, ctx: RouteCtx) {
     });
 
     const data = await res.json();
-    return NextResponse.json(data, { status: res.status });
+    return NextResponse.json(data, {
+      status: res.status,
+      headers: {
+        "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
+      },
+    });
   } catch (error) {
     console.error("Proxy Error:", error);
     return NextResponse.json({ message: "Failed to proxy request" }, { status: 500 });

@@ -128,6 +128,5 @@ export interface ProductDetailResponse {
 export const fetchProductDetail = (id: string) =>
   apiClient<{ data: ProductDetailResponse }>({ route: `/products/${id}` })
     .then((r) => {
-      console.log("fetchProductDetail result:", r.data);
-      return r.data;
+       return r.data;
     });

@@ -1,5 +1,16 @@
 import AddressForm from "@/features/addresses/components/AddressForm";
 import { getTranslations } from "next-intl/server";
+import type { Metadata } from "next";
+import { generateAlternateMetadata } from "@/lib/seo";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}): Promise<Metadata> {
+  await params;
+  return generateAlternateMetadata("/account/addresses/new");
+}
 
 export default async function AddAddressPage() {
   const t = await getTranslations("account.addAddress");

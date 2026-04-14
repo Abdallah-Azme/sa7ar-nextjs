@@ -4,10 +4,12 @@ import { fetchAddresses, addressKeys } from "@/features/addresses/services/addre
 import AddressesPageContent from "@/features/addresses/components/AddressesPageContent";
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
+import { generateAlternateMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Delivery Addresses | Sohar Water",
   description: "Manage your saved delivery locations for faster checkout experience.",
+  ...generateAlternateMetadata("/account/addresses"),
 };
 
 export default async function AddressesPage({ params }: { params: Promise<{ lang: string }> }) {

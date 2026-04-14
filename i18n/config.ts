@@ -12,7 +12,9 @@ export const routing = defineRouting({
   defaultLocale: 'ar',
   
   // Don't prefix the default language
-  localePrefix: 'as-needed'
+  localePrefix: 'as-needed',
+  // Prevent locale cookie writes that force no-store on HTML responses.
+  localeCookie: false
 });
 
 /** Locales that use right-to-left layout (Embla `direction`, CSS `dir`, etc.) */

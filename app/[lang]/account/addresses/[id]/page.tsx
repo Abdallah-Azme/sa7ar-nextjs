@@ -2,8 +2,19 @@ import { notFound, redirect } from "next/navigation";
 import AddressForm from "@/features/addresses/components/AddressForm";
 import { getAddressDetails } from "@/features/addresses/queries";
 import { getTranslations } from "next-intl/server";
+import type { Metadata } from "next";
+import { generateAlternateMetadata } from "@/lib/seo";
 
-export default async function EditAddressPage({ params }: { params: Promise<{ id: string }> }) {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string; id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  return generateAlternateMetadata(`/account/addresses/${id}`);
+}
+
+export default async function EditAddressPage({ params }: { params: Promise<{ lang: string; id: string }> }) {
     const { id } = await params;
     if (!id) return redirect("/account/addresses");
 

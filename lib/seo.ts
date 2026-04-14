@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { headers } from 'next/headers';
 import { routing } from '@/i18n/config';
 
 interface SeoProps {
@@ -11,32 +12,67 @@ interface SeoProps {
   keywords?: string;
 }
 
-export function generateSeoMetadata({ title, description, lang, path = '', image, noIndex = false, keywords }: SeoProps): Metadata {
+function getAlternateLanguageUrls(path = ''): { baseUrl: string; languages: Record<string, string> } {
   let baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://watersohar.om';
   if (!baseUrl.startsWith('http')) baseUrl = `https://${baseUrl}`;
-  
-  // Format the relative path
+
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
   const isRoot = normalizedPath === '/' || normalizedPath === '';
-  
-  // Create alternate language dictionary
+
   const languages: Record<string, string> = {};
-  
+
   routing.locales.forEach((locale) => {
-    // With localePrefix: 'as-needed', the default locale (ar) has no prefix
     const prefix = locale === routing.defaultLocale ? '' : `/${locale}`;
     const urlPath = `${prefix}${isRoot ? '' : normalizedPath}`;
     languages[locale] = urlPath || '/';
   });
 
-  // Add x-default (pointing to the default language version)
   languages['x-default'] = isRoot ? '/' : normalizedPath;
 
+  return { baseUrl, languages };
+}
+
+async function resolveRequestBaseUrl(): Promise<string> {
+  try {
+    const h = await headers();
+    const host = h.get('x-forwarded-host') || h.get('host');
+    if (host) {
+      const proto = h.get('x-forwarded-proto') || (host.includes('localhost') ? 'http' : 'https');
+      return `${proto}://${host}`;
+    }
+  } catch {
+    // Fallback to configured site URL below.
+  }
+
+  let fallback = process.env.NEXT_PUBLIC_SITE_URL || 'https://watersohar.om';
+  if (!fallback.startsWith('http')) fallback = `https://${fallback}`;
+  return fallback;
+}
+
+export function generateAlternateMetadata(path = ''): Pick<Metadata, 'alternates'> {
+  const { languages } = getAlternateLanguageUrls(path);
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  const isRoot = normalizedPath === '/' || normalizedPath === '';
+
+  return {
+    alternates: {
+      canonical: isRoot ? '/' : normalizedPath,
+      languages,
+    },
+  };
+}
+
+export async function generateSeoMetadata({ title, description, lang, path = '', image, noIndex = false, keywords }: SeoProps): Promise<Metadata> {
+  const baseUrl = await resolveRequestBaseUrl();
+  const { languages: relativeLanguages } = getAlternateLanguageUrls(path);
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  const isRoot = normalizedPath === '/' || normalizedPath === '';
   const currentPrefix = lang === routing.defaultLocale ? '' : `/${lang}`;
   const currentUrl = `${currentPrefix}${isRoot ? '' : normalizedPath}` || '/';
+  const absoluteLanguages = Object.fromEntries(
+    Object.entries(relativeLanguages).map(([locale, localePath]) => [locale, new URL(localePath, baseUrl).toString()]),
+  );
   const absoluteCanonical = new URL(currentUrl, baseUrl).toString();
-
-  const isLocalBaseUrl = /localhost|127\.0\.0\.1/.test(baseUrl);
 
   return {
     title,
@@ -45,7 +81,7 @@ export function generateSeoMetadata({ title, description, lang, path = '', image
     metadataBase: new URL(baseUrl),
     alternates: {
       canonical: absoluteCanonical,
-      ...(isLocalBaseUrl ? {} : { languages }),
+      languages: absoluteLanguages,
     },
     openGraph: {
       title,

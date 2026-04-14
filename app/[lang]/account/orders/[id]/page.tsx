@@ -5,10 +5,19 @@ import { fetchOrderDetail, orderKeys } from "@/features/orders/services/orderSer
 import OrderDetailsView from "@/features/orders/components/OrderDetailsView";
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
+import { generateAlternateMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Order Details | Sohar Water",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string; id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  return {
+    title: "Order Details | Sohar Water",
+    ...generateAlternateMetadata(`/account/orders/${id}`),
+  };
+}
 
 /**
  * Account Tracking Page - RSC (Server Component)

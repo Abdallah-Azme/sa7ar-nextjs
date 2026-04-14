@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { getServerAuth } from "@/features/auth/queries";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { AuthDialogProvider } from "@/contexts/AuthDialogContext";
 import { CartProvider } from "@/contexts/CartContext";
@@ -13,7 +12,7 @@ import "./globals.css";
 
 // next-intl
 import { NextIntlClientProvider } from "next-intl";
-import { getMessages, setRequestLocale, getTranslations } from "next-intl/server";
+import { getMessages, setRequestLocale } from "next-intl/server";
 import DirectionProviderWrapper from "@/components/providers/DirectionProviderWrapper";
 
 import { Cairo } from "next/font/google";
@@ -34,25 +33,9 @@ const cairo = Cairo({
 
 
 import { Toaster } from "@/components/ui/sonner";
-import { generateSeoMetadata } from "@/lib/seo";
-
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ lang: string }>;
-}): Promise<Metadata> {
-  const { lang } = await params;
-  const t = await getTranslations({ locale: lang, namespace: "seo.home" });
-
-  return generateSeoMetadata({
-    title: t("title"),
-    description: t("description"),
-    lang,
-    path: "/",
-  });
-}
-
 import { QueryProvider } from "@/providers/QueryProvider";
+
+export const metadata: Metadata = {};
 
 export default async function RootLayout({
   children,
@@ -61,10 +44,7 @@ export default async function RootLayout({
   children: React.ReactNode;
   params: Promise<{ lang: string }>;
 }>) {
-  // 1. Fetch user data on server to hydrate AuthContext (Zero flash logic)
-  const initialUser = await getServerAuth();
-
-  // 2. Extract locale and messages
+  // Extract locale and messages
   const paramsResolved = await params;
   const lang = (paramsResolved?.lang as "ar" | "en") ?? routing.defaultLocale;
   
@@ -82,7 +62,7 @@ export default async function RootLayout({
         >
           <DirectionProviderWrapper dir={dir}>
             <QueryProvider>
-              <AuthProvider initialUser={initialUser}>
+              <AuthProvider initialUser={null}>
                 <AuthDialogProvider>
                 <CartProvider>
                   
