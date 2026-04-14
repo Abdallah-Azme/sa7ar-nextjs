@@ -19,8 +19,6 @@ export default function MostSoldProductsPageContent() {
 
   const { data, isLoading } = useMostSoldProducts(page);
 
-  console.log({ data });
-  
   const products = data?.products ?? [];
   const totalPages = data?.pagination?.total_pages ?? 1;
 

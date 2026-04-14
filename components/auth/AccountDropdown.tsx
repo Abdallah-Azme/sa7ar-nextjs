@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { UserRoundIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -118,8 +118,8 @@ export default function AccountDropdown({
 
 					<div className="h-px bg-gray-100 my-2 mx-2" />
 					<div className="px-4 pb-2">
-						<div className="text-xs text-gray-500 mb-1">{tCommon("language")}</div>
-						<div className="grid grid-cols-2 gap-2">
+						<div className="text-xs text-gray-400 mb-1 px-1">{tCommon("language")}</div>
+						<div className="flex flex-col">
 							<button
 								type="button"
 								onClick={() => {
@@ -127,13 +127,12 @@ export default function AccountDropdown({
 									_onOpenChange(false);
 									onOpenChange?.(false);
 								}}
-								className={`rounded-md px-3 py-2 text-sm text-center border ${
-									locale === "en"
-										? "bg-primary text-white border-primary"
-										: "bg-white text-gray-700 border-gray-200"
+								className={`flex items-center justify-between gap-3 px-2 py-1.5 rounded-md text-sm transition-colors w-full text-start ${
+									locale === "en" ? "bg-[#51A1B1] text-white font-semibold" : "hover:bg-gray-50 text-gray-600"
 								}`}
 							>
-								English
+								<span>English</span>
+								{locale === "en" && <span className="text-gray-500 text-base leading-none">✓</span>}
 							</button>
 							<button
 								type="button"
@@ -142,13 +141,12 @@ export default function AccountDropdown({
 									_onOpenChange(false);
 									onOpenChange?.(false);
 								}}
-								className={`rounded-md px-3 py-2 text-sm text-center border ${
-									locale === "ar"
-										? "bg-primary text-white border-primary"
-										: "bg-white text-gray-700 border-gray-200"
+								className={`flex items-center justify-between gap-3 px-2 py-1.5 rounded-md text-sm transition-colors w-full text-start ${
+									locale === "ar" ? "bg-[#51A1B1] text-white font-semibold" : "hover:bg-gray-50 text-gray-600"
 								}`}
 							>
-								العربية
+								<span>العربية</span>
+								{locale === "ar" && <span className="text-gray-500 text-base leading-none">✓</span>}
 							</button>
 						</div>
 					</div>
