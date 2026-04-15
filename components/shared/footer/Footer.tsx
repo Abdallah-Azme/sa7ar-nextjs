@@ -1,4 +1,5 @@
 import { getGlobalSettings, getSocialLinks } from "@/features/settings/queries";
+import { fetchCmsPages, getCmsPagePathByKey } from "@/features/about/services/cmsService";
 import AppStore from "@/components/icons/AppStore";
 import GoogleStore from "@/components/icons/GoogleStore";
 import { Button } from "@/components/ui/button";
@@ -15,6 +16,10 @@ export default async function Footer() {
     const tCommon = await getTranslations("common");
 
 	const setting = await getGlobalSettings();
+	const cmsPages = await fetchCmsPages().catch(() => undefined);
+	const aboutPath = getCmsPagePathByKey(cmsPages, "about_us");
+	const termsPath = getCmsPagePathByKey(cmsPages, "terms_and_conditions");
+	const privacyPath = getCmsPagePathByKey(cmsPages, "privacy_policy");
 	const socialMediaLinks = getSocialLinks(setting);
 	const year = new Date().getFullYear();
 
@@ -24,7 +29,7 @@ export default async function Footer() {
 			items: [
 				{ label: tNav("home"), link: "/" },
 				{ label: tNav("products"), link: "/products" },
-				{ label: tNav("about"), link: "/about" },
+				{ label: tNav("about"), link: aboutPath },
 				{ label: tNav("blog"), link: "/blogs" },
 			],
 		},
@@ -195,9 +200,9 @@ export default async function Footer() {
 					{tFooter("copyright", { year })}
 				</span>
 				<span className="flex items-center justify-center gap-2 md:justify-end">
-					<Link href="/terms">{tCommon("links.terms")}</Link>
+					<Link href={termsPath}>{tCommon("links.terms")}</Link>
 					<span aria-hidden>·</span>
-					<Link href="/privacy">{tCommon("links.privacy")}</Link>
+					<Link href={privacyPath}>{tCommon("links.privacy")}</Link>
 				</span>
 			</div>
 		</footer>

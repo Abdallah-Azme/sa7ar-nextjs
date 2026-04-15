@@ -40,8 +40,9 @@ async function fetchJson<T>(route: string): Promise<T | null> {
     });
     if (!res.ok) return null;
     return (await res.json()) as T;
-  } catch (error: any) {
-    console.error(`[fetchJson] Failed to fetch ${route}:`, error.message);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    console.error(`[fetchJson] Failed to fetch ${route}:`, message);
     return null;
   }
 }
@@ -107,6 +108,12 @@ export async function getDynamicProductSlugPaths(): Promise<string[]> {
 export async function getDynamicPageLikePaths(locale: "ar" | "en"): Promise<string[]> {
   const grouped = await getGroupedSlugs();
 
+  const pagePaths = (grouped.pages ?? [])
+    .filter((item) => !item.locale || item.locale === locale)
+    .map((item) => sanitizeSlug(item.slug))
+    .filter((slug): slug is string => Boolean(slug))
+    .map((slug) => `/${slug}`);
+
   const brandPaths = (grouped.brands ?? [])
     .map((item) => sanitizeSlug(item.slug))
     .filter((slug): slug is string => Boolean(slug))
@@ -118,7 +125,7 @@ export async function getDynamicPageLikePaths(locale: "ar" | "en"): Promise<stri
     .filter((slug): slug is string => Boolean(slug))
     .map((slug) => `/blogs/${slug}`);
 
-  return uniquePaths([...brandPaths, ...blogPaths]);
+  return uniquePaths([...pagePaths, ...brandPaths, ...blogPaths]);
 }
 
 export function withLocalePath(route: string, locale: "ar" | "en"): string {

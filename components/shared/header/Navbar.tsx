@@ -32,6 +32,8 @@ import AuthActionWrapper from "@/components/shared/AuthActionWrapper";
 import ScrollToTop from "@/components/shared/ScrollToTop";
 import LanguageSwitcher from "@/components/shared/header/LanguageSwitcher";
 import { useTranslations, useLocale } from "next-intl";
+import { useCmsPagesQuery } from "@/features/about/hooks/useCms";
+import { getCmsPagePathByKey } from "@/features/about/services/cmsService";
 
 /**
  * Nav links — mirrors React's navLinks array exactly (same paths, same icons)
@@ -61,6 +63,11 @@ export default function Navbar({ logo }: { logo?: ReactNode }) {
 	const { isAuthenticated } = useAuth();
 	const { cartCount } = useCart();
 	const pathname = usePathname();
+	const { data: cmsPages } = useCmsPagesQuery();
+	const aboutPath = getCmsPagePathByKey(cmsPages, "about_us");
+	const resolvedNavLinks = navLinks.map((item) =>
+		item.key === "about" ? { ...item, path: aboutPath } : item,
+	);
 
 	// Active link helper — mirrors React NavLink's isActive logic
 	const isActive = (path: string) => {
@@ -127,7 +134,7 @@ export default function Navbar({ logo }: { logo?: ReactNode }) {
 
 					{/* Desktop nav links */}
 					<ul className="hidden lg:flex transition-all duration-1000 items-center gap-2 text-nowrap">
-						{navLinks.map((item) => (
+						{resolvedNavLinks.map((item) => (
 							<li key={item.key}>
 								{"hasDropdown" in item && item.hasDropdown ? (
 									<DropdownMenu>
@@ -246,7 +253,7 @@ export default function Navbar({ logo }: { logo?: ReactNode }) {
 									<div className="flex flex-col gap-6 p-2 mt-10">
 										<div className="text-sm font-bold text-gray">{tCommon("menu")}</div>
 										<div className="flex flex-col gap-2">
-											{navLinks.map((item) => {
+											{resolvedNavLinks.map((item) => {
 												if ("hasDropdown" in item && item.hasDropdown) {
 													return (
 														<div key={item.key} className="flex flex-col gap-2">

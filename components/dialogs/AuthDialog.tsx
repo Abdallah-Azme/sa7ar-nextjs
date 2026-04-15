@@ -23,6 +23,8 @@ import ResetPasswordDialog from "./ResetPasswordDialog";
 import VerifyOtpDialog from "./VerifyOtpDialog";
 import apiClient from "@/lib/apiClient";
 import type { Profile } from "@/types";
+import { useCmsPagesQuery } from "@/features/about/hooks/useCms";
+import { getCmsPagePathByKey } from "@/features/about/services/cmsService";
 
 type DialogMode = "login" | "signup";
 
@@ -200,6 +202,9 @@ function SignupDialog({
 }) {
 	const t = useTranslations("authDialog.signup");
 	const tForm = useTranslations("form");
+	const { data: cmsPages } = useCmsPagesQuery();
+	const termsPath = getCmsPagePathByKey(cmsPages, "terms_and_conditions");
+	const privacyPath = getCmsPagePathByKey(cmsPages, "privacy_policy");
 	const [showOtpDialog, setShowOtpDialog] = useState(false);
 	const [otpMobile, setOtpMobile] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -324,9 +329,9 @@ function SignupDialog({
 								/>
 								<p className="text-gray-500 font-medium leading-relaxed">
 									{t("consentPrefix")}
-                                    <Link href="/terms" className="font-extrabold text-primary hover:underline mx-1">{t("consentTerms")}</Link>
+                                    <Link href={termsPath} className="font-extrabold text-primary hover:underline mx-1">{t("consentTerms")}</Link>
                                     {useTranslations("common")("and")}
-                                    <Link href="/privacy" className="font-extrabold text-primary hover:underline ms-1">{t("consentPrivacy")}</Link>.
+                                    <Link href={privacyPath} className="font-extrabold text-primary hover:underline ms-1">{t("consentPrivacy")}</Link>.
 								</p>
 							</div>
 							{errors.consent && <p className="text-destructive text-xs font-bold ps-2 mt-1">{String(errors.consent.message)}</p>}
