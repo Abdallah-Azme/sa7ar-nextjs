@@ -193,9 +193,11 @@ export default function Navbar({ logo }: { logo?: ReactNode }) {
 
 					{/* Right-side actions */}
 					<div className="flex gap-4 items-center">
-						<div className="hidden sm:block">
-							<LanguageSwitcher />
-						</div>
+						{isAuthenticated && (
+							<div className="hidden sm:block">
+								<LanguageSwitcher />
+							</div>
+						)}
 
 						{/* Cart button — guarded by AuthActionWrapper for guests */}
 						<AuthActionWrapper>
@@ -328,9 +330,11 @@ export default function Navbar({ logo }: { logo?: ReactNode }) {
 											})}
 										</div>
 										<div className="border-t pt-4" />
-										<div className="sm:hidden -mt-1 mb-2 px-2">
-											<LanguageSwitcher />
-										</div>
+										{isAuthenticated && (
+											<div className="sm:hidden -mt-1 mb-2 px-2">
+												<LanguageSwitcher />
+											</div>
+										)}
 										{/* Account dropdown inside mobile sheet (authenticated only) */}
 										{isAuthenticated && (
 											<div className="lg:hidden">
