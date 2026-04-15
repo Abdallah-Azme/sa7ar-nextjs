@@ -266,7 +266,7 @@ export default function ProductDetailsView({ product, relatedProducts }: Product
 									key={related.id}
 									className="basis-full min-[460px]:basis-1/2 sm:basis-1/3 lg:basis-1/4 xl:basis-1/6"
 								>
-									<ProductCard item={related} titleAs="h2" />
+									<ProductCard item={related} titleAs="h3" />
 								</CarouselItem>
 							))}
 						</CarouselContent>
