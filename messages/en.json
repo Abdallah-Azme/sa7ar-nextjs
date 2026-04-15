@@ -557,6 +557,7 @@
 		"createdAt": "January 16, 2025",
 		"title": "How many liters of water does your body need daily?",
 		"shareLabel": "Share this article on",
+		"notFound": "Article not found",
 		"social": {
 			"facebook": "Facebook",
 			"twitter": "Twitter (X)",
@@ -578,8 +579,7 @@
 			"fourth": {
 				"title": "Tip Four - 04!",
 				"description": "If your schedule is busy, use phone reminders or a marked bottle to track intake, because small consistent habits are the easiest way to maintain hydration balance."
-			},
-			"notFound": "Article not found"
+			}
 		}
 	},
 	"privacyPage": {

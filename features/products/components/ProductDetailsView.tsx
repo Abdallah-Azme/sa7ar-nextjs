@@ -19,7 +19,7 @@ import Autoplay from "embla-carousel-autoplay";
 import SectionHeader from "@/components/shared/SectionHeader";
 import ProductCard from "@/components/shared/cards/ProductCard";
 import { useCart } from "@/contexts/CartContext";
-import { cn } from "@/lib/utils";
+import { cn, htmlToPlainText } from "@/lib/utils";
 import type { Product } from "@/types";
 import { useRouter } from "@/i18n/routing";
 import apiClient from "@/lib/apiClient";
@@ -164,7 +164,7 @@ export default function ProductDetailsView({ product, relatedProducts }: Product
 							{tProducts("descriptionLabel")}
 						</label>
 						<p className="font-light text-gray text-sm leading-relaxed">
-							{product?.description}
+							{htmlToPlainText(product?.description ?? "")}
 						</p>
 					</div>
 

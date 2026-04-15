@@ -25,8 +25,24 @@ export interface BlogsResponse {
 export const blogKeys = {
   all: ["blogs"] as const,
   list: (page: number) => [...blogKeys.all, "list", page] as const,
-  detail: (slug: string) => [...blogKeys.all, "detail", slug] as const,
+  detail: (slug: string) => [...blogKeys.all, "detail", normalizeBlogSlug(slug)] as const,
 };
+
+/**
+ * Normalize route slug to support Arabic and encoded values safely.
+ */
+export function normalizeBlogSlug(slug: string): string {
+  const trimmed = slug.trim();
+  if (!trimmed) return "";
+
+  try {
+    // If we receive percent-encoded slug from URL, decode once.
+    return decodeURIComponent(trimmed).normalize("NFC");
+  } catch {
+    // If decoding fails (or already plain text), keep original value.
+    return trimmed.normalize("NFC");
+  }
+}
 
 export async function fetchBlogs(page = 1) {
   const res = await apiClient<{ data: BlogsResponse }>({
@@ -36,8 +52,10 @@ export async function fetchBlogs(page = 1) {
 }
 
 export async function fetchBlogBySlug(slug: string) {
+  const normalizedSlug = normalizeBlogSlug(slug);
+  const encodedSlug = encodeURIComponent(normalizedSlug);
   const res = await apiClient<{ data: BlogItem | { blog: BlogItem } }>({
-    route: `/blogs/${slug}`,
+    route: `/blogs/${encodedSlug}`,
   });
   
   const data = res.data;

@@ -37,10 +37,27 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     });
   }
 
+  const seoWithSettings = data.product.seo as
+    | (typeof data.product.seo & {
+        settings?: {
+          meta_title?: string | null;
+          meta_description?: string | null;
+        } | null;
+      })
+    | null
+    | undefined;
+  const seoSettings = seoWithSettings?.settings;
+  const settingsMetaTitle = typeof seoSettings?.meta_title === "string" ? seoSettings.meta_title.trim() : "";
+  const settingsMetaDescription =
+    typeof seoSettings?.meta_description === "string" ? seoSettings.meta_description.trim() : "";
+  const seoMetaTitle = data.product.seo?.meta_title?.trim() || "";
+  const seoMetaDescription = data.product.seo?.meta_description?.trim() || "";
+  const seoMetaKeywords = data.product.seo?.meta_keywords?.trim() || "";
+
   return generateSeoMetadata({
-    title: data.product.seo?.meta_title || data.product.name,
-    description:
-      data.product.seo?.meta_description || data.product.description || "",
+    title: settingsMetaTitle || seoMetaTitle || data.product.name,
+    description: settingsMetaDescription || seoMetaDescription || data.product.description || "",
+    keywords: seoMetaKeywords || undefined,
     lang,
     path: `/products/${slug}`,
     image: data.product.image || data.product.images?.[0],
@@ -64,8 +81,6 @@ export default async function ProductPage({ params }: Props) {
   } catch {
     notFound();
   }
-
-
   if (!data?.product) {
     notFound();
   }
