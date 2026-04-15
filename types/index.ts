@@ -27,6 +27,7 @@ export type Product = {
 	id: number;
 	name: string;
 	image: string;
+	image_alt?: string | null;
 	price: number;
 	offer_price: number | null;
 	points_value: number;

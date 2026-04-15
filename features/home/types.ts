@@ -7,6 +7,7 @@ export interface HomeResponse {
 		title: string;
 		description: string;
 		image: string;
+		image_alt?: string | null;
 		category_id: number | null;
 		category_name: string | null;
 		type: string;

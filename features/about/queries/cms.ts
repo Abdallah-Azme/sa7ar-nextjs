@@ -43,15 +43,13 @@ export function getCmsSeoMetadataInput(
 	};
 }
 
-/**
- * Fetch CMS Page Content (Privacy, Terms, etc.)
- * Server-side cached query with 24-hour revalidation for static-like content.
- */
+ 
 export async function getCmsPage(id: string | number) {
 	try {
         const res = await apiClient<{ data: CmsPage }>({
             route: `/pages?page_id=${id}`,
         });
+		console.log("res", res);
         return res.data;
     } catch (error) {
         console.error(`Error fetching CMS page ${id}:`, error);

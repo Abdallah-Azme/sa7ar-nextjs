@@ -167,7 +167,7 @@ export default function Hero({
                 <Overlay>
                   <ImageFallback
                     src={slider.image}
-                    alt={slider.title}
+                    alt={slider.image_alt?.trim() || slider.title}
                     priority={index === 0}
                     fetchPriority={index === 0 ? "high" : "auto"}
                     width={1200}

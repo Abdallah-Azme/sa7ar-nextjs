@@ -63,8 +63,7 @@ export async function GET(req: NextRequest, ctx: RouteCtx) {
 
   try {
     const res = await fetch(url, {
-      cache: "force-cache",
-      next: { revalidate: 300 },
+      cache: "no-store",
       headers: {
         Accept: "application/json",
         Authorization: getAuthorizationHeader(req),
@@ -76,7 +75,7 @@ export async function GET(req: NextRequest, ctx: RouteCtx) {
     return NextResponse.json(data, {
       status: res.status,
       headers: {
-        "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
+        "Cache-Control": "no-store, no-cache, must-revalidate",
       },
     });
   } catch (error) {

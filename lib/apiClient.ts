@@ -109,8 +109,7 @@ export async function apiClient<T = unknown>(
       headers,
       ...(isSafeCacheableGet
         ? {
-            cache: (opts as any).cache ?? "force-cache",
-            next: (opts as any).next ?? { revalidate: 300 },
+            cache: (opts as any).cache ?? "no-store",
           }
         : {}),
       ...(opts as any),

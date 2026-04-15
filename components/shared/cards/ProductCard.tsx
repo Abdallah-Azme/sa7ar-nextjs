@@ -32,8 +32,13 @@ export default function ProductCard({ item }: { item: Product }) {
 	const pointsValue = Number(item?.points_value ?? 0);
 	const hasPoints = pointsValue > 0;
 	const isMostSold = Boolean(item?.is_most_sold);
+	const imageAlt =
+		typeof (item as { image_alt?: string | null })?.image_alt === "string" &&
+		(item as { image_alt?: string | null }).image_alt?.trim()
+			? (item as { image_alt?: string | null }).image_alt!.trim()
+			: item?.name;
 
-	const slug = item?.seo?.slug?.trim();
+ 	const slug = item?.seo?.slug?.trim();
 	const productHref = slug ? `/products/${slug}` : `/products/${item.id}`;
 
 	const cartItem = cart?.items?.find(
@@ -48,7 +53,7 @@ export default function ProductCard({ item }: { item: Product }) {
 					className="absolute inset-0 z-10 rounded-4xl"
 					aria-label={item.name}
 				/>
-				<CardHeader className="relative z-[1] pointer-events-none rounded-4xl py-4 sm:py-6 bg-background-cu flex items-center justify-center overflow-visible">
+				<CardHeader className="relative z-1 pointer-events-none rounded-4xl py-4 sm:py-6 bg-background-cu flex items-center justify-center overflow-visible">
 					{(hasPoints || isMostSold) && (
 						<div className="absolute right-3 top-3 z-10 flex items-center gap-1.5 direction-ltr pointer-events-none">
 							{hasPoints && (
@@ -65,13 +70,13 @@ export default function ProductCard({ item }: { item: Product }) {
 					)}
 					<ImageFallback
 						src={item?.image}
-						alt={item?.name}
+						alt={imageAlt}
 						width={275}
 						height={275}
 						className="w-33 h-48 mx-auto object-contain"
 					/>
 				</CardHeader>
-				<CardContent className="relative z-[1] pointer-events-none flex flex-col gap-3 items-center text-center mt-4">
+				<CardContent className="relative z-1 pointer-events-none flex flex-col gap-3 items-center text-center mt-4">
 				<div className="text-gray text-xs font-medium flex items-center justify-center gap-2">
 					<WaterDrop size={14} className="stroke-2" />
 					<span>{item?.size}</span>
