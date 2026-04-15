@@ -159,10 +159,6 @@ export default function ProductDetailsView({ product, relatedProducts }: Product
 					</div>
 
 					<div className="space-y-4">
-						<label className="text-gray font-bold text-sm inline-block">
-							<CartIcon className="inline me-2" />
-							{tProducts("descriptionLabel")}
-						</label>
 						<p className="font-light text-gray text-sm leading-relaxed">
 							{htmlToPlainText(product?.description ?? "")}
 						</p>
@@ -270,7 +266,7 @@ export default function ProductDetailsView({ product, relatedProducts }: Product
 									key={related.id}
 									className="basis-full min-[460px]:basis-1/2 sm:basis-1/3 lg:basis-1/4 xl:basis-1/6"
 								>
-									<ProductCard item={related} />
+									<ProductCard item={related} titleAs="h2" />
 								</CarouselItem>
 							))}
 						</CarouselContent>

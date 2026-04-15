@@ -10,6 +10,7 @@ import ProductsListPageContent from "@/features/products/components/ProductsList
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { generateSeoMetadata } from "@/lib/seo";
+import { fetchSeoSettings } from "@/features/settings/services/settingsService";
 
 interface Props {
   params: Promise<{ lang: string }>;
@@ -25,6 +26,8 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   const { lang } = await params;
   const tSeo = await getTranslations({ locale: lang, namespace: "seo.products" });
   const tProducts = await getTranslations({ locale: lang, namespace: "products" });
+  const seoSettings = await fetchSeoSettings();
+  const seoPages = seoSettings?.pages;
   const sParams = await searchParams;
   const section = (sParams.section as string) || "most-sold";
   
@@ -40,9 +43,22 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
       titleSegment = tSeo("title").split("|")[0].trim();
     }
 
+    const seoPage =
+      section === "most-sold"
+        ? seoPages?.most_sold_products
+        : section === "rathath"
+          ? seoPages?.razar_products ?? seoPages?.brand_product
+          : section === "bard"
+            ? seoPages?.brad ?? seoPages?.brand_product
+            : section === "accessories"
+              ? seoPages?.accessory_products
+              : seoPages?.products;
+
     return generateSeoMetadata({
-      title: `${titleSegment} | ${tSeo("title").split("|")[1]?.trim() || "Sohar"}`,
-      description: tSeo("description"),
+      title:
+        seoPage?.meta_title ||
+        `${titleSegment} | ${tSeo("title").split("|")[1]?.trim() || "Sohar"}`,
+      description: seoPage?.meta_description || tSeo("description"),
       lang,
       path: "/products-list",
     });

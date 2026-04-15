@@ -68,7 +68,9 @@ export interface SeoSettingsResponse {
   structured_data: unknown[];
   pages: {
     products?: SeoPageMetadata;
+    most_sold_products?: SeoPageMetadata;
     brand_product?: SeoPageMetadata;
+    brad?: SeoPageMetadata;
     razar_products?: SeoPageMetadata;
     accessory_products?: SeoPageMetadata;
     blog?: SeoPageMetadata;

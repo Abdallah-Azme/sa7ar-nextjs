@@ -28,7 +28,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const brand = BRAND_COPY[slug as BrandSlug];
   const t = await getTranslations({ locale: lang, namespace: "seo.brands" });
   const seoSettings = await fetchSeoSettings();
-  const seoPage = seoSettings?.pages?.brand_product;
+  const seoPages = seoSettings?.pages;
+  const seoPage =
+    slug === "rathath"
+      ? seoPages?.razar_products ?? seoPages?.brand_product
+      : slug === "bard"
+        ? seoPages?.brad ?? seoPages?.brand_product
+        : seoPages?.brand_product;
 
 
 

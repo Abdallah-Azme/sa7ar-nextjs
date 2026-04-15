@@ -24,10 +24,16 @@ const buttonClass =
  * ProductCard - Client Component
  * Handles direct cart interaction and quantity management
  */
-export default function ProductCard({ item }: { item: Product }) {
+type ProductCardProps = {
+	item: Product;
+	titleAs?: "h2" | "h3";
+};
+
+export default function ProductCard({ item, titleAs = "h3" }: ProductCardProps) {
     const tActions = useTranslations("actions");
     const tProducts = useTranslations("products");
 	const { cart, addToCart, updateCart, addToCartPending, updateCartPending } = useCart();
+	const TitleTag = titleAs;
 
 	const pointsValue = Number(item?.points_value ?? 0);
 	const hasPoints = pointsValue > 0;
@@ -82,7 +88,7 @@ export default function ProductCard({ item }: { item: Product }) {
 					<span>{item?.size}</span>
 				</div>
 				{/* Title */}
-				<h3 className="font-bold text-lg line-clamp-1">{item?.name}</h3>
+				<TitleTag className="font-bold text-lg line-clamp-1">{item?.name}</TitleTag>
 
 				{/* Price */}
 				<div className="font-extrabold text-xl flex items-center gap-2">

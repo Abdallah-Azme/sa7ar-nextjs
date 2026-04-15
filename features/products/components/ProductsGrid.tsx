@@ -17,6 +17,7 @@ interface ProductsGridProps {
 }
 
 export default function ProductsGrid({ queryKey, source, brand }: ProductsGridProps) {
+  const cardTitleAs = source === "brand" ? "h2" : "h3";
   const fetchFn = async (): Promise<Product[]> => {
     if (source === "best-selling") return fetchBestSellingProducts();
     if (source === "accessories") return fetchBestSellingAccessories();
@@ -50,7 +51,7 @@ export default function ProductsGrid({ queryKey, source, brand }: ProductsGridPr
   return (
     <div className="grid min-[460px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
       {products.map((product) => (
-        <ProductCard key={product.id} item={product} />
+        <ProductCard key={product.id} item={product} titleAs={cardTitleAs} />
       ))}
     </div>
   );

@@ -15,7 +15,7 @@ export async function generateMetadata({
   const { lang } = await params;
   const t = await getTranslations({ locale: lang, namespace: "seo.bestSelling" });
   const seoSettings = await fetchSeoSettings();
-  const seoPage = seoSettings?.pages?.products;
+  const seoPage = seoSettings?.pages?.most_sold_products;
 
   return generateSeoMetadata({
     title: seoPage?.meta_title || t("title"),

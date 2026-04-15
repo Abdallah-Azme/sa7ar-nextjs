@@ -37,6 +37,7 @@ export default function ProductsListPageContent() {
 
     let products: import("@/types").Product[] = [];
     let title = "";
+    const isBrandSection = section === "rathath" || section === "bard";
     
     switch (section) {
         case "most-sold":
@@ -90,7 +91,7 @@ export default function ProductsListPageContent() {
                         </div>
                     ) : (
                         products.map((product) => (
-                            <ProductCard key={product.id} item={product} />
+                            <ProductCard key={product.id} item={product} titleAs={isBrandSection ? "h2" : "h3"} />
                         ))
                     )}
                 </div>

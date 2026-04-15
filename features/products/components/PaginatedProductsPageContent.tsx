@@ -37,9 +37,9 @@ export default function PaginatedProductsPageContent({
   const activeQuery = source === "accessories" ? accessoriesQuery : brandQuery;
 
 
-  console.log({ activeQuery });
   const products = activeQuery.data?.products ?? [];
   const totalPages = activeQuery.data?.pagination?.total_pages ?? 1;
+  const cardTitleAs = source === "brand" ? "h2" : "h3";
 
   return (
     <div className="container py-10 space-y-8">
@@ -56,7 +56,7 @@ export default function PaginatedProductsPageContent({
       ) : (
         <div className="grid min-[460px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
           {products.map((product) => (
-            <ProductCard key={product.id} item={product} />
+            <ProductCard key={product.id} item={product} titleAs={cardTitleAs} />
           ))}
         </div>
       )}
