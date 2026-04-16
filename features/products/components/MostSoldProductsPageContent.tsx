@@ -37,7 +37,7 @@ export default function MostSoldProductsPageContent() {
       ) : (
         <div className="grid min-[460px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
           {products.map((product) => (
-            <ProductCard key={product.id} item={product} />
+            <ProductCard key={product.id} item={product} titleAs="h2" />
           ))}
         </div>
       )}

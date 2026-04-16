@@ -74,6 +74,7 @@ export interface SeoSettingsResponse {
     razar_products?: SeoPageMetadata;
     accessory_products?: SeoPageMetadata;
     blog?: SeoPageMetadata;
+    home?: SeoPageMetadata;
     [key: string]: SeoPageMetadata | undefined;
   };
 }

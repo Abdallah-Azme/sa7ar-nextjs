@@ -7,7 +7,6 @@ import {
 	MenuIcon,
 	ArchiveIcon,
 	ShoppingBagIcon,
-	FlameIcon,
 	BookTextIcon,
 	MessageCircleQuestionMarkIcon,
 	NewspaperIcon,
@@ -31,7 +30,7 @@ import LoginDropdown from "@/components/auth/LoginDropdown";
 import AuthActionWrapper from "@/components/shared/AuthActionWrapper";
 import ScrollToTop from "@/components/shared/ScrollToTop";
 import LanguageSwitcher from "@/components/shared/header/LanguageSwitcher";
-import { useTranslations, useLocale } from "next-intl";
+import { useTranslations } from "next-intl";
 import { useCmsPagesQuery } from "@/features/about/hooks/useCms";
 import { getCmsPagePathByKey } from "@/features/about/services/cmsService";
 
@@ -41,6 +40,7 @@ import { getCmsPagePathByKey } from "@/features/about/services/cmsService";
 const navLinks = [
 	{ path: "/", key: "home", Icon: ArchiveIcon },
 	{ path: "/products", key: "products", Icon: ShoppingBagIcon, hasDropdown: true },
+	{ path: "/brands", key: "brands", Icon: ShoppingBagIcon, hasDropdown: true },
 	{ path: "/about", key: "about", Icon: BookTextIcon },
 	{ path: "/faq", key: "faq", Icon: MessageCircleQuestionMarkIcon },
 	{ path: "/blogs", key: "blog", Icon: NewspaperIcon },
@@ -54,7 +54,7 @@ export default function Navbar({ logo }: { logo?: ReactNode }) {
 	const t = useTranslations("nav");
 	const tCommon = useTranslations("common");
 	const tProducts = useTranslations("products");
-	const locale = useLocale();
+	const tBestSellingAccessories = useTranslations("bestSellingAccessories");
 	const [isSheetOpen, setIsSheetOpen] = useState(false);
 	const [isScrolled, setIsScrolled] = useState(false);
 	const [isTransitioning, setIsTransitioning] = useState(false);
@@ -75,6 +75,10 @@ export default function Navbar({ logo }: { logo?: ReactNode }) {
 		if (path === "/") return pathname === "/";
 		return pathname.startsWith(path);
 	};
+	const isProductsMenuActive =
+		isActive("/products") ||
+		isActive("/best-selling-products") ||
+		isActive("/best-selling-accessories");
 
 	// Scroll sticky effect — identical to React version
 	useEffect(() => {
@@ -142,7 +146,9 @@ export default function Navbar({ logo }: { logo?: ReactNode }) {
 											<button
 												className={cn(
 													"flex items-center gap-2 py-2 px-3 rounded-full text-xs 2xl:text-sm font-medium transition-colors outline-none",
-													isActive(item.path) || pathname.startsWith("/best-selling") || pathname.startsWith("/brands")
+													item.key === "products"
+														? isProductsMenuActive
+														: isActive(item.path)
 														? "bg-primary text-white font-bold"
 														: "text-gray hover:bg-primary/10",
 												)}
@@ -153,31 +159,43 @@ export default function Navbar({ logo }: { logo?: ReactNode }) {
 											</button>
 										</DropdownMenuTrigger>
 										<DropdownMenuContent align="start" className="w-[200px]">
-											<DropdownMenuItem asChild>
-												<Link href="/products" className="w-full cursor-pointer">
-													{t("products")} ({tCommon("all")})
-												</Link>
-											</DropdownMenuItem>
-											<DropdownMenuItem asChild>
-												<Link href="/best-selling-products" className="w-full cursor-pointer">
-													{t("bestSellingProducts")}
-												</Link>
-											</DropdownMenuItem>
-											<DropdownMenuItem asChild>
-												<Link href="/brands/bard" className="w-full cursor-pointer">
-													{tProducts("sections.bard")}
-												</Link>
-											</DropdownMenuItem>
-											<DropdownMenuItem asChild>
-												<Link href="/brands/rathath" className="w-full cursor-pointer">
-													{tProducts("sections.rathath")}
-												</Link>
-											</DropdownMenuItem>
-											<DropdownMenuItem asChild>
-												<Link href="/best-selling-accessories" className="w-full cursor-pointer">
-													{locale === "ar" ? "إكسسوارات الأكثر مبيعًا" : "Best Selling Accessories"}
-												</Link>
-											</DropdownMenuItem>
+											{item.key === "products" ? (
+												<>
+													<DropdownMenuItem asChild>
+														<Link href="/products" className="w-full cursor-pointer font-semibold">
+															{t("products")}
+														</Link>
+													</DropdownMenuItem>
+													<DropdownMenuItem asChild>
+														<Link href="/best-selling-products" className="w-full cursor-pointer">
+															{t("bestSellingProducts")}
+														</Link>
+													</DropdownMenuItem>
+													<DropdownMenuItem asChild>
+														<Link href="/best-selling-accessories" className="w-full cursor-pointer">
+															{tBestSellingAccessories("title")}
+														</Link>
+													</DropdownMenuItem>
+												</>
+											) : (
+												<>
+													<DropdownMenuItem asChild>
+														<Link href="/brands" className="w-full cursor-pointer font-semibold">
+															{t("brands")}
+														</Link>
+													</DropdownMenuItem>
+													<DropdownMenuItem asChild>
+														<Link href="/brands/rathath" className="w-full cursor-pointer">
+															{tProducts("sections.rathath")}
+														</Link>
+													</DropdownMenuItem>
+													<DropdownMenuItem asChild>
+														<Link href="/brands/bard" className="w-full cursor-pointer">
+															{tProducts("sections.bard")}
+														</Link>
+													</DropdownMenuItem>
+												</>
+											)}
 										</DropdownMenuContent>
 									</DropdownMenu>
 								) : (
@@ -255,48 +273,74 @@ export default function Navbar({ logo }: { logo?: ReactNode }) {
 										<div className="flex flex-col gap-2">
 											{resolvedNavLinks.map((item) => {
 												if ("hasDropdown" in item && item.hasDropdown) {
+													if (item.key === "products") {
+														return (
+															<div key={item.key} className="flex flex-col gap-2">
+																<Link
+																	href="/products"
+																	onClick={() => setIsSheetOpen(false)}
+																	className={cn(
+																		"flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-colors",
+																		isActive("/products") &&
+																			!isActive("/best-selling-products") &&
+																			!isActive("/best-selling-accessories")
+																			? "bg-primary text-white font-bold"
+																			: "text-gray hover:bg-primary/10",
+																	)}
+																>
+																	<item.Icon size={18} />
+																	<span>{t("products")}</span>
+																</Link>
+																<Link
+																	href="/best-selling-products"
+																	onClick={() => setIsSheetOpen(false)}
+																	className={cn(
+																		"flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-colors ms-6",
+																		isActive("/best-selling-products")
+																			? "bg-primary text-white font-bold"
+																			: "text-gray hover:bg-primary/10"
+																	)}
+																>
+																	<ShoppingBagIcon size={18} />
+																	<span>{t("bestSellingProducts")}</span>
+																</Link>
+																<Link
+																	href="/best-selling-accessories"
+																	onClick={() => setIsSheetOpen(false)}
+																	className={cn(
+																		"flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-colors ms-6",
+																		isActive("/best-selling-accessories")
+																			? "bg-primary text-white font-bold"
+																			: "text-gray hover:bg-primary/10"
+																	)}
+																>
+																	<ShoppingBagIcon size={18} />
+																	<span>{tBestSellingAccessories("title")}</span>
+																</Link>
+															</div>
+														);
+													}
+
 													return (
 														<div key={item.key} className="flex flex-col gap-2">
 															<Link
-																href="/products"
+																href="/brands"
 																onClick={() => setIsSheetOpen(false)}
 																className={cn(
 																	"flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-colors",
-																	isActive("/products")
+																	isActive("/brands") && !isActive("/brands/bard") && !isActive("/brands/rathath")
 																		? "bg-primary text-white font-bold"
 																		: "text-gray hover:bg-primary/10",
 																)}
 															>
 																<item.Icon size={18} />
-																<span>{t(item.key)} ({tCommon("all")})</span>
-															</Link>
-															<Link
-																href="/best-selling-products"
-																onClick={() => setIsSheetOpen(false)}
-																className={cn(
-																	"flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-colors ms-4",
-																	isActive("/best-selling-products") ? "bg-primary text-white font-bold" : "text-gray hover:bg-primary/10"
-																)}
-															>
-																<FlameIcon size={18} />
-																<span>{t("bestSellingProducts")}</span>
-															</Link>
-															<Link
-																href="/brands/bard"
-																onClick={() => setIsSheetOpen(false)}
-																className={cn(
-																	"flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-colors ms-4",
-																	isActive("/brands/bard") ? "bg-primary text-white font-bold" : "text-gray hover:bg-primary/10"
-																)}
-															>
-																<ShoppingBagIcon size={18} />
-																<span>{tProducts("sections.bard")}</span>
+																<span>{t("brands")}</span>
 															</Link>
 															<Link
 																href="/brands/rathath"
 																onClick={() => setIsSheetOpen(false)}
 																className={cn(
-																	"flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-colors ms-4",
+																	"flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-colors ms-6",
 																	isActive("/brands/rathath") ? "bg-primary text-white font-bold" : "text-gray hover:bg-primary/10"
 																)}
 															>
@@ -304,15 +348,15 @@ export default function Navbar({ logo }: { logo?: ReactNode }) {
 																<span>{tProducts("sections.rathath")}</span>
 															</Link>
 															<Link
-																href="/best-selling-accessories"
+																href="/brands/bard"
 																onClick={() => setIsSheetOpen(false)}
 																className={cn(
-																	"flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-colors ms-4",
-																	isActive("/best-selling-accessories") ? "bg-primary text-white font-bold" : "text-gray hover:bg-primary/10"
+																	"flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-colors ms-6",
+																	isActive("/brands/bard") ? "bg-primary text-white font-bold" : "text-gray hover:bg-primary/10"
 																)}
 															>
 																<ShoppingBagIcon size={18} />
-																<span>{locale === "ar" ? "إكسسوارات الأكثر مبيعًا" : "Best Selling Accessories"}</span>
+																<span>{tProducts("sections.bard")}</span>
 															</Link>
 														</div>
 													);

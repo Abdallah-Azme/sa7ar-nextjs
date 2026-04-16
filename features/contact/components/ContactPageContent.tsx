@@ -97,7 +97,6 @@ export default function ContactPageContent() {
 									<ContactUsInput
 										Icon={<PhoneIcon size={15} />}
 										type="tel"
-										placeholder={t("form.placeholders.phone")}
 										dir="ltr"
 										{...register("mobile", {
 											required: tForm("errors.required"),

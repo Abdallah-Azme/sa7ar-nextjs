@@ -1,21 +1,78 @@
 "use client";
 
+import { useMemo } from "react";
 import ImageFallback from "@/components/shared/ImageFallback";
 import { Link } from "@/i18n/routing";
 import { CalendarIcon, Share2Icon } from "lucide-react";
 import type { BlogItem } from "../services/blogService";
 import { useTranslations, useLocale } from "next-intl";
+import { toast } from "sonner";
 
 export default function BlogDetailView({ blog }: { blog: BlogItem }) {
   const t = useTranslations("blogDetails");
   const tNav = useTranslations("nav");
+  const tCommon = useTranslations("common");
   const locale = useLocale();
+
+  const shareUrl = useMemo(() => {
+    if (typeof window === "undefined") return "";
+    return window.location.href;
+  }, []);
 
   const formattedDate = new Date(blog.created_at).toLocaleDateString(locale === "ar" ? "ar-SA" : "en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
   });
+
+  const shareText = `${blog.title} - ${blog.subtitle}`;
+
+  const copyLink = async () => {
+    if (!shareUrl) return;
+
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      toast.success(tCommon("linkCopied"));
+    } catch {
+      toast.error(tCommon("errorOccurred"));
+    }
+  };
+
+  const handleNativeShare = async () => {
+    if (!shareUrl) return;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: blog.title,
+          text: shareText,
+          url: shareUrl,
+        });
+        return;
+      } catch {
+        // Let the user copy the link if native share is cancelled or unsupported.
+      }
+    }
+
+    await copyLink();
+  };
+
+  const openShareWindow = async (platform: "facebook" | "twitter") => {
+    if (!shareUrl) return;
+
+    const encodedUrl = encodeURIComponent(shareUrl);
+    const encodedText = encodeURIComponent(shareText);
+    const shareTargets = {
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+      twitter: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedText}`,
+    };
+
+    const didOpen = window.open(shareTargets[platform], "_blank", "noopener,noreferrer,width=640,height=720");
+
+    if (!didOpen) {
+      await copyLink();
+    }
+  };
 
   return (
     <article className="flex flex-col min-h-screen bg-white">
@@ -62,9 +119,30 @@ export default function BlogDetailView({ blog }: { blog: BlogItem }) {
             <div className="hidden lg:block absolute -inset-s-24 top-0 space-y-6">
                 <div className="flex flex-col gap-4">
                     <p className="text-[10px] font-bold text-gray-400 uppercase vertical-text transform -rotate-180 mb-4 whitespace-nowrap">{t("shareLabel")}</p>
-                    <button className="size-10 rounded-full bg-primary text-white flex items-center justify-center hover:bg-accent transition-colors shadow-sm font-bold">F</button>
-                    <button className="size-10 rounded-full bg-primary text-white flex items-center justify-center hover:bg-accent transition-colors shadow-sm font-bold">X</button>
-                    <button className="size-10 rounded-full bg-primary text-white flex items-center justify-center hover:bg-accent transition-colors shadow-sm font-bold">I</button>
+                    <button
+                      type="button"
+                      onClick={() => openShareWindow("facebook")}
+                      aria-label={t("social.facebook")}
+                      className="size-10 rounded-full bg-primary text-white flex items-center justify-center hover:bg-accent transition-colors shadow-sm font-bold"
+                    >
+                      F
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => openShareWindow("twitter")}
+                      aria-label={t("social.twitter")}
+                      className="size-10 rounded-full bg-primary text-white flex items-center justify-center hover:bg-accent transition-colors shadow-sm font-bold"
+                    >
+                      X
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleNativeShare}
+                      aria-label={tCommon("copyLink")}
+                      className="size-10 rounded-full bg-primary text-white flex items-center justify-center hover:bg-accent transition-colors shadow-sm font-bold"
+                    >
+                      <Share2Icon size={16} />
+                    </button>
                 </div>
             </div>
 
@@ -87,11 +165,26 @@ export default function BlogDetailView({ blog }: { blog: BlogItem }) {
                 {t("shareLabel")}
             </div>
             <div className="flex gap-4">
-                <button className="px-8 h-12 bg-primary text-white rounded-full flex items-center gap-3 font-bold hover:bg-accent transition-all shadow-md">
+                <button
+                  type="button"
+                  onClick={() => openShareWindow("facebook")}
+                  className="px-8 h-12 bg-primary text-white rounded-full flex items-center gap-3 font-bold hover:bg-accent transition-all shadow-md"
+                >
                     {t("social.facebook")}
                 </button>
-                <button className="px-8 h-12 bg-primary text-white rounded-full flex items-center gap-3 font-bold hover:bg-accent transition-all shadow-md">
+                <button
+                  type="button"
+                  onClick={() => openShareWindow("twitter")}
+                  className="px-8 h-12 bg-primary text-white rounded-full flex items-center gap-3 font-bold hover:bg-accent transition-all shadow-md"
+                >
                     {t("social.twitter")}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleNativeShare}
+                  className="px-8 h-12 bg-primary text-white rounded-full flex items-center gap-3 font-bold hover:bg-accent transition-all shadow-md"
+                >
+                    {tCommon("copyLink")}
                 </button>
             </div>
         </footer>
