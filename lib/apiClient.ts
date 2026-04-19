@@ -81,23 +81,18 @@ export async function apiClient<T = unknown>(
     headers["Content-Type"] = "application/json";
   }
 
-  if (tokenRequire) {
+  if (tokenRequire && isServer) {
     let token: string | null = null;
-
-    if (isServer) {
-      try {
-        const { cookies } = await import("next/headers");
-        const store = await cookies();
-        token = store.get("token")?.value ?? null;
-      } catch {
-        // Non-fatal: SSG context may have no cookie store
-      }
-    } else {
-      token = localStorage.getItem("token");
+    try {
+      const { cookies } = await import("next/headers");
+      const store = await cookies();
+      token = store.get("token")?.value ?? null;
+    } catch {
+      // Non-fatal: SSG context may have no cookie store
     }
-
     if (token) headers["Authorization"] = `Bearer ${token}`;
   }
+  // Client + tokenRequire: token stays in httpOnly cookie; /api/proxy adds Authorization.
 
   // ofetch merges headers cleanly and handles JSON by default
   // and throws on non-2xx responses
@@ -107,6 +102,7 @@ export async function apiClient<T = unknown>(
 
     const rawRes = await ofetch.native(url, {
       headers,
+      ...(!isServer ? { credentials: "include" as const } : {}),
       ...(isSafeCacheableGet
         ? {
             cache: (opts as any).cache ?? "no-store",

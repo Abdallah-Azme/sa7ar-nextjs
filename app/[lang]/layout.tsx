@@ -17,6 +17,9 @@ import DirectionProviderWrapper from "@/components/providers/DirectionProviderWr
 
 import { Cairo } from "next/font/google";
 import DeferredToaster from "@/components/providers/DeferredToaster";
+import { dehydrate } from "@tanstack/react-query";
+import { getServerAuth, authKeys } from "@/features/auth/queries";
+import { makeQueryClient } from "@/lib/queryClient";
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ lang: locale }));
@@ -52,6 +55,11 @@ export default async function RootLayout({
   const messages = await getMessages();
   const dir = lang === "ar" ? "rtl" : "ltr";
 
+  const initialUser = await getServerAuth();
+  const queryClient = makeQueryClient();
+  queryClient.setQueryData(authKeys.profile(), initialUser);
+  const dehydratedState = dehydrate(queryClient);
+
   return (
     <html lang={lang} dir={dir} className={lang === "ar" ? cairo.variable : inter.variable}>
       <body className="min-h-full flex flex-col font-sans antialiased">
@@ -61,8 +69,8 @@ export default async function RootLayout({
           timeZone="Asia/Muscat"
         >
           <DirectionProviderWrapper dir={dir}>
-            <QueryProvider>
-              <AuthProvider initialUser={null}>
+            <QueryProvider dehydratedState={dehydratedState}>
+              <AuthProvider initialUser={initialUser}>
                 <AuthDialogProvider>
                 <CartProvider>
                   
