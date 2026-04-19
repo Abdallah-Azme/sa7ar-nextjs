@@ -75,10 +75,12 @@ export default function ProfileForm() {
         formData.append("mobile", data.mobile.trim());
         if (imageFile) formData.append("image", imageFile);
 
+        const profileToastId = "profile-update";
+
         try {
             const res = await updateProfileMutation.mutateAsync(formData);
-            toast.success(res.message);
-            
+            toast.success(res.message, { id: profileToastId });
+
             const oldMobile = res.data?.old_mobile;
             const newMobile = res.data?.new_mobile;
 
@@ -87,7 +89,7 @@ export default function ProfileForm() {
                 setShowVerifyMobileDialog(true);
             }
         } catch (err: any) {
-            toast.error(err.message || tForm("errors.errorOccurred"));
+            toast.error(err.message || tForm("errors.errorOccurred"), { id: profileToastId });
         }
 	};
 

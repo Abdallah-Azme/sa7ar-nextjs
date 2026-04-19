@@ -746,6 +746,10 @@
 			"summaryHint": "Please review your order before confirmation",
 			"subtotal": "Subtotal",
 			"delivery": "Delivery",
+			"tax": "Tax",
+			"couponDiscount": "Coupon discount",
+			"shippingFee": "Shipping fees",
+			"shippingFree": "Free",
 			"total": "Total",
 			"sendOrder": "Send Order Now",
 			"sending": "Sending...",
@@ -822,6 +826,10 @@
 		"errors": {
 			"reorderInvalid": "Failed to reorder, please try again"
 		},
+		"status": "Delivery status",
+		"itemsTitle": "Order items",
+		"processing": "Processing",
+		"cancelSuccess": "Order cancelled successfully",
 		"details": {
 			"title": "Track order step by step .. 📍",
 			"mapTitle": "Order Location",
@@ -972,7 +980,11 @@
 	"brandPage": {
 		"title": "Our Brands",
 		"description": "Explore our curated selection of premium water brands, each meeting the highest standards of purity.",
-		"viewCollection": "View Collection"
+		"viewCollection": "View Collection",
+		"brandNames": {
+			"rathath": "Sohar",
+			"bard": "Bard"
+		}
 	},
 	"brandProductsPage": {
 		"bard": "Bard Products",
@@ -1048,8 +1060,5 @@
 			"title": "Privacy Policy | Sohar Water",
 			"description": "Learn how we handle your personal data and protect your privacy at Sohar Water."
 		}
-	},
-	"status": "Delivery Status",
-	"itemsTitle": "Order Items",
-	"processing": "Processing"
+	}
 }

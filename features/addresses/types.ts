@@ -9,7 +9,8 @@ export interface Address {
 	apartment_number: string | null;
 	detailed_address: string | null;
 	notes: string | null;
-	is_default: number;
+	/** API may return 0/1, false/true, or "0"/"1" strings */
+	is_default?: number | boolean | string | null;
 }
 
 export interface AddressFormData {

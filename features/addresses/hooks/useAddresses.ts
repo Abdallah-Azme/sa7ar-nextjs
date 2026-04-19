@@ -1,6 +1,7 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { addressKeys, fetchAddresses, deleteAddress, setDefaultAddress } from "../services/addressService";
 import { toast } from "sonner";
 
@@ -28,12 +29,16 @@ export function useDeleteAddressMutation() {
 
 export function useSetDefaultAddressMutation() {
   const queryClient = useQueryClient();
+  const t = useTranslations("account.addressesList.messages");
 
   return useMutation({
     mutationFn: setDefaultAddress,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: addressKeys.all });
-      toast.success("تم تحديد العنوان الافتراضي");
+      toast.success(t("setDefaultSuccess"));
+    },
+    onError: () => {
+      toast.error(t("setDefaultFailed"));
     },
   });
 }

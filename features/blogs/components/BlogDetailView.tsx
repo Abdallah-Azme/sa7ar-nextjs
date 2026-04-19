@@ -1,12 +1,15 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useRef, useState } from "react";
 import ImageFallback from "@/components/shared/ImageFallback";
 import { Link } from "@/i18n/routing";
 import { CalendarIcon, Share2Icon } from "lucide-react";
 import type { BlogItem } from "../services/blogService";
 import { useTranslations, useLocale } from "next-intl";
 import { toast } from "sonner";
+import { copyTextToClipboard } from "@/lib/copyToClipboard";
+
+const BLOG_CLIPBOARD_TOAST_ID = "blog-share-clipboard";
 
 export default function BlogDetailView({ blog }: { blog: BlogItem }) {
   const t = useTranslations("blogDetails");
@@ -14,9 +17,11 @@ export default function BlogDetailView({ blog }: { blog: BlogItem }) {
   const tCommon = useTranslations("common");
   const locale = useLocale();
 
-  const shareUrl = useMemo(() => {
-    if (typeof window === "undefined") return "";
-    return window.location.href;
+  const [shareUrl, setShareUrl] = useState("");
+  const copyInFlight = useRef(false);
+
+  useEffect(() => {
+    setShareUrl(window.location.href);
   }, []);
 
   const formattedDate = new Date(blog.created_at).toLocaleDateString(locale === "ar" ? "ar-SA" : "en-US", {
@@ -28,13 +33,15 @@ export default function BlogDetailView({ blog }: { blog: BlogItem }) {
   const shareText = `${blog.title} - ${blog.subtitle}`;
 
   const copyLink = async () => {
-    if (!shareUrl) return;
-
+    if (!shareUrl || copyInFlight.current) return;
+    copyInFlight.current = true;
     try {
-      await navigator.clipboard.writeText(shareUrl);
-      toast.success(tCommon("linkCopied"));
+      await copyTextToClipboard(shareUrl);
+      toast.success(tCommon("linkCopied"), { id: BLOG_CLIPBOARD_TOAST_ID });
     } catch {
-      toast.error(tCommon("errorOccurred"));
+      toast.error(tCommon("errorOccurred"), { id: BLOG_CLIPBOARD_TOAST_ID });
+    } finally {
+      copyInFlight.current = false;
     }
   };
 

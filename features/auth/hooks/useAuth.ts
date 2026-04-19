@@ -93,18 +93,14 @@ export function useLogoutMutation() {
 
 export function useUpdateProfileMutation() {
   const queryClient = useQueryClient();
-  const t = useTranslations("auth");
 
   return useMutation({
     mutationFn: postEditProfile,
+    /** ProfileForm shows API message; skip global MutationCache error toast too */
+    meta: { skipGlobalMutationError: true },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: authKeys.profile() });
-      toast.success(t("messages.profileUpdateSuccess"));
     },
-    onError: (error: unknown) => {
-      const err = error as { message?: string };
-      toast.error(err?.message || t("errors.errorUpdatingProfile"));
-    }
   });
 }
 

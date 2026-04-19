@@ -1,6 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+
+/** API may return decimals as strings; keeps summary rows visible. */
+function formatCartMoney(value: unknown) {
+	const n = Number(value);
+	return Number.isFinite(n) ? n.toFixed(3) : "0.000";
+}
 import { Link, useRouter } from "@/i18n/routing";
 import { useSearchParams } from "next/navigation";
 import { CheckIcon, PlusIcon } from "lucide-react";
@@ -68,6 +74,38 @@ export default function CheckoutPageContent() {
             setSelectedAddressId(toSelect?.id ?? addresses[0].id);
         }
 	}, [cart?.address_id, addresses]);
+
+	// Keep server cart address in sync so delivery_price / totals match the selected address
+	// (shipping is calculated after /cart/set-address — not only at pay click).
+	useEffect(() => {
+		if (isLoadingCart || isLoadingAddresses || selectedAddressId == null) return;
+		if (selectedAddressId === cart?.address_id) return;
+
+		let cancelled = false;
+		(async () => {
+			try {
+				await apiClient({
+					route: "/cart/set-address",
+					method: "POST",
+					body: JSON.stringify({ address_id: selectedAddressId }),
+					tokenRequire: true,
+				});
+				if (!cancelled) await refreshCart();
+			} catch {
+				if (!cancelled) toast.error(t("error"));
+			}
+		})();
+		return () => {
+			cancelled = true;
+		};
+	}, [
+		cart?.address_id,
+		isLoadingCart,
+		isLoadingAddresses,
+		refreshCart,
+		selectedAddressId,
+		t,
+	]);
 
 	const selectedAddress = useMemo(
 		() => addresses.find((address) => address.id === selectedAddressId) ?? null,
@@ -233,15 +271,40 @@ export default function CheckoutPageContent() {
 							<div className="flex items-center justify-between">
 								<span>{t("subtotal")}</span>
 								<span className="text-accent flex items-center gap-2">
-									{cart?.subtotal?.toFixed(3)}
+									{formatCartMoney(cart?.subtotal)}
 									<PriceIcon className="size-5" />
 								</span>
 							</div>
 							<div className="flex items-center justify-between">
-								<span>{t("delivery")}</span>
+								<span>{t("tax")}</span>
 								<span className="text-accent flex items-center gap-2">
-									{cart?.delivery_price?.toFixed(3)}
+									{formatCartMoney(cart?.tax)}
 									<PriceIcon className="size-5" />
+								</span>
+							</div>
+							{(Number(cart?.coupon_discount) || 0) > 0 && (
+								<div className="flex items-center justify-between text-secondary">
+									<span>
+										{t("couponDiscount")}
+										{cart?.applied_coupon?.code ? ` (${cart.applied_coupon.code})` : ""}
+									</span>
+									<span className="text-secondary flex items-center gap-2">
+										-{formatCartMoney(cart?.coupon_discount)}
+										<PriceIcon className="size-5" />
+									</span>
+								</div>
+							)}
+							<div className="flex items-center justify-between border-t border-black/5 pt-3 mt-1">
+								<span className="text-primary font-bold">{t("shippingFee")}</span>
+								<span className="text-accent flex items-center gap-2 font-bold">
+									{Number(cart?.delivery_price) === 0 ? (
+										<span className="text-secondary">{t("shippingFree")}</span>
+									) : (
+										<>
+											{formatCartMoney(cart?.delivery_price)}
+											<PriceIcon className="size-5" />
+										</>
+									)}
 								</span>
 							</div>
 						</div>
@@ -249,7 +312,7 @@ export default function CheckoutPageContent() {
 						<div className="border-t pt-6 flex items-center justify-between text-lg font-extrabold text-secondary">
 							<span>{t("total")}</span>
 							<span className="text-accent flex items-center gap-2">
-								{cart?.total?.toFixed(3)}
+								{formatCartMoney(cart?.total)}
 								<PriceIcon className="size-6" />
 							</span>
 						</div>

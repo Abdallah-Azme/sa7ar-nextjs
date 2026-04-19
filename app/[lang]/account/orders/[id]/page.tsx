@@ -37,7 +37,8 @@ export default async function OrderDetailsPage({ params }: { params: Promise<{ l
         queryFn: () => fetchOrderDetail(id),
     });
 
-    if (!order) return notFound();
+
+     if (!order) return notFound();
 
     // Replicate buildGoogleMapEmbedUrl logic inline
     const orderMapQuery = [

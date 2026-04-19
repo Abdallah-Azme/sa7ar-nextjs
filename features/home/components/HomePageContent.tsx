@@ -74,8 +74,7 @@ export default function HomePageContent() {
     queryFn: fetchHomeData,
   });
 
-  console.log("homeData", homeData);
- 
+  
   const { data: settings } = useQuery({
     queryKey: settingsKeys.global(),
     queryFn: fetchGlobalSettings,

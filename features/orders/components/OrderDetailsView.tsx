@@ -50,7 +50,7 @@ export default function OrderDetailsView({ order, mapSrc }: { order: OrderDetail
 
 	return (
 		<div className="space-y-6 animate-in fade-in zoom-in duration-500">
-			<h2 className="text-gray-700 font-extrabold text-lg">{tOrders("details")}</h2>
+			<h2 className="text-gray-700 font-extrabold text-lg">{tOrders("details.title")}</h2>
 
 			<div className="relative space-y-10 group">
 				<iframe

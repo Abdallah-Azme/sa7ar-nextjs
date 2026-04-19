@@ -49,8 +49,7 @@ export async function getCmsPage(id: string | number) {
         const res = await apiClient<{ data: CmsPage }>({
             route: `/pages?page_id=${id}`,
         });
-		console.log("res", res);
-        return res.data;
+         return res.data;
     } catch (error) {
         console.error(`Error fetching CMS page ${id}:`, error);
         return null;

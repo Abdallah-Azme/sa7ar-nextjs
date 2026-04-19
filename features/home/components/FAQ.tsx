@@ -112,8 +112,11 @@ export default function FAQ({
 									/>
 								</div>
 							</AccordionTrigger>
-							<AccordionContent className="ms-9 text-gray leading-8 text-base">
-								{faq.answer}
+							<AccordionContent className="ms-9 text-gray leading-8 text-base [&_p]:mb-3 last:[&_p]:mb-0 [&_a]:text-secondary [&_a]:underline">
+								<div
+									className="faq-answer-html"
+									dangerouslySetInnerHTML={{ __html: faq.answer }}
+								/>
 							</AccordionContent>
 						</AccordionItem>
 					))}

@@ -28,9 +28,9 @@ export default async function BrandsPage({ params }: { params: Promise<{ lang: s
   const t = await getTranslations("brandPage");
 
   const brands = [
-    { id: "rathath", name: "Sohar", slug: "rathath", image: "/images/sohar-logo.png" }, // Update image paths as needed
-    { id: "bard", name: "Bard", slug: "bard", image: "/images/bard-logo.png" },
-  ];
+    { id: "rathath", slug: "rathath", image: "/images/sohar-logo.png" },
+    { id: "bard", slug: "bard", image: "/images/bard-logo.png" },
+  ] as const;
 
   return (
     <div className="container py-10 space-y-8">
@@ -47,7 +47,7 @@ export default async function BrandsPage({ params }: { params: Promise<{ lang: s
             <div className="flex flex-col items-center text-center gap-4">
                {/* Display Brand Image/Logo */}
               <div className="text-2xl font-bold group-hover:text-primary transition-colors">
-                {brand.name}
+                {t(`brandNames.${brand.id}`)}
               </div>
               <span className="text-sm font-medium text-white bg-primary px-4 py-2 rounded-full">
                 {t("viewCollection")}

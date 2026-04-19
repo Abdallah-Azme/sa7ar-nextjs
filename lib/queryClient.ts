@@ -15,10 +15,11 @@ export function makeQueryClient(): QueryClient {
       },
     }),
     mutationCache: new MutationCache({
-      onError: (error: any) => {
-        if (typeof window !== "undefined") {
-          toast.error(error?.message || "Something went wrong with the mutation");
-        }
+      onError: (error: any, _vars, _ctx, mutation) => {
+        if (typeof window === "undefined") return;
+        const meta = mutation.options.meta as { skipGlobalMutationError?: boolean } | undefined;
+        if (meta?.skipGlobalMutationError) return;
+        toast.error(error?.message || "Something went wrong with the mutation");
       },
     }),
     defaultOptions: {
