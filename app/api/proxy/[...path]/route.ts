@@ -112,9 +112,12 @@ export async function POST(req: NextRequest, ctx: RouteCtx) {
       const formData = await req.formData();
       fetchOptions.body = formData;
     } else {
-      const body = await req.json();
-      fetchOptions.body = JSON.stringify(body);
-      baseHeaders["Content-Type"] = "application/json";
+      // Empty body is valid (e.g. POST .../addresses/:id/set-default). req.json() throws if body is empty.
+      const text = await req.text();
+      if (text.length > 0) {
+        fetchOptions.body = text;
+        baseHeaders["Content-Type"] = "application/json";
+      }
     }
 
     const res = await fetch(`${API_BASE}${apiPath}`, fetchOptions);
