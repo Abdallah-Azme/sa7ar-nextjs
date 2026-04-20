@@ -23,8 +23,7 @@ export default function AddressesPageContent() {
 		() => normalizeAddressList(addressesRaw),
 		[addressesRaw],
 	);
-	console.log(addresses);
-
+ 
  
 
 	if (isLoading) {

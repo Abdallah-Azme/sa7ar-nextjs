@@ -20,6 +20,7 @@ import DeferredToaster from "@/components/providers/DeferredToaster";
 import { dehydrate } from "@tanstack/react-query";
 import { getServerAuth, authKeys } from "@/features/auth/queries";
 import { makeQueryClient } from "@/lib/queryClient";
+import { getGlobalSettings } from "@/features/settings/queries";
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ lang: locale }));
@@ -38,7 +39,18 @@ const cairo = Cairo({
 
 import { QueryProvider } from "@/providers/QueryProvider";
 
-export const metadata: Metadata = {};
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getGlobalSettings();
+  const iconUrl = settings?.app_logo || "/favicon.ico";
+
+  return {
+    icons: {
+      icon: [{ url: iconUrl }],
+      shortcut: [{ url: iconUrl }],
+      apple: [{ url: iconUrl }],
+    },
+  };
+}
 
 export default async function RootLayout({
   children,

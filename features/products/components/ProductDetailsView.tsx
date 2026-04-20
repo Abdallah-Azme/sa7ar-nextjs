@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PlusIcon, MinusIcon, ShoppingBagIcon, ShoppingBasketIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -65,8 +65,14 @@ export default function ProductDetailsView({ product, relatedProducts }: Product
 
 	const { addToCart, addToCartPending, refreshCart } = useCart();
 	const [quantity, setQuantity] = useState(1);
-    const [selectedSizeId, setSelectedSizeId] = useState<number | null>(product?.size_id || null);
+    const [selectedSizeId, setSelectedSizeId] = useState<number | null>(
+        product?.sizes?.[0]?.id ?? product?.size_id ?? null
+    );
 	const [buyNowPending, setBuyNowPending] = useState(false);
+
+    useEffect(() => {
+        setSelectedSizeId(product?.sizes?.[0]?.id ?? product?.size_id ?? null);
+    }, [product?.id, product?.size_id, product?.sizes]);
 
     const activeSize = product?.sizes?.find((s: ProductSize) => s.id === selectedSizeId) || product;
 	const unitPrice = activeSize?.offer_price || activeSize?.price || 0;
