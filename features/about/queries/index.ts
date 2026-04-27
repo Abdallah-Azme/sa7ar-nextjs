@@ -25,6 +25,30 @@ export interface AboutPageData {
 		description?: string;
 		icon?: string | null;
 	} | null;
+	trust_cards_section?: {
+		title?: string;
+		description?: string;
+		cards?: Array<{
+			id?: string | number;
+			image?: string | null;
+			title?: string;
+			description?: string;
+			image_alt?: string | null;
+		}>;
+	} | null;
+	excellence_section?: {
+		title?: string;
+		description?: string;
+		badge_image?: string | null;
+		badge_image_alt?: string | null;
+		items?: Array<{
+			id?: string | number;
+			title?: string;
+			description?: string;
+			image?: string | null;
+			image_alt?: string | null;
+		}>;
+	} | null;
 }
 
 /**
