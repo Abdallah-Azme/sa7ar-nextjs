@@ -130,3 +130,26 @@ export const fetchProductDetail = (id: string) =>
     .then((r) => {
        return r.data;
     });
+
+export interface ProductSchemaResponse {
+  status: boolean;
+  message: string;
+  data?: {
+    schema?: Record<string, unknown> | null;
+  } | null;
+}
+
+export const fetchProductSchema = async (
+  productId: number | string,
+): Promise<Record<string, unknown> | null> => {
+  const response = await apiClient<ProductSchemaResponse>({
+    route: `/products/${productId}/schema`,
+  });
+
+  if (!response?.status) return null;
+
+  const schema = response.data?.schema;
+  if (!schema || typeof schema !== "object") return null;
+
+  return schema;
+};

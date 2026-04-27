@@ -32,6 +32,22 @@ export default async function BusinessPartnershipsPage({ params }: { params: Pro
 
   const tCommon = await getTranslations({ locale: lang, namespace: "common" });
   const tPartnership = await getTranslations({ locale: lang, namespace: "partnership" });
+  const tSeo = await getTranslations({ locale: lang, namespace: "seo.partnership" });
+  let baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://watersohar.om";
+  if (!baseUrl.startsWith("http")) baseUrl = `https://${baseUrl}`;
+  const url = new URL(
+    lang === "en" ? "/business-partnerships" : `/${lang}/business-partnerships`,
+    baseUrl
+  ).toString();
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    name: tSeo("title"),
+    description: tSeo("description"),
+    inLanguage: lang,
+    url,
+  };
 
   const queryClient = makeQueryClient();
   const types = await queryClient.fetchQuery({
@@ -41,6 +57,12 @@ export default async function BusinessPartnershipsPage({ params }: { params: Pro
 
   return (
     <main className="flex flex-col min-h-screen bg-gray-50">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
       <section className="bg-primary pt-12 pb-32 rounded-b-[60px] md:rounded-b-[100px] shadow-lg relative overflow-hidden">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] bg-size-[24px_24px]"></div>
         

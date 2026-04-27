@@ -44,7 +44,10 @@ export default function ProductCard({ item, titleAs = "h3" }: ProductCardProps) 
 			? (item as { image_alt?: string | null }).image_alt!.trim()
 			: item?.name;
 
- 	const slug = item?.seo?.slug?.trim();
+	const slug =
+		(typeof (item as Product & { slug?: string | null }).slug === "string" &&
+		(item as Product & { slug?: string | null }).slug?.trim()) ||
+		item?.seo?.slug?.trim();
 	const productHref = slug ? `/products/${slug}` : `/products/${item.id}`;
 
 	const cartItem = cart?.items?.find(

@@ -41,6 +41,18 @@ export default async function PrivacyPage({ params }: { params: Promise<{ lang: 
   setRequestLocale(lang);
 
   const t = await getTranslations("privacyPage");
+  const seoT = await getTranslations({ locale: lang, namespace: "seo.privacy" });
+  let baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://watersohar.om";
+  if (!baseUrl.startsWith("http")) baseUrl = `https://${baseUrl}`;
+  const url = new URL(lang === "ar" ? "/privacy" : `/${lang}/privacy`, baseUrl).toString();
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "PrivacyPolicy",
+    name: seoT("title"),
+    description: seoT("description"),
+    inLanguage: lang,
+    url,
+  };
 
   const queryClient = makeQueryClient();
   await queryClient.prefetchQuery({
@@ -54,6 +66,12 @@ export default async function PrivacyPage({ params }: { params: Promise<{ lang: 
       <div className="absolute top-0 inset-e-0 -z-1 size-[500px] bg-secondary/5 rounded-full blur-[100px] translate-x-1/3 -translate-y-1/4" />
 
       <HydrationBoundary state={dehydrate(queryClient)}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+          }}
+        />
         <CmsPageContent 
           id={PRIVACY_PAGE_ID} 
           title={t("title")}

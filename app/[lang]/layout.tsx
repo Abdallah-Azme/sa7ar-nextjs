@@ -38,6 +38,7 @@ const cairo = Cairo({
 
 
 import { QueryProvider } from "@/providers/QueryProvider";
+import { getGroupedSlugs } from "@/lib/sitemap-data";
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getGlobalSettings();
@@ -71,8 +72,7 @@ export default async function RootLayout({
   const queryClient = makeQueryClient();
   queryClient.setQueryData(authKeys.profile(), initialUser);
   const dehydratedState = dehydrate(queryClient);
-
-  return (
+   return (
     <html lang={lang} dir={dir} className={lang === "ar" ? cairo.variable : inter.variable}>
       <body className="min-h-full flex flex-col font-sans antialiased">
         <NextIntlClientProvider 

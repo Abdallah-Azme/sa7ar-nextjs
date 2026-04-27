@@ -3,6 +3,7 @@ import { makeQueryClient } from "@/lib/queryClient";
 import {
   productKeys,
   fetchProductDetail,
+  fetchProductSchema,
 } from "@/features/products/services/productService";
 import ProductDetailsView from "@/features/products/components/ProductDetailsView";
 import HelpCard from "@/components/shared/cards/HelpCard";
@@ -11,9 +12,49 @@ import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 
 import { generateSeoMetadata } from "@/lib/seo";
+import { getPublicApiBaseUrl } from "@/lib/apiBase";
 
 interface Props {
   params: Promise<{ lang: string; slug: string }>;
+}
+
+function toAbsoluteUrl(url: string): string {
+  if (!url) return url;
+  if (/^https?:\/\//i.test(url)) return url;
+
+  try {
+    return new URL(url, getPublicApiBaseUrl()).toString();
+  } catch {
+    return url;
+  }
+}
+
+function buildFallbackProductJsonLd(product: Awaited<ReturnType<typeof fetchProductDetail>>["product"]) {
+  const images = [product.image, ...(product.images ?? [])]
+    .filter((value): value is string => typeof value === "string" && value.trim().length > 0)
+    .map((image) => toAbsoluteUrl(image));
+
+  const currentPrice = typeof product.offer_price === "number" ? product.offer_price : product.price;
+
+  return {
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    name: product.name,
+    description: product.description || product.name,
+    sku: `PRD-${product.id}`,
+    image: images,
+    brand: {
+      "@type": "Brand",
+      name: product.size || "Sahar",
+    },
+    offers: {
+      "@type": "Offer",
+      priceCurrency: "SAR",
+      price: typeof currentPrice === "number" ? currentPrice.toFixed(2) : undefined,
+      availability: "https://schema.org/InStock",
+      itemCondition: "https://schema.org/NewCondition",
+    },
+  };
 }
 
 /**
@@ -85,8 +126,23 @@ export default async function ProductPage({ params }: Props) {
     notFound();
   }
 
+  let schemaFromApi: Record<string, unknown> | null = null;
+  try {
+    schemaFromApi = await fetchProductSchema(data.product.id);
+  } catch {
+    schemaFromApi = null;
+  }
+
+  const jsonLd = schemaFromApi ?? buildFallbackProductJsonLd(data.product);
+
   return (
     <main className="flex flex-col min-h-screen">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
       <HydrationBoundary state={dehydrate(queryClient)}>
         <ProductDetailsView
           product={data.product}

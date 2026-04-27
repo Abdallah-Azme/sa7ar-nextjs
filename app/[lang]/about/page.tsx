@@ -38,6 +38,18 @@ export default async function AboutPage({ params }: { params: Promise<{ lang: st
   const { lang } = await params;
   setRequestLocale(lang);
   const t = await getTranslations({ locale: lang, namespace: "seo.about" });
+  let baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://watersohar.om";
+  if (!baseUrl.startsWith("http")) baseUrl = `https://${baseUrl}`;
+  const url = new URL(lang === "en" ? "/about" : `/${lang}/about`, baseUrl).toString();
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    name: t("title"),
+    description: t("description"),
+    inLanguage: lang,
+    url,
+  };
 
   const queryClient = makeQueryClient();
   
@@ -54,6 +66,12 @@ export default async function AboutPage({ params }: { params: Promise<{ lang: st
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
       <h1 className="sr-only">{t("title")}</h1>
       <AboutPageContent />
     </HydrationBoundary>

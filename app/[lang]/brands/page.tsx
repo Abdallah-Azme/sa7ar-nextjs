@@ -4,6 +4,51 @@ import type { Metadata } from "next";
 import { Link } from "@/i18n/routing";
 import { fetchSeoSettings } from "@/features/settings/services/settingsService";
 
+function buildBrandsPageJsonLd({
+  lang,
+  title,
+  description,
+  brands,
+}: {
+  lang: string;
+  title: string;
+  description: string;
+  brands: ReadonlyArray<{ id: string; name: string; slug: string; image: string }>;
+}) {
+  let baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://watersohar.om";
+  if (!baseUrl.startsWith("http")) baseUrl = `https://${baseUrl}`;
+
+  const brandsPath = lang === "ar" ? "/brands" : `/${lang}/brands`;
+  const pageUrl = new URL(brandsPath, baseUrl).toString();
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: title,
+    description,
+    url: pageUrl,
+    mainEntity: {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: brands.length,
+      itemListElement: brands.map((brand, index) => {
+        const brandPath = lang === "ar" ? `/brands/${brand.slug}` : `/${lang}/brands/${brand.slug}`;
+
+        return {
+          "@type": "ListItem",
+          position: index + 1,
+          item: {
+            "@type": "Brand",
+            name: brand.name,
+            image: new URL(brand.image, baseUrl).toString(),
+            url: new URL(brandPath, baseUrl).toString(),
+          },
+        };
+      }),
+    },
+  };
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -31,9 +76,26 @@ export default async function BrandsPage({ params }: { params: Promise<{ lang: s
     { id: "rathath", slug: "rathath", image: "/images/sohar-logo.png" },
     { id: "bard", slug: "bard", image: "/images/bard-logo.png" },
   ] as const;
+  const brandsWithNames = brands.map((brand) => ({
+    ...brand,
+    name: t(`brandNames.${brand.id}`),
+  }));
+
+  const jsonLd = buildBrandsPageJsonLd({
+    lang,
+    title: t("title"),
+    description: t("description"),
+    brands: brandsWithNames,
+  });
 
   return (
     <div className="container py-10 space-y-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
       <h1 className="text-3xl font-bold">{t("title")}</h1>
       <p className="text-gray-600 max-w-2xl">{t("description")}</p>
       

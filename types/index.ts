@@ -26,6 +26,7 @@ export interface Profile {
 export type Product = {
 	id: number;
 	name: string;
+	slug?: string | null;
 	image: string;
 	image_alt?: string | null;
 	price: number;

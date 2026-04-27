@@ -12,6 +12,39 @@ import { getCmsPage, getCmsSeoMetadataInput } from "@/features/about/queries/cms
 
 const TERMS_PAGE_ID = 2;
 
+function buildTermsJsonLd({
+  lang,
+  title,
+  description,
+  path,
+}: {
+  lang: string;
+  title: string;
+  description: string;
+  path: string;
+}) {
+  let baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://watersohar.om";
+  if (!baseUrl.startsWith("http")) baseUrl = `https://${baseUrl}`;
+
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+  const localizedPath = lang === "ar" ? normalizedPath : `/${lang}${normalizedPath}`;
+  const pageUrl = new URL(localizedPath, baseUrl).toString();
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: title,
+    description,
+    url: pageUrl,
+    inLanguage: lang,
+    isPartOf: {
+      "@type": "WebSite",
+      name: "Sohar Water",
+      url: baseUrl,
+    },
+  };
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -41,15 +74,34 @@ export default async function TermsPage({ params }: { params: Promise<{ lang: st
   setRequestLocale(lang);
 
   const t = await getTranslations("termsPage");
+  const tSeo = await getTranslations({ locale: lang, namespace: "seo.terms" });
+  const pageData = await getCmsPage(TERMS_PAGE_ID);
+  const seo = getCmsSeoMetadataInput(pageData, {
+    title: tSeo("title"),
+    description: tSeo("description"),
+    path: "/terms",
+  });
 
   const queryClient = makeQueryClient();
   await queryClient.prefetchQuery({
     queryKey: cmsKeys.detail(TERMS_PAGE_ID),
     queryFn: () => fetchCmsPage(TERMS_PAGE_ID),
   });
+  const jsonLd = buildTermsJsonLd({
+    lang,
+    title: seo.title,
+    description: seo.description,
+    path: seo.path,
+  });
 
   return (
     <main className="flex flex-col min-h-screen relative overflow-hidden bg-white/50">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
       <div className="absolute top-1/2 inset-s-0 -z-1 size-[600px] bg-accent/5 rounded-full blur-[120px] -translate-x-1/2 -translate-y-1/2" />
       <div className="absolute top-0 inset-e-0 -z-1 size-[500px] bg-secondary/5 rounded-full blur-[100px] translate-x-1/3 -translate-y-1/4" />
 

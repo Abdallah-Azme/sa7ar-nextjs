@@ -8,6 +8,7 @@ export async function GET() {
     getDynamicProductSlugPaths(),
     getDynamicProductPaths(),
   ]);
+
   const productPaths = Array.from(new Set([...productSlugPaths, ...productFallbackPaths]));
   const urls = productPaths.map((route) => `${BASE_URL}${withLocalePath(route, "en")}`);
   const body = urls.map((url) => `<url><loc>${url}</loc></url>`).join("");

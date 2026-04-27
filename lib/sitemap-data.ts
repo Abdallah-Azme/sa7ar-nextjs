@@ -38,6 +38,7 @@ async function fetchJson<T>(route: string): Promise<T | null> {
     const res = await fetch(`${API_BASE}${route}`, {
       headers: { Accept: "application/json" },
     });
+
     if (!res.ok) return null;
     return (await res.json()) as T;
   } catch (error: unknown) {
@@ -61,7 +62,7 @@ function collectProductPathsFromList(products: Product[] | undefined): string[] 
   if (!products?.length) return [];
   return products
     .map((product) => {
-      const slug = product?.seo?.slug?.trim();
+      const slug = product?.slug?.trim() || product?.seo?.slug?.trim();
       if (slug) return `/products/${slug}`;
       if (product?.id) return `/products/${product.id}`;
       return null;
@@ -90,7 +91,7 @@ export async function getDynamicProductPaths(): Promise<string[]> {
   return uniquePaths(all);
 }
 
-async function getGroupedSlugs(): Promise<SlugsGrouped> {
+export async function getGroupedSlugs(): Promise<SlugsGrouped> {
   const response = await fetchJson<SlugsApiResponse>("/slugs");
   return response?.data?.grouped ?? {};
 }
@@ -98,9 +99,13 @@ async function getGroupedSlugs(): Promise<SlugsGrouped> {
 export async function getDynamicProductSlugPaths(): Promise<string[]> {
   const grouped = await getGroupedSlugs();
   const productPaths = (grouped.products ?? [])
-    .map((item) => sanitizeSlug(item.slug))
-    .filter((slug): slug is string => Boolean(slug))
-    .map((slug) => `/products/${slug}`);
+    .map((item) => {
+      const slug = sanitizeSlug(item.slug);
+      if (slug) return `/products/${slug}`;
+      if (item.id) return `/products/${item.id}`;
+      return null;
+    })
+    .filter((path): path is string => Boolean(path));
 
   return uniquePaths(productPaths);
 }

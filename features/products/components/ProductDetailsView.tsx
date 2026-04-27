@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { PlusIcon, MinusIcon, ShoppingBagIcon, ShoppingBasketIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,11 +15,10 @@ import WaterDrop from "@/components/icons/WaterDrop";
 import PriceIcon from "@/components/icons/PriceIcon";
 import CartIcon from "@/components/icons/CartIcon";
 import ArrowIcon from "@/components/icons/ArrowIcon";
-import Autoplay from "embla-carousel-autoplay";
 import SectionHeader from "@/components/shared/SectionHeader";
 import ProductCard from "@/components/shared/cards/ProductCard";
 import { useCart } from "@/contexts/CartContext";
-import { cn, htmlToPlainText } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import type { Product } from "@/types";
 import { useRouter } from "@/i18n/routing";
 import apiClient from "@/lib/apiClient";
@@ -35,11 +34,15 @@ export interface ProductSize {
 }
 
 export interface ProductDetail extends Product {
-    sizes: ProductSize[];
-    description: string;
-    images: string[];
-    images_alts?: string[];
-    size_id: number;
+	sizes: ProductSize[];
+	description: string;
+	images: string[];
+	images_alts?: string[];
+	images_with_alt?: Array<{
+		url: string;
+		alt?: string | null;
+	}>;
+	size_id: number;
 }
 
 interface ProductDetailsViewProps {
@@ -54,7 +57,7 @@ import { useTranslations } from "next-intl";
  * Interactive view for a single product.
  */
 export default function ProductDetailsView({ product, relatedProducts }: ProductDetailsViewProps) {
-	const tProducts = useTranslations("productDetails");
+ 	const tProducts = useTranslations("productDetails");
 	const tNav = useTranslations("products");
 	const tActions = useTranslations("actions");
 	const tCart = useTranslations("cart.messages");
@@ -69,12 +72,32 @@ export default function ProductDetailsView({ product, relatedProducts }: Product
         product?.sizes?.[0]?.id ?? product?.size_id ?? null
     );
 	const [buyNowPending, setBuyNowPending] = useState(false);
+	const galleryImages = useMemo(
+		() =>
+			product?.images_with_alt?.length
+				? product.images_with_alt
+						.filter((image) => Boolean(image?.url))
+						.map((image) => ({
+							url: image.url,
+							alt: image.alt?.trim() || product?.name,
+						}))
+				: (product?.images ?? [])
+						.filter((image) => Boolean(image))
+						.map((image, index) => ({
+							url: image,
+							alt: product?.images_alts?.[index] || product?.name,
+						})),
+		[product?.images_with_alt, product?.images, product?.images_alts, product?.name]
+	);
 
     useEffect(() => {
         setSelectedSizeId(product?.sizes?.[0]?.id ?? product?.size_id ?? null);
     }, [product?.id, product?.size_id, product?.sizes]);
 
-    const activeSize = product?.sizes?.find((s: ProductSize) => s.id === selectedSizeId) || product;
+    const activeSize = useMemo(
+		() => product?.sizes?.find((s: ProductSize) => s.id === selectedSizeId) || product,
+		[product, selectedSizeId]
+	);
 	const unitPrice = activeSize?.offer_price || activeSize?.price || 0;
 	const totalPrice = unitPrice * quantity;
 
@@ -118,14 +141,17 @@ export default function ProductDetailsView({ product, relatedProducts }: Product
 				<div className="bg-accent/10 rounded-4xl p-6 space-y-4">
 					<Carousel opts={{ align: "start" }}>
 						<CarouselContent>
-							{product?.images?.map((image: string, index: number) => (
+							{galleryImages.map((image, index) => (
 								<CarouselItem key={index}>
 									<div className="h-96 flex items-center justify-center">
 										<ImageFallback
-											src={image}
-											alt={product?.images_alts?.[index] || product?.name}
+											src={image.url}
+											alt={image.alt || product?.name}
 											width={400}
 											height={400}
+											priority={index === 0}
+											fetchPriority={index === 0 ? "high" : "auto"}
+											sizes="(max-width: 1024px) 100vw, 40vw"
 											className="object-contain"
 										/>
 									</div>
@@ -165,9 +191,10 @@ export default function ProductDetailsView({ product, relatedProducts }: Product
 					</div>
 
 					<div className="space-y-4">
-						<p className="font-light text-gray text-sm leading-relaxed">
-							{htmlToPlainText(product?.description ?? "")}
-						</p>
+						<div
+							className="font-light text-gray text-sm leading-relaxed"
+							dangerouslySetInnerHTML={{ __html: product?.description ?? "" }}
+						/>
 					</div>
 
 					{/* Size Selection */}
@@ -206,6 +233,7 @@ export default function ProductDetailsView({ product, relatedProducts }: Product
 									"bg-primary text-primary-foreground hover:bg-primary/90",
 								)}
 								onClick={() => setQuantity(q => q + 1)}
+								aria-label="Increase quantity"
 							>
 								<PlusIcon size={16} className="stroke-[2.5px]" />
 							</Button>
@@ -222,6 +250,7 @@ export default function ProductDetailsView({ product, relatedProducts }: Product
 									"[&_svg]:text-foreground",
 								)}
 								onClick={() => setQuantity(q => Math.max(1, q - 1))}
+								aria-label="Decrease quantity"
 							>
 								<MinusIcon size={16} className="stroke-[2.5px]" />
 							</Button>
@@ -262,10 +291,7 @@ export default function ProductDetailsView({ product, relatedProducts }: Product
 						labelIcon={<ShoppingBagIcon size={15} />}
 						titleIcon={<ShoppingBasketIcon size={30} />}
 					/>
-					<Carousel
-						plugins={[Autoplay({ delay: 2500 })]}
-						opts={{ align: "start", loop: true }}
-					>
+					<Carousel opts={{ align: "start", loop: true }}>
 						<CarouselContent className="py-2">
 							{relatedProducts.map((related) => (
 								<CarouselItem
