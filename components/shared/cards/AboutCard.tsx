@@ -33,7 +33,7 @@ export default function AboutCard({
 
 				{/* Text */}
 				<div className="space-y-2">
-					<h2 className="text-xl font-extrabold">{title}</h2>
+					<h3 className="text-xl font-extrabold">{title}</h3>
 					<p className="text-lg font-light text-primary/80">
 						{description}
 					</p>

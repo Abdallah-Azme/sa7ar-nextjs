@@ -7,7 +7,11 @@ import { useSearchParams } from "next/navigation";
 import { useCart } from "@/contexts/CartContext";
 
 import { useQuery } from "@tanstack/react-query";
-import { homeKeys, fetchHomeData, fetchFaqs } from "../services/homeService";
+import {
+  homeKeys,
+  fetchHomeData,
+  fetchFaqs,
+} from "../services/homeService";
 import {
   settingsKeys,
   fetchGlobalSettings,
@@ -19,6 +23,8 @@ import {
 
 import Hero from "./Hero";
 import Products from "./Products";
+import Rewards from "./Rewards";
+import type { RewardsSectionData, QualityMarkSectionData } from "../types";
 const About = dynamic(() => import("./About"));
 const Partners = dynamic(() => import("./Partners"), {
   ssr: false,
@@ -33,10 +39,55 @@ const RequestPartnership = dynamic(() => import("./RequestPartnership"), {
   loading: () => null,
 });
 const FAQ = dynamic(() => import("./FAQ"), { ssr: false, loading: () => null });
+const QualityMark = dynamic(() => import("./QualityMark"), {
+  ssr: false,
+  loading: () => null,
+});
 const BestSellingAccessories = dynamic(
   () => import("./BestSellingAccessories"),
   { ssr: false, loading: () => null },
 );
+
+const rewardsSectionData: RewardsSectionData = {
+  title: "إنجازاتنا وجوائزنا",
+  description:
+    "تمتلك الشركة العديد من الشهادات والاعتمادات الوطنية والدولية كدليل على التزامها الصارم بمراقبة الجودة.",
+  items: [
+    {
+      id: "gold-award",
+      image: "/images/rewards/reward-1.png",
+      alt: "جائزة التميز الذهبية",
+    },
+    {
+      id: "national-quality",
+      image: "/images/rewards/reward-2.png",
+      alt: "وسام الجودة الوطني",
+    },
+    {
+      id: "ibwa",
+      image: "/images/rewards/reward-3.png",
+      alt: "اعتماد IBWA",
+    },
+    {
+      id: "abu-award",
+      image: "/images/rewards/reward-4.png",
+      alt: "جائزة أبو للتميز",
+    },
+    {
+      id: "nsf",
+      image: "/images/rewards/reward-5.png",
+      alt: "اعتماد NSF",
+    },
+  ],
+};
+
+const qualityMarkSectionData: QualityMarkSectionData = {
+  title: "علامة الجودة العمانية",
+  description:
+    "حصلت الشركة على علامة الجودة العمانية في خطوة تعكس التزامها بتقديم منتجات مطابقة لأعلى معايير الجودة المحلية.",
+  image: "/images/om.svg",
+  imageAlt: "شعار علامة الجودة العمانية",
+};
 
 export default function HomePageContent() {
   const t = useTranslations("products");
@@ -88,6 +139,18 @@ export default function HomePageContent() {
     queryKey: productKeys.accessories(),
     queryFn: fetchBestSellingAccessories,
   });
+  const rewardsData =
+    homeData?.rewards_section && homeData.rewards_section.items?.length > 0
+      ? homeData.rewards_section
+      : rewardsSectionData;
+  const qualityMarkData =
+    homeData?.quality_mark_section &&
+    homeData.quality_mark_section.title &&
+    homeData.quality_mark_section.description &&
+    homeData.quality_mark_section.image &&
+    homeData.quality_mark_section.imageAlt
+      ? homeData.quality_mark_section
+      : qualityMarkSectionData;
 
    return (
     <div className="flex flex-col gap-20 pb-20">
@@ -126,7 +189,13 @@ export default function HomePageContent() {
           {/* 7. B2B Partnership CTA */}
           <RequestPartnership />
 
-          {/* 8. FAQ Section */}
+          {/* 8. Rewards Section */}
+          <Rewards data={rewardsData} />
+
+          {/* 9. Omani Quality Mark */}
+          <QualityMark data={qualityMarkData} />
+
+          {/* 10. FAQ Section */}
           <FAQ faqs={faqs ?? []} isSection={true} />
         </>
       ) : (

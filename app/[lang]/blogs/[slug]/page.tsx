@@ -41,7 +41,7 @@ function buildBlogDetailsJsonLd({
 
   return {
     "@context": "https://schema.org",
-    "@type": "BlogPosting",
+    "@type": "Article",
     mainEntityOfPage: {
       "@type": "WebPage",
       "@id": articleUrl,
@@ -52,6 +52,8 @@ function buildBlogDetailsJsonLd({
     datePublished: createdAt || undefined,
     dateModified: createdAt || undefined,
     url: articleUrl,
+    articleSection: "Blog",
+    inLanguage: lang === "ar" ? "ar" : "en",
     author: {
       "@type": "Organization",
       name: "Sohar Water",
@@ -60,6 +62,48 @@ function buildBlogDetailsJsonLd({
       "@type": "Organization",
       name: "Sohar Water",
     },
+  };
+}
+
+function buildBlogBreadcrumbJsonLd({
+  lang,
+  slug,
+  title,
+}: {
+  lang: string;
+  slug: string;
+  title: string;
+}) {
+  let baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://watersohar.om";
+  if (!baseUrl.startsWith("http")) baseUrl = `https://${baseUrl}`;
+
+  const homePath = lang === "ar" ? "/" : `/${lang}`;
+  const blogsPath = lang === "ar" ? "/blogs" : `/${lang}/blogs`;
+  const articlePath = lang === "ar" ? `/blogs/${slug}` : `/${lang}/blogs/${slug}`;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: lang === "ar" ? "الرئيسية" : "Home",
+        item: new URL(homePath, baseUrl).toString(),
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: lang === "ar" ? "المدونة" : "Blogs",
+        item: new URL(blogsPath, baseUrl).toString(),
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: title,
+        item: new URL(articlePath, baseUrl).toString(),
+      },
+    ],
   };
 }
 
@@ -114,14 +158,22 @@ export default async function BlogDetailsPage({ params }: BlogDetailsProps) {
         createdAt: blogData.created_at,
       })
     : null;
+  const breadcrumbJsonLd = blogData
+    ? buildBlogBreadcrumbJsonLd({
+        lang,
+        slug,
+        title: blogData.title,
+      })
+    : null;
+  const schemas = [jsonLd, breadcrumbJsonLd].filter(Boolean);
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      {jsonLd ? (
+      {schemas.length > 0 ? (
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+            __html: JSON.stringify(schemas.length === 1 ? schemas[0] : schemas).replace(/</g, "\\u003c"),
           }}
         />
       ) : null}

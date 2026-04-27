@@ -33,4 +33,25 @@ export interface HomeResponse {
 	}[];
 	unfinished_order: unknown | null;
 	most_ordered_products: Product[];
+	rewards_section?: RewardsSectionData | null;
+	quality_mark_section?: QualityMarkSectionData | null;
+}
+
+export interface RewardItem {
+	id: string;
+	image: string;
+	alt: string;
+}
+
+export interface RewardsSectionData {
+	title: string;
+	description: string;
+	items: RewardItem[];
+}
+
+export interface QualityMarkSectionData {
+	title: string;
+	description: string;
+	image: string;
+	imageAlt: string;
 }

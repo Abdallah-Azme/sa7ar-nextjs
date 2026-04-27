@@ -1,6 +1,10 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { makeQueryClient } from "@/lib/queryClient";
-import { fetchHomeData, fetchFaqs, homeKeys } from "@/features/home/services/homeService";
+import {
+  fetchHomeData,
+  fetchFaqs,
+  homeKeys,
+} from "@/features/home/services/homeService";
 import { fetchGlobalSettings, settingsKeys } from "@/features/settings/services/settingsService";
 import { fetchBestSellingAccessories, productKeys } from "@/features/products/services/productService";
 import HomePageContent from "@/features/home/components/HomePageContent";

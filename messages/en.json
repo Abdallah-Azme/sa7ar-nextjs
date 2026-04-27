@@ -283,6 +283,11 @@
 		"description": "Customized water solutions for companies and organizations",
 		"cta": "Request partnership now"
 	},
+	"qualityMark": {
+		"title": "Omani Quality Mark",
+		"description": "The first water company in Oman to receive the Omani Quality Mark for compliance with packaged drinking water requirements from the Gulf Standardization Organization.",
+		"imageAlt": "Omani Quality Mark logo"
+	},
 	"businessPartnerships": {
 		"title": "Business Partnerships",
 		"fields": {
