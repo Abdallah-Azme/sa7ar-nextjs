@@ -10,40 +10,16 @@ const nextConfig: NextConfig = {
   output: 'standalone',
 
   images: {
-    // All external image hosts used by the API
+    // Allow external images from any domain and any path.
     remotePatterns: [
-      // Primary backend (saharapi)
       {
         protocol: "https",
-        hostname: "saharapi.subcodeco.com",
+        hostname: "**",
         pathname: "/**",
       },
-      // Secondary backend (road-80)
-      {
-        protocol: "https",
-        hostname: "portal.road-80.com",
-        pathname: "/**",
-      },
-      // Common CDN/storage hosts (covers S3, Cloudflare, etc.)
-      {
-        protocol: "https",
-        hostname: "**.amazonaws.com",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "**.cloudflare.com",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "country-code-au6g.vercel.app",
-        pathname: "/**",
-      },
-      // Allow any http for local/dev
       {
         protocol: "http",
-        hostname: "localhost",
+        hostname: "**",
         pathname: "/**",
       },
     ],
