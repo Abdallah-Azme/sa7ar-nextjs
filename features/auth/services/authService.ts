@@ -31,7 +31,7 @@ export async function postLogin(payload: LoginPayload) {
 
 export async function postRegister(payload: RegisterPayload) {
   return apiClient<{ data: { token: string; user: Profile } }>({
-    route: "/register",
+    route: "/signup",
     method: "POST",
     body: JSON.stringify(payload),
   });

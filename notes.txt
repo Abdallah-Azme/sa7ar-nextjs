@@ -12,3 +12,8 @@ weareone
 
 
 https://saharapi.subcodeco.com/api/settings/seo
+
+
+
+https://api.watersohar.om/api/home
+https://api.watersohar.om/api/about-us

@@ -187,14 +187,9 @@ export default function AboutPageContent() {
                 imageUrl={mission.icon || "/images/placeholder/our-story.webp"}
             />
         )}
-
-
         {/* <AboutTrustCardsSection data={trustSectionData} /> */}
 
         <AboutExcellenceSection data={excellenceSectionData} />
-
-
-
 
         <div className="grid md:grid-cols-3 xl:grid-cols-4 gap-6">
             {features.map((feature, idx) => (

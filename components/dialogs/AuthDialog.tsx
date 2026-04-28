@@ -224,7 +224,7 @@ function SignupDialog({
             };
             
             await apiClient({
-                route: "/register",
+                route: "/signup",
                 method: "POST",
                 body: JSON.stringify(payload)
             });
