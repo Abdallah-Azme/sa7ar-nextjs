@@ -189,7 +189,7 @@ export default function AboutPageContent() {
         )}
 
 
-        <AboutTrustCardsSection data={trustSectionData} />
+        {/* <AboutTrustCardsSection data={trustSectionData} /> */}
 
         <AboutExcellenceSection data={excellenceSectionData} />
 
