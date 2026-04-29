@@ -57,7 +57,7 @@ export default function FAQ({
 
 				<h2 className="text-xl sm:text-2xl lg:text-5xl font-medium">
 					{t("title.line1")} 
-					<b className="font-extrabold mx-2">{t("title.emphasis")}</b>
+					{t("title.emphasis")}
 				</h2>
 
 				<p className="font-light text-black text-lg/10">
